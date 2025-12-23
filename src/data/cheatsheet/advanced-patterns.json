@@ -1,0 +1,24 @@
+{
+  "id": "advanced-patterns",
+  "title": "Advanced Patterns",
+  "explanation": "These patterns combine multiple TypeScript features to solve complex typing problems.",
+  "codeBlocks": [
+    {
+      "title": "Mapped Types",
+      "code": "// Create new types by transforming properties\ntype User = {\n  id: number;\n  name: string;\n  email: string;\n};\n\n// Make all properties optional\ntype Optional<T> = {\n  [K in keyof T]?: T[K];\n};\n\ntype OptionalUser = Optional<User>;\n// Same as: { id?: number; name?: string; email?: string; }\n\n// Make all properties readonly\ntype Readonly<T> = {\n  readonly [K in keyof T]: T[K];\n};\n\n// Add null to all properties\ntype Nullable<T> = {\n  [K in keyof T]: T[K] | null;\n};\n\ntype NullableUser = Nullable<User>;\n// Same as: { id: number | null; name: string | null; email: string | null; }\n\n// Getters for all properties\ntype Getters<T> = {\n  [K in keyof T as `get${Capitalize<string & K>}`]: () => T[K];\n};\n\ntype UserGetters = Getters<User>;\n// Same as: { getId: () => number; getName: () => string; getEmail: () => string; }"
+    },
+    {
+      "title": "Conditional Types",
+      "code": "// Type depends on condition\ntype IsString<T> = T extends string ? true : false;\n\ntype Test1 = IsString<string>; // true\ntype Test2 = IsString<number>; // false\n\n// More practical example\ntype NonArray<T> = T extends any[] ? never : T;\n\ntype Str = NonArray<string>; // string\ntype Num = NonArray<number>; // number\ntype Arr = NonArray<string[]>; // never\n\n// Extract array element type\ntype Flatten<T> = T extends (infer U)[] ? U : T;\n\ntype Num = Flatten<number[]>; // number\ntype Str = Flatten<string>; // string\n\n// Real-world example: API response\ntype ApiResponse<T> = T extends { success: true }\n  ? { data: T; error: null }\n  : { data: null; error: string };"
+    },
+    {
+      "title": "Template Literal Types",
+      "code": "// Create types from string templates\ntype Color = \"red\" | \"blue\" | \"green\";\ntype Shade = \"light\" | \"dark\";\n\ntype ColorShade = `${Shade}-${Color}`;\n// \"light-red\" | \"light-blue\" | \"light-green\" | \"dark-red\" | \"dark-blue\" | \"dark-green\"\n\n// Event names\ntype EventName = \"click\" | \"focus\" | \"blur\";\ntype EventHandler = `on${Capitalize<EventName>}`;\n// \"onClick\" | \"onFocus\" | \"onBlur\"\n\n// CSS properties\ntype Size = \"sm\" | \"md\" | \"lg\";\ntype Spacing = `m-${Size}` | `p-${Size}`;\n// \"m-sm\" | \"m-md\" | \"m-lg\" | \"p-sm\" | \"p-md\" | \"p-lg\"\n\ninterface Events {\n  onClick: () => void;\n  onFocus: () => void;\n  onBlur: () => void;\n}\n\ntype EventKeys = keyof Events; // \"onClick\" | \"onFocus\" | \"onBlur\""
+    },
+    {
+      "title": "Index Access Types",
+      "code": "interface User {\n  id: number;\n  profile: {\n    name: string;\n    age: number;\n    address: {\n      street: string;\n      city: string;\n    };\n  };\n}\n\n// Access nested types\ntype UserId = User[\"id\"]; // number\ntype UserProfile = User[\"profile\"]; // { name: string; age: number; address: {...} }\ntype UserName = User[\"profile\"][\"name\"]; // string\ntype UserAddress = User[\"profile\"][\"address\"]; // { street: string; city: string }\n\n// Access all property types\ntype UserValues = User[keyof User]; // number | { name: string; age: number; ... }\n\n// Array element type\ntype Roles = [\"admin\", \"user\", \"guest\"];\ntype Role = Roles[number]; // \"admin\" | \"user\" | \"guest\"\n\nconst roleArray = [\"admin\", \"user\", \"guest\"] as const;\ntype RoleFromArray = typeof roleArray[number]; // \"admin\" | \"user\" | \"guest\""
+    }
+  ],
+  "tip": "These advanced patterns become essential as your codebase grows. Mapped types help transform types, conditional types add logic, and template literals create string type combinations."
+}

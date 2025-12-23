@@ -1,0 +1,211 @@
+{
+  "id": "lesson-advanced-patterns",
+  "title": "Advanced Type Patterns - Conditional, Mapped & Template Literal Types",
+  "description": "Master advanced TypeScript patterns including conditional types, mapped types, template literals, and the infer keyword",
+  "sections": [
+    {
+      "title": "What Are Advanced Type Patterns?",
+      "content": "Advanced type patterns are sophisticated type-level programming techniques that transform, manipulate, and derive new types from existing ones. They enable you to write highly generic, reusable code that adapts to any type.",
+      "analogy": "Think of basic types as LEGO bricks, and advanced patterns as the instruction manual for building complex structures. Just as you can create intricate LEGO models by following patterns, you can create sophisticated type systems using these advanced techniques!",
+      "whenToUse": [
+        "Building libraries and frameworks",
+        "Creating highly reusable generic functions",
+        "Deriving types from existing types",
+        "Type transformations (making all properties optional, readonly, etc.)",
+        "Working with complex API responses"
+      ]
+    },
+    {
+      "title": "Mapped Types",
+      "content": "Mapped types transform all properties of an existing type by applying a transformation rule. They iterate over properties and create new types.",
+      "syntax": "type MappedType<T> = { [K in keyof T]: Transformation };",
+      "breakdown": {
+        "[K in keyof T]": "Iterate over each property K in type T",
+        "keyof T": "Gets all property names of T",
+        "Transformation": "What to do with each property"
+      },
+      "examples": [
+        {
+          "title": "Make All Properties Optional",
+          "code": "type User = {\n  id: number;\n  name: string;\n  email: string;\n};\n\n// Built-in Partial<T> does this:\ntype Partial<T> = {\n  [K in keyof T]?: T[K];\n};\n\ntype PartialUser = Partial<User>;\n// Same as:\n// type PartialUser = {\n//   id?: number;\n//   name?: string;\n//   email?: string;\n// }",
+          "explanation": "The ? makes each property optional. Works with any type!"
+        },
+        {
+          "title": "Make All Properties Readonly",
+          "code": "type Readonly<T> = {\n  readonly [K in keyof T]: T[K];\n};\n\ntype ReadonlyUser = Readonly<User>;\n// Same as:\n// type ReadonlyUser = {\n//   readonly id: number;\n//   readonly name: string;\n//   readonly email: string;\n// }",
+          "explanation": "Add 'readonly' modifier to prevent mutations"
+        },
+        {
+          "title": "Pick Specific Properties",
+          "code": "type Pick<T, K extends keyof T> = {\n  [P in K]: T[P];\n};\n\ntype UserPreview = Pick<User, 'id' | 'name'>;\n// Same as:\n// type UserPreview = {\n//   id: number;\n//   name: string;\n// }",
+          "explanation": "Extract only the properties you need"
+        },
+        {
+          "title": "Omit Specific Properties",
+          "code": "type Omit<T, K extends keyof T> = {\n  [P in Exclude<keyof T, K>]: T[P];\n};\n\ntype UserWithoutEmail = Omit<User, 'email'>;\n// Same as:\n// type UserWithoutEmail = {\n//   id: number;\n//   name: string;\n// }",
+          "explanation": "Remove unwanted properties from a type"
+        },
+        {
+          "title": "Custom Transformations",
+          "code": "// Convert all properties to functions that return the property type\ntype Getters<T> = {\n  [K in keyof T as `get${Capitalize<string & K>}`]: () => T[K];\n};\n\ntype User = {\n  name: string;\n  age: number;\n};\n\ntype UserGetters = Getters<User>;\n// Same as:\n// type UserGetters = {\n//   getName: () => string;\n//   getAge: () => number;\n// }",
+          "explanation": "Transform property names AND types - very powerful!"
+        }
+      ]
+    },
+    {
+      "title": "Conditional Types",
+      "content": "Conditional types let types make decisions based on conditions, like if-else for types.",
+      "syntax": "T extends U ? X : Y",
+      "meaning": "If T is assignable to U, the type is X, otherwise Y",
+      "examples": [
+        {
+          "title": "Basic Conditional Type",
+          "code": "type IsString<T> = T extends string ? true : false;\n\ntype A = IsString<string>;    // true\ntype B = IsString<number>;    // false\ntype C = IsString<'hello'>;   // true",
+          "explanation": "Check if a type extends another type"
+        },
+        {
+          "title": "Extract Non-Nullable",
+          "code": "type NonNullable<T> = T extends null | undefined ? never : T;\n\ntype A = NonNullable<string | null>;       // string\ntype B = NonNullable<number | undefined>;  // number\ntype C = NonNullable<string | null | undefined>;  // string",
+          "explanation": "Filter out null and undefined from a union type"
+        },
+        {
+          "title": "Flatten Array Types",
+          "code": "type Flatten<T> = T extends Array<infer U> ? U : T;\n\ntype A = Flatten<string[]>;      // string\ntype B = Flatten<number[]>;      // number\ntype C = Flatten<string>;        // string (not an array)\ntype D = Flatten<Array<User>>;   // User",
+          "explanation": "Extract element type from arrays. 'infer U' captures the element type!"
+        },
+        {
+          "title": "Function Return Type",
+          "code": "type ReturnType<T> = T extends (...args: any[]) => infer R ? R : never;\n\nfunction getUser() {\n  return { id: 1, name: 'Alice' };\n}\n\ntype User = ReturnType<typeof getUser>;\n// Same as: { id: number; name: string; }",
+          "explanation": "Extract the return type of any function. 'infer R' captures the return type!"
+        },
+        {
+          "title": "Distributive Conditional Types",
+          "code": "type ToArray<T> = T extends any ? T[] : never;\n\ntype A = ToArray<string | number>;\n// string[] | number[] (not (string | number)[])\n\n// How it distributes:\n// ToArray<string> | ToArray<number>\n// string[] | number[]",
+          "explanation": "Conditional types distribute over unions automatically!"
+        }
+      ]
+    },
+    {
+      "title": "The infer Keyword",
+      "content": "The infer keyword lets you extract and capture types within conditional types. It's like a variable for types!",
+      "syntax": "T extends SomeType<infer U> ? U : never",
+      "meaning": "If T matches the pattern, extract the type and assign it to U",
+      "examples": [
+        {
+          "title": "Extract Function Parameters",
+          "code": "type Parameters<T> = T extends (...args: infer P) => any ? P : never;\n\nfunction greet(name: string, age: number) {\n  console.log(`Hello ${name}, you are ${age}`);\n}\n\ntype GreetParams = Parameters<typeof greet>;\n// [string, number]",
+          "explanation": "Capture function parameter types as a tuple"
+        },
+        {
+          "title": "Extract Promise Value",
+          "code": "type Awaited<T> = T extends Promise<infer U> ? U : T;\n\ntype A = Awaited<Promise<string>>;         // string\ntype B = Awaited<Promise<number>>;         // number\ntype C = Awaited<string>;                  // string\ntype D = Awaited<Promise<Promise<User>>>;  // Promise<User> (only unwraps once)",
+          "explanation": "Unwrap Promise types to get the resolved value type"
+        },
+        {
+          "title": "Deep Awaited (Recursive)",
+          "code": "type DeepAwaited<T> = T extends Promise<infer U>\n  ? DeepAwaited<U>\n  : T;\n\ntype A = DeepAwaited<Promise<Promise<Promise<string>>>>;\n// string (fully unwrapped!)",
+          "explanation": "Recursively unwrap nested Promises"
+        },
+        {
+          "title": "Extract First Array Element Type",
+          "code": "type FirstElement<T> = T extends [infer F, ...any[]] ? F : never;\n\ntype A = FirstElement<[string, number, boolean]>;  // string\ntype B = FirstElement<[User, string]>;             // User\ntype C = FirstElement<[]>;                         // never",
+          "explanation": "Pattern match on tuple types to extract specific elements"
+        }
+      ]
+    },
+    {
+      "title": "Template Literal Types",
+      "content": "Template literal types let you manipulate string literal types using template literal syntax. Build new string types from existing ones!",
+      "syntax": "type NewType = `${Type1}${Type2}`;",
+      "examples": [
+        {
+          "title": "Combine String Literals",
+          "code": "type Prefix = 'Mr' | 'Mrs' | 'Ms';\ntype Name = 'Alice' | 'Bob';\n\ntype Greeting = `${Prefix} ${Name}`;\n// 'Mr Alice' | 'Mr Bob' | 'Mrs Alice' | 'Mrs Bob' | 'Ms Alice' | 'Ms Bob'",
+          "explanation": "All combinations of string literals!"
+        },
+        {
+          "title": "Event Names",
+          "code": "type EventName = 'click' | 'focus' | 'blur';\ntype Handler = `on${Capitalize<EventName>}`;\n// 'onClick' | 'onFocus' | 'onBlur'",
+          "explanation": "Generate event handler names automatically"
+        },
+        {
+          "title": "CSS Properties",
+          "code": "type Size = 'small' | 'medium' | 'large';\ntype Color = 'red' | 'blue' | 'green';\n\ntype ClassName = `${Size}-${Color}`;\n// 'small-red' | 'small-blue' | 'small-green' | \n// 'medium-red' | 'medium-blue' | 'medium-green' |\n// 'large-red' | 'large-blue' | 'large-green'",
+          "explanation": "Generate all CSS class name combinations"
+        },
+        {
+          "title": "API Endpoints",
+          "code": "type Resource = 'user' | 'post' | 'comment';\ntype Action = 'get' | 'create' | 'update' | 'delete';\n\ntype Endpoint = `/${Resource}/${Action}`;\n// '/user/get' | '/user/create' | '/user/update' | ...",
+          "explanation": "Generate all possible API endpoint paths"
+        },
+        {
+          "title": "Intrinsic String Manipulation",
+          "code": "type Uppercase<S extends string> = intrinsic;\ntype Lowercase<S extends string> = intrinsic;\ntype Capitalize<S extends string> = intrinsic;\ntype Uncapitalize<S extends string> = intrinsic;\n\ntype A = Uppercase<'hello'>;      // 'HELLO'\ntype B = Lowercase<'WORLD'>;      // 'world'\ntype C = Capitalize<'alice'>;     // 'Alice'\ntype D = Uncapitalize<'Bob'>;     // 'bob'",
+          "explanation": "Built-in utilities for string manipulation"
+        }
+      ]
+    },
+    {
+      "title": "Combining Patterns - Real-World Example",
+      "content": "These patterns become powerful when combined. Let's build a type-safe API client!",
+      "example": {
+        "code": "// Define API routes\ntype Routes = {\n  'GET /users': { response: User[] };\n  'GET /users/:id': { params: { id: string }; response: User };\n  'POST /users': { body: { name: string; email: string }; response: User };\n  'DELETE /users/:id': { params: { id: string }; response: void };\n};\n\n// Extract HTTP method\ntype Method<T extends string> = T extends `${infer M} ${string}` ? M : never;\ntype Methods = Method<keyof Routes>;\n// 'GET' | 'POST' | 'DELETE'\n\n// Extract path\ntype Path<T extends string> = T extends `${string} ${infer P}` ? P : never;\ntype Paths = Path<keyof Routes>;\n// '/users' | '/users/:id'\n\n// Extract route details\ntype RouteDetails<T extends keyof Routes> = Routes[T];\n\n// Type-safe API client\nclass ApiClient {\n  async request<T extends keyof Routes>(\n    route: T,\n    options: RouteDetails<T> extends { params: infer P }\n      ? { params: P }\n      : RouteDetails<T> extends { body: infer B }\n      ? { body: B }\n      : {}\n  ): Promise<RouteDetails<T> extends { response: infer R } ? R : never> {\n    // Implementation...\n    throw new Error('Not implemented');\n  }\n}\n\nconst client = new ApiClient();\n\n// ✓ Type-safe!\nconst users = await client.request('GET /users', {});\nconst user = await client.request('GET /users/:id', { params: { id: '1' } });\nconst created = await client.request('POST /users', {\n  body: { name: 'Alice', email: 'alice@example.com' }\n});\n\n// ✗ Type errors!\nclient.request('GET /users', { params: { id: '1' } });  // Wrong options\nclient.request('POST /users', {});  // Missing body",
+        "explanation": "Combined mapped types, conditional types, template literals, and infer to create a fully type-safe API client!"
+      }
+    },
+    {
+      "title": "Recursive Types",
+      "content": "Types can reference themselves, enabling recursive data structures.",
+      "examples": [
+        {
+          "title": "Deep Partial",
+          "code": "type DeepPartial<T> = {\n  [K in keyof T]?: T[K] extends object ? DeepPartial<T[K]> : T[K];\n};\n\ntype User = {\n  name: string;\n  age: number;\n  address: {\n    street: string;\n    city: string;\n    coords: {\n      lat: number;\n      lng: number;\n    };\n  };\n};\n\ntype PartialUser = DeepPartial<User>;\n// All properties at all levels are optional",
+          "explanation": "Recursively make all nested properties optional"
+        },
+        {
+          "title": "Deep Readonly",
+          "code": "type DeepReadonly<T> = {\n  readonly [K in keyof T]: T[K] extends object\n    ? DeepReadonly<T[K]>\n    : T[K];\n};\n\ntype ReadonlyUser = DeepReadonly<User>;\n// All properties at all levels are readonly",
+          "explanation": "Recursively make all nested properties readonly"
+        },
+        {
+          "title": "JSON Type",
+          "code": "type JSONValue =\n  | string\n  | number\n  | boolean\n  | null\n  | JSONValue[]\n  | { [key: string]: JSONValue };\n\nconst data: JSONValue = {\n  name: 'Alice',\n  age: 30,\n  hobbies: ['reading', 'coding'],\n  address: {\n    city: 'New York',\n    coords: [40.7128, -74.0060]\n  }\n};",
+          "explanation": "Type representing any valid JSON structure"
+        }
+      ]
+    },
+    {
+      "title": "Best Practices",
+      "content": "Expert guidelines for using advanced patterns:",
+      "practices": [
+        {
+          "practice": "Start simple, add complexity only when needed",
+          "bad": "type ComplexType<T extends Record<string, any>> = {\n  [K in keyof T as T[K] extends Function ? never : K]: T[K] extends object ? DeepReadonly<T[K]> : T[K];\n};",
+          "good": "// Start with:\ntype Simple<T> = { readonly [K in keyof T]: T[K] };\n\n// Add features incrementally:\ntype Improved<T> = {\n  readonly [K in keyof T]: T[K] extends object ? DeepReadonly<T[K]> : T[K];\n};",
+          "why": "Complex types are hard to understand and debug. Build them incrementally."
+        },
+        {
+          "practice": "Name intermediate types for clarity",
+          "bad": "type Result<T> = T extends Promise<infer U> ? U extends Array<infer V> ? V : U : T;",
+          "good": "type Awaited<T> = T extends Promise<infer U> ? U : T;\ntype Unarray<T> = T extends Array<infer U> ? U : T;\ntype Result<T> = Unarray<Awaited<T>>;",
+          "why": "Named types are easier to understand and reuse"
+        },
+        {
+          "practice": "Use built-in utility types when possible",
+          "code": "// Use these instead of reinventing:\nPartial<T>      // Make all properties optional\nRequired<T>     // Make all properties required\nReadonly<T>     // Make all properties readonly\nPick<T, K>      // Select specific properties\nOmit<T, K>      // Remove specific properties\nRecord<K, T>    // Create object type with keys K and values T\nReturnType<T>   // Extract function return type\nParameters<T>   // Extract function parameter types",
+          "why": "Built-in types are well-tested and widely understood"
+        },
+        {
+          "practice": "Document complex types",
+          "code": "/**\n * Recursively makes all properties and nested properties optional.\n * Useful for partial updates where any subset of fields can be provided.\n * \n * @example\n * type User = { name: string; address: { city: string } };\n * type PartialUser = DeepPartial<User>;\n * // { name?: string; address?: { city?: string } }\n */\ntype DeepPartial<T> = {\n  [K in keyof T]?: T[K] extends object ? DeepPartial<T[K]> : T[K];\n};",
+          "why": "Future you (and your team) will thank you"
+        },
+        {
+          "practice": "Test your types with examples",
+          "code": "type Flatten<T> = T extends Array<infer U> ? U : T;\n\n// Test cases\ntype Test1 = Flatten<string[]>;    // Should be: string ✓\ntype Test2 = Flatten<number>;      // Should be: number ✓\ntype Test3 = Flatten<User[]>;      // Should be: User ✓",
+          "why": "Type-level unit tests ensure your types work correctly"
+        }
+      ]
+    }
+  ]
+}

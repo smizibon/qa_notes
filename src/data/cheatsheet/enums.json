@@ -1,0 +1,20 @@
+{
+  "id": "enums",
+  "title": "Enums",
+  "explanation": "Enums allow you to define a set of named constants, making code more readable and less error-prone.",
+  "codeBlocks": [
+    {
+      "title": "Numeric Enums",
+      "code": "// Numeric enum (default starts at 0)\nenum Direction {\n  Up,    // 0\n  Down,  // 1\n  Left,  // 2\n  Right  // 3\n}\n\nlet move: Direction = Direction.Up;\nconsole.log(move); // 0\n\n// Custom starting value\nenum Status {\n  Pending = 1,\n  Approved,  // 2\n  Rejected   // 3\n}\n\n// Custom values\nenum HttpStatus {\n  OK = 200,\n  NotFound = 404,\n  ServerError = 500\n}\n\nfunction handleStatus(status: HttpStatus): void {\n  if (status === HttpStatus.OK) {\n    console.log(\"Success!\");\n  }\n}"
+    },
+    {
+      "title": "String Enums",
+      "code": "// String enum (recommended for most cases)\nenum Color {\n  Red = \"RED\",\n  Green = \"GREEN\",\n  Blue = \"BLUE\"\n}\n\nlet favorite: Color = Color.Red;\nconsole.log(favorite); // \"RED\"\n\n// More readable in logs and debugging\nenum LogLevel {\n  Error = \"ERROR\",\n  Warning = \"WARNING\",\n  Info = \"INFO\",\n  Debug = \"DEBUG\"\n}\n\nfunction log(level: LogLevel, message: string): void {\n  console.log(`[${level}] ${message}`);\n}\n\nlog(LogLevel.Error, \"Something went wrong\"); // [ERROR] Something went wrong"
+    },
+    {
+      "title": "Const Enums",
+      "code": "// Const enum - removed during compilation for performance\nconst enum Size {\n  Small = \"SMALL\",\n  Medium = \"MEDIUM\",\n  Large = \"LARGE\"\n}\n\nlet shirtSize: Size = Size.Medium;\n\n// Regular enums vs const enums:\n// Regular: generates JavaScript object\n// Const: inlines values directly (no runtime object)"
+    }
+  ],
+  "tip": "Prefer string enums over numeric enums for better debugging. The values are more meaningful in logs and error messages."
+}

@@ -1,0 +1,24 @@
+{
+  "id": "functions",
+  "title": "Functions",
+  "explanation": "Functions in TypeScript can have typed parameters and return types. This prevents bugs and improves code documentation.",
+  "codeBlocks": [
+    {
+      "title": "Function Basics",
+      "code": "// Named function with types\nfunction greet(name: string): string {\n  return `Hello, ${name}!`;\n}\n\n// Arrow function\nconst add = (a: number, b: number): number => {\n  return a + b;\n};\n\n// Shorter arrow function (implicit return)\nconst multiply = (a: number, b: number): number => a * b;\n\n// Void return type (no return value)\nfunction logError(message: string): void {\n  console.error(message);\n}\n\n// Function expressions\nconst divide: (a: number, b: number) => number = function(a, b) {\n  return a / b;\n};"
+    },
+    {
+      "title": "Optional & Default Parameters",
+      "code": "// Optional parameters (use ?)\nfunction greet(name: string, age?: number): string {\n  if (age !== undefined) {\n    return `Hello, ${name}. You are ${age} years old.`;\n  }\n  return `Hello, ${name}!`;\n}\n\ngreet(\"Alice\"); // ✓ OK\ngreet(\"Bob\", 30); // ✓ OK\n\n// Default parameters\nfunction createUser(name: string, role: string = \"user\"): void {\n  console.log(`${name} is a ${role}`);\n}\n\ncreateUser(\"Alice\"); // role defaults to \"user\"\ncreateUser(\"Bob\", \"admin\"); // role is \"admin\"\n\n// Optional must come after required\n// function bad(age?: number, name: string) {} // ✗ Error!"
+    },
+    {
+      "title": "Rest Parameters",
+      "code": "// Rest parameters - collect multiple arguments into array\nfunction sum(...numbers: number[]): number {\n  return numbers.reduce((total, n) => total + n, 0);\n}\n\nconsole.log(sum(1, 2, 3)); // 6\nconsole.log(sum(1, 2, 3, 4, 5)); // 15\n\n// Mixing regular and rest parameters\nfunction announce(message: string, ...names: string[]): void {\n  console.log(`${message}: ${names.join(\", \")}`);\n}\n\nannounce(\"Winners\", \"Alice\", \"Bob\", \"Charlie\");\n// Output: \"Winners: Alice, Bob, Charlie\""
+    },
+    {
+      "title": "Function Overloads",
+      "code": "// Function overloads - same function, different signatures\nfunction format(value: string): string;\nfunction format(value: number): string;\nfunction format(value: boolean): string;\n\n// Implementation (must handle all cases)\nfunction format(value: string | number | boolean): string {\n  if (typeof value === \"string\") {\n    return value.toUpperCase();\n  } else if (typeof value === \"number\") {\n    return value.toFixed(2);\n  } else {\n    return value ? \"YES\" : \"NO\";\n  }\n}\n\nconsole.log(format(\"hello\")); // \"HELLO\"\nconsole.log(format(42)); // \"42.00\"\nconsole.log(format(true)); // \"YES\""
+    }
+  ],
+  "tip": "Always type your function parameters. Return types can often be inferred, but being explicit helps with documentation and catches errors."
+}

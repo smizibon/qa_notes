@@ -1,0 +1,340 @@
+{
+  "id": "lesson-tsconfig",
+  "title": "TSConfig - Configuring TypeScript Compiler",
+  "description": "Master tsconfig.json to control how TypeScript compiles your code with compiler options, strict mode, and project settings",
+  "sections": [
+    {
+      "title": "What is tsconfig.json?",
+      "content": "The tsconfig.json file is the configuration file for the TypeScript compiler. It specifies compiler options, which files to include/exclude, and how to compile your TypeScript project. Think of it as the control panel for TypeScript!",
+      "analogy": "Imagine you're setting up a coffee machine. The tsconfig.json is like all the settings - strength, temperature, cup size. Different settings produce different results from the same beans (code). You configure once, and TypeScript remembers your preferences!",
+      "location": "Place tsconfig.json in the root of your project directory",
+      "basicStructure": {
+        "code": "{\n  \"compilerOptions\": {\n    // How to compile\n  },\n  \"include\": [\n    // Which files to compile\n  ],\n  \"exclude\": [\n    // Which files to ignore\n  ]\n}",
+        "sections": {
+          "compilerOptions": "Compiler behavior and output settings",
+          "include": "File patterns to include in compilation",
+          "exclude": "File patterns to exclude from compilation"
+        }
+      }
+    },
+    {
+      "title": "Essential Compiler Options",
+      "content": "The most important settings you'll configure regularly.",
+      "options": [
+        {
+          "name": "target",
+          "description": "ECMAScript version for the output JavaScript",
+          "values": ["ES3", "ES5", "ES6/ES2015", "ES2016", "ES2017", "ES2018", "ES2019", "ES2020", "ES2021", "ES2022", "ESNext"],
+          "example": {
+            "code": "{\n  \"compilerOptions\": {\n    \"target\": \"ES2020\"\n  }\n}",
+            "explanation": "Compiles to ES2020 JavaScript. Use ES2020+ for modern browsers, ES5 for older browser support."
+          },
+          "recommendation": "ES2020 or newer for modern projects, ES5 for legacy support"
+        },
+        {
+          "name": "module",
+          "description": "Module system for output code",
+          "values": ["commonjs", "amd", "umd", "system", "es6/es2015", "es2020", "esnext", "node16", "nodenext"],
+          "example": {
+            "code": "{\n  \"compilerOptions\": {\n    \"module\": \"esnext\"\n  }\n}",
+            "explanation": "Use 'esnext' for modern ESM, 'commonjs' for Node.js (pre-16), 'node16' for modern Node.js"
+          },
+          "recommendation": "esnext for frontend, node16 for Node.js 16+, commonjs for older Node"
+        },
+        {
+          "name": "lib",
+          "description": "Include type definitions for built-in APIs",
+          "values": ["ES5", "ES6", "ES2015", "ES2016", "ES2017", "ES2018", "ES2019", "ES2020", "ESNext", "DOM", "WebWorker", "ScriptHost"],
+          "example": {
+            "code": "{\n  \"compilerOptions\": {\n    \"lib\": [\"ES2020\", \"DOM\", \"DOM.Iterable\"]\n  }\n}",
+            "explanation": "Enables ES2020 features + DOM APIs (document, window) + iterable DOM collections"
+          },
+          "recommendation": "Match your target runtime (DOM for browsers, ES2020 for modern features)"
+        },
+        {
+          "name": "outDir",
+          "description": "Output directory for compiled JavaScript",
+          "example": {
+            "code": "{\n  \"compilerOptions\": {\n    \"outDir\": \"./dist\"\n  }\n}",
+            "explanation": "All compiled .js files go into the 'dist' folder"
+          },
+          "recommendation": "./dist or ./build for organized output"
+        },
+        {
+          "name": "rootDir",
+          "description": "Root directory of source files",
+          "example": {
+            "code": "{\n  \"compilerOptions\": {\n    \"rootDir\": \"./src\",\n    \"outDir\": \"./dist\"\n  }\n}",
+            "explanation": "TypeScript preserves the folder structure from src/ to dist/"
+          },
+          "recommendation": "./src if all source code is in a src folder"
+        }
+      ]
+    },
+    {
+      "title": "Strict Mode - Type Safety Settings",
+      "content": "Strict mode options enforce stricter type checking, catching more errors at compile time.",
+      "strictOption": {
+        "name": "strict",
+        "description": "Enable ALL strict type checking options at once",
+        "code": "{\n  \"compilerOptions\": {\n    \"strict\": true  // Enables all strict options below!\n  }\n}",
+        "recommendation": "Always use strict: true for new projects!",
+        "enables": [
+          "strictNullChecks",
+          "strictFunctionTypes",
+          "strictBindCallApply",
+          "strictPropertyInitialization",
+          "noImplicitAny",
+          "noImplicitThis",
+          "alwaysStrict"
+        ]
+      },
+      "individualOptions": [
+        {
+          "name": "strictNullChecks",
+          "description": "null and undefined are not assignable to other types",
+          "without": {
+            "code": "let name: string = null;  // ✓ OK (bad!)\nfunction greet(name: string) {\n  console.log(name.toUpperCase());  // Runtime error if name is null!\n}",
+            "issue": "Null reference errors are common and hard to debug"
+          },
+          "with": {
+            "code": "let name: string = null;  // ✗ Error! Type 'null' is not assignable to type 'string'\nlet name: string | null = null;  // ✓ OK, explicit nullable type\n\nfunction greet(name: string | null) {\n  if (name) {\n    console.log(name.toUpperCase());  // Safe!\n  }\n}",
+            "benefit": "Forces you to handle null/undefined explicitly"
+          }
+        },
+        {
+          "name": "noImplicitAny",
+          "description": "Error on variables with inferred 'any' type",
+          "without": {
+            "code": "function add(a, b) {  // a and b are implicitly 'any'\n  return a + b;  // Could be adding anything!\n}\nadd('hello', 5);  // ✓ OK but wrong!",
+            "issue": "Bypasses type checking completely"
+          },
+          "with": {
+            "code": "function add(a, b) {  // ✗ Error! Parameter 'a' implicitly has an 'any' type\n  return a + b;\n}\n\n// Fix: Add explicit types\nfunction add(a: number, b: number): number {\n  return a + b;\n}",
+            "benefit": "Ensures all code is properly typed"
+          }
+        },
+        {
+          "name": "strictFunctionTypes",
+          "description": "Enable strict checking of function types",
+          "example": {
+            "code": "type Handler = (value: string | number) => void;\nconst handler: Handler = (value: string) => {  // ✗ Error with strictFunctionTypes\n  console.log(value.toUpperCase());\n};\n// Prevents functions from accepting fewer parameter types than declared",
+            "benefit": "Catches function type mismatches"
+          }
+        },
+        {
+          "name": "strictPropertyInitialization",
+          "description": "Class properties must be initialized",
+          "without": {
+            "code": "class User {\n  name: string;  // ✓ OK but undefined at runtime!\n  \n  constructor() {\n    // Forgot to initialize name\n  }\n}",
+            "issue": "Properties can be undefined when they shouldn't be"
+          },
+          "with": {
+            "code": "class User {\n  name: string;  // ✗ Error! Property 'name' has no initializer\n}\n\n// Fix: Initialize in declaration or constructor\nclass User {\n  name: string = '';  // ✓ OK\n  // OR\n  name!: string;  // ✓ OK with definite assignment assertion\n  // OR\n  constructor(name: string) {\n    this.name = name;  // ✓ OK\n  }\n}",
+            "benefit": "Prevents undefined property access"
+          }
+        }
+      ]
+    },
+    {
+      "title": "Module Resolution",
+      "content": "Controls how TypeScript finds and imports modules.",
+      "options": [
+        {
+          "name": "moduleResolution",
+          "description": "Strategy for resolving module imports",
+          "values": ["node", "node16", "nodenext", "classic"],
+          "example": {
+            "code": "{\n  \"compilerOptions\": {\n    \"moduleResolution\": \"node16\"\n  }\n}",
+            "explanation": "Use 'node16' for Node.js 16+, 'node' for older Node.js, bundlers usually handle this"
+          }
+        },
+        {
+          "name": "baseUrl",
+          "description": "Base directory for non-relative module imports",
+          "example": {
+            "code": "{\n  \"compilerOptions\": {\n    \"baseUrl\": \"./src\"\n  }\n}\n\n// Now you can import:\nimport { User } from 'models/User';  // Instead of '../../../models/User'",
+            "benefit": "Cleaner imports, less '../../../' spaghetti"
+          }
+        },
+        {
+          "name": "paths",
+          "description": "Path mapping for module imports (aliases)",
+          "example": {
+            "code": "{\n  \"compilerOptions\": {\n    \"baseUrl\": \"./\",\n    \"paths\": {\n      \"@/*\": [\"src/*\"],\n      \"@components/*\": [\"src/components/*\"],\n      \"@utils/*\": [\"src/utils/*\"]\n    }\n  }\n}\n\n// Use aliases:\nimport { Button } from '@components/Button';\nimport { formatDate } from '@utils/date';",
+            "benefit": "Clean, consistent import paths throughout your project"
+          }
+        },
+        {
+          "name": "resolveJsonModule",
+          "description": "Allow importing .json files",
+          "example": {
+            "code": "{\n  \"compilerOptions\": {\n    \"resolveJsonModule\": true\n  }\n}\n\n// Now you can:\nimport package from './package.json';\nconsole.log(package.version);",
+            "benefit": "Import JSON configuration files with type safety"
+          }
+        },
+        {
+          "name": "esModuleInterop",
+          "description": "Enable interoperability between CommonJS and ES Modules",
+          "example": {
+            "code": "{\n  \"compilerOptions\": {\n    \"esModuleInterop\": true\n  }\n}\n\n// Allows default imports from CommonJS modules:\nimport express from 'express';  // Instead of: import * as express from 'express';",
+            "recommendation": "Always enable for better compatibility"
+          }
+        }
+      ]
+    },
+    {
+      "title": "Source Maps and Debugging",
+      "content": "Options for debugging TypeScript code in browsers and editors.",
+      "options": [
+        {
+          "name": "sourceMap",
+          "description": "Generate .map files for debugging",
+          "code": "{\n  \"compilerOptions\": {\n    \"sourceMap\": true\n  }\n}",
+          "benefit": "Debug TypeScript code directly in browser DevTools instead of compiled JavaScript"
+        },
+        {
+          "name": "inlineSourceMap",
+          "description": "Embed source maps in JavaScript files",
+          "code": "{\n  \"compilerOptions\": {\n    \"inlineSourceMap\": true\n  }\n}",
+          "benefit": "Single file output, useful for bundlers"
+        },
+        {
+          "name": "declaration",
+          "description": "Generate .d.ts declaration files",
+          "code": "{\n  \"compilerOptions\": {\n    \"declaration\": true,\n    \"declarationMap\": true  // Optional: source maps for .d.ts files\n  }\n}",
+          "benefit": "Required for publishing TypeScript libraries"
+        }
+      ]
+    },
+    {
+      "title": "Additional Helpful Options",
+      "content": "Other useful compiler options for better development experience.",
+      "options": [
+        {
+          "name": "skipLibCheck",
+          "description": "Skip type checking of declaration files (.d.ts)",
+          "code": "{\n  \"compilerOptions\": {\n    \"skipLibCheck\": true\n  }\n}",
+          "why": "Speeds up compilation, especially with large node_modules. Recommended!",
+          "recommendation": "Enable for faster builds"
+        },
+        {
+          "name": "forceConsistentCasingInFileNames",
+          "description": "Ensure file name casing is consistent",
+          "code": "{\n  \"compilerOptions\": {\n    \"forceConsistentCasingInFileNames\": true\n  }\n}",
+          "why": "Prevents issues when deploying to case-sensitive file systems (Linux)",
+          "recommendation": "Always enable"
+        },
+        {
+          "name": "noEmitOnError",
+          "description": "Don't generate JavaScript if there are type errors",
+          "code": "{\n  \"compilerOptions\": {\n    \"noEmitOnError\": true\n  }\n}",
+          "why": "Prevents deploying broken code",
+          "recommendation": "Enable for production builds"
+        },
+        {
+          "name": "removeComments",
+          "description": "Remove comments from output JavaScript",
+          "code": "{\n  \"compilerOptions\": {\n    \"removeComments\": true\n  }\n}",
+          "why": "Smaller output files",
+          "recommendation": "Enable for production"
+        },
+        {
+          "name": "importHelpers",
+          "description": "Import helper functions from tslib instead of inlining",
+          "code": "{\n  \"compilerOptions\": {\n    \"importHelpers\": true\n  }\n}\n\n// Install: npm install tslib",
+          "why": "Reduces output size when using async/await or other features that need helpers",
+          "recommendation": "Enable for libraries and large projects"
+        }
+      ]
+    },
+    {
+      "title": "Include and Exclude",
+      "content": "Control which files TypeScript compiles.",
+      "options": [
+        {
+          "name": "include",
+          "description": "File patterns to include",
+          "example": {
+            "code": "{\n  \"include\": [\n    \"src/**/*\",           // All files in src/\n    \"tests/**/*\"          // All files in tests/\n  ]\n}",
+            "explanation": "** matches any directory, * matches any file"
+          }
+        },
+        {
+          "name": "exclude",
+          "description": "File patterns to exclude",
+          "example": {
+            "code": "{\n  \"exclude\": [\n    \"node_modules\",       // Dependencies (default)\n    \"dist\",               // Output directory\n    \"**/*.spec.ts\",       // Test files\n    \"**/*.test.ts\"\n  ]\n}",
+            "explanation": "Exclude compiled output, dependencies, and test files from compilation"
+          }
+        },
+        {
+          "name": "files",
+          "description": "Explicit list of files to include",
+          "example": {
+            "code": "{\n  \"files\": [\n    \"src/index.ts\",\n    \"src/types.ts\"\n  ]\n}",
+            "explanation": "Use for very small projects or when you want explicit control"
+          }
+        }
+      ],
+      "defaults": "If neither 'include' nor 'files' is specified, TypeScript includes all .ts files, excluding node_modules"
+    },
+    {
+      "title": "Complete Real-World tsconfig.json Examples",
+      "content": "Production-ready configurations for different project types.",
+      "examples": [
+        {
+          "title": "React Application (Create React App style)",
+          "code": "{\n  \"compilerOptions\": {\n    \"target\": \"ES2020\",\n    \"lib\": [\"ES2020\", \"DOM\", \"DOM.Iterable\"],\n    \"jsx\": \"react-jsx\",\n    \"module\": \"esnext\",\n    \"moduleResolution\": \"node\",\n    \n    \"strict\": true,\n    \"esModuleInterop\": true,\n    \"skipLibCheck\": true,\n    \"forceConsistentCasingInFileNames\": true,\n    \n    \"resolveJsonModule\": true,\n    \"isolatedModules\": true,\n    \"noEmit\": true,\n    \n    \"baseUrl\": \"src\"\n  },\n  \"include\": [\"src\"]\n}",
+          "explanation": "Modern React with strict type checking, no emit (bundler handles compilation)"
+        },
+        {
+          "title": "Node.js Backend (Modern)",
+          "code": "{\n  \"compilerOptions\": {\n    \"target\": \"ES2022\",\n    \"lib\": [\"ES2022\"],\n    \"module\": \"node16\",\n    \"moduleResolution\": \"node16\",\n    \n    \"strict\": true,\n    \"esModuleInterop\": true,\n    \"skipLibCheck\": true,\n    \"forceConsistentCasingInFileNames\": true,\n    \n    \"outDir\": \"./dist\",\n    \"rootDir\": \"./src\",\n    \"sourceMap\": true,\n    \n    \"resolveJsonModule\": true\n  },\n  \"include\": [\"src/**/*\"],\n  \"exclude\": [\"node_modules\", \"dist\"]\n}",
+          "explanation": "Node.js 16+ with ES modules, strict checking, source maps for debugging"
+        },
+        {
+          "title": "Library/Package",
+          "code": "{\n  \"compilerOptions\": {\n    \"target\": \"ES2018\",\n    \"lib\": [\"ES2018\"],\n    \"module\": \"esnext\",\n    \"moduleResolution\": \"node\",\n    \n    \"strict\": true,\n    \"esModuleInterop\": true,\n    \"skipLibCheck\": true,\n    \"forceConsistentCasingInFileNames\": true,\n    \n    \"declaration\": true,\n    \"declarationMap\": true,\n    \"sourceMap\": true,\n    \n    \"outDir\": \"./dist\",\n    \"rootDir\": \"./src\",\n    \n    \"removeComments\": true,\n    \"importHelpers\": true\n  },\n  \"include\": [\"src/**/*\"],\n  \"exclude\": [\"node_modules\", \"dist\", \"**/*.test.ts\"]\n}",
+          "explanation": "Library configuration with type declarations, optimized output, excluding tests"
+        }
+      ]
+    },
+    {
+      "title": "Best Practices",
+      "content": "Expert tips for tsconfig.json configuration.",
+      "practices": [
+        {
+          "practice": "Always use strict: true for new projects",
+          "code": "{\n  \"compilerOptions\": {\n    \"strict\": true\n  }\n}",
+          "why": "Catches more bugs at compile time, enforces better coding practices"
+        },
+        {
+          "practice": "Enable skipLibCheck for faster builds",
+          "code": "{\n  \"compilerOptions\": {\n    \"skipLibCheck\": true\n  }\n}",
+          "why": "Significantly speeds up compilation, especially with large dependencies"
+        },
+        {
+          "practice": "Use path aliases for cleaner imports",
+          "code": "{\n  \"compilerOptions\": {\n    \"baseUrl\": \"./\",\n    \"paths\": {\n      \"@/*\": [\"src/*\"]\n    }\n  }\n}",
+          "why": "Makes imports cleaner and more maintainable"
+        },
+        {
+          "practice": "Match target to your runtime environment",
+          "frontend": "ES2020+ for modern browsers",
+          "node": "ES2022 for Node.js 18+, ES2020 for Node.js 14+",
+          "legacy": "ES5 for IE11 support",
+          "why": "Balances modern features with compatibility"
+        },
+        {
+          "practice": "Use separate tsconfig for different environments",
+          "structure": "tsconfig.json - Base configuration\ntsconfig.app.json - Application code\ntsconfig.test.json - Test files\ntsconfig.build.json - Production build",
+          "example": {
+            "code": "// tsconfig.build.json\n{\n  \"extends\": \"./tsconfig.json\",\n  \"compilerOptions\": {\n    \"removeComments\": true,\n    \"noEmitOnError\": true\n  },\n  \"exclude\": [\"**/*.test.ts\", \"**/*.spec.ts\"]\n}",
+            "benefit": "Different settings for development, testing, and production"
+          }
+        }
+      ]
+    }
+  ]
+}

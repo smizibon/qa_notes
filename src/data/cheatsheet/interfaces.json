@@ -1,0 +1,28 @@
+{
+  "id": "interfaces",
+  "title": "Objects & Interfaces",
+  "explanation": "Interfaces define the structure of objects. They're like contracts that objects must follow.",
+  "codeBlocks": [
+    {
+      "title": "Basic Interface",
+      "code": "// Define an interface\ninterface User {\n  name: string;\n  age: number;\n  email: string;\n}\n\n// Create an object following the interface\nconst user: User = {\n  name: \"Alice\",\n  age: 30,\n  email: \"alice@example.com\"\n};\n\n// Missing properties cause errors\n// const badUser: User = { name: \"Bob\" }; // ✗ Error: missing age and email\n\n// Extra properties also cause errors\n// const badUser2: User = { \n//   name: \"Bob\", \n//   age: 25, \n//   email: \"bob@example.com\",\n//   phone: \"123\" // ✗ Error: phone doesn't exist in User\n// };"
+    },
+    {
+      "title": "Optional & Readonly Properties",
+      "code": "interface Product {\n  id: number;           // required\n  name: string;         // required\n  description?: string; // optional (may be undefined)\n  readonly price: number; // cannot be changed after creation\n}\n\nconst laptop: Product = {\n  id: 1,\n  name: \"MacBook Pro\",\n  price: 1999\n  // description is optional, so we can omit it\n};\n\n// laptop.price = 1500; // ✗ Error: Cannot assign to 'price' because it is read-only\nlaptop.description = \"Powerful laptop\"; // ✓ OK\n\n// Checking optional properties\nif (laptop.description) {\n  console.log(laptop.description.toUpperCase());\n}"
+    },
+    {
+      "title": "Method Signatures",
+      "code": "interface Calculator {\n  // Method syntax 1\n  add(a: number, b: number): number;\n  \n  // Method syntax 2 (property with function type)\n  subtract: (a: number, b: number) => number;\n}\n\nconst calc: Calculator = {\n  add(a, b) {\n    return a + b;\n  },\n  subtract: (a, b) => a - b\n};\n\nconsole.log(calc.add(5, 3)); // 8\nconsole.log(calc.subtract(10, 4)); // 6"
+    },
+    {
+      "title": "Extending Interfaces",
+      "code": "// Base interface\ninterface Person {\n  name: string;\n  age: number;\n}\n\n// Extended interface (inherits from Person)\ninterface Employee extends Person {\n  employeeId: number;\n  department: string;\n}\n\nconst employee: Employee = {\n  name: \"Alice\",\n  age: 30,\n  employeeId: 12345,\n  department: \"Engineering\"\n};\n\n// Multiple inheritance\ninterface ContactInfo {\n  email: string;\n  phone: string;\n}\n\ninterface FullEmployee extends Person, ContactInfo {\n  employeeId: number;\n}\n\nconst fullEmployee: FullEmployee = {\n  name: \"Bob\",\n  age: 28,\n  email: \"bob@company.com\",\n  phone: \"555-1234\",\n  employeeId: 67890\n};"
+    },
+    {
+      "title": "Index Signatures",
+      "code": "// Index signature - for objects with dynamic keys\ninterface StringDictionary {\n  [key: string]: string;\n}\n\nconst colors: StringDictionary = {\n  red: \"#FF0000\",\n  green: \"#00FF00\",\n  blue: \"#0000FF\"\n};\n\n// Can add any string key\ncolors.yellow = \"#FFFF00\";\n\n// Mixing index signature with known properties\ninterface UserDatabase {\n  admin: string; // specific known property\n  [username: string]: string; // other usernames\n}\n\nconst users: UserDatabase = {\n  admin: \"Alice\",\n  bob: \"Bob Smith\",\n  charlie: \"Charlie Brown\"\n};"
+    }
+  ],
+  "tip": "Use interfaces for object shapes. They're great for defining data structures and can be extended or implemented by classes."
+}

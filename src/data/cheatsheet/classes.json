@@ -1,0 +1,32 @@
+{
+  "id": "classes",
+  "title": "Classes",
+  "explanation": "Classes in TypeScript add type annotations and access modifiers to JavaScript classes.",
+  "codeBlocks": [
+    {
+      "title": "Basic Class",
+      "code": "class Person {\n  // Properties\n  name: string;\n  age: number;\n\n  // Constructor\n  constructor(name: string, age: number) {\n    this.name = name;\n    this.age = age;\n  }\n\n  // Method\n  greet(): string {\n    return `Hello, I'm ${this.name} and I'm ${this.age} years old.`;\n  }\n}\n\nconst person = new Person(\"Alice\", 30);\nconsole.log(person.greet());"
+    },
+    {
+      "title": "Access Modifiers",
+      "code": "class BankAccount {\n  public accountNumber: string;    // accessible everywhere\n  private balance: number;          // only inside this class\n  protected owner: string;          // this class and subclasses\n\n  constructor(accountNumber: string, owner: string, initialBalance: number) {\n    this.accountNumber = accountNumber;\n    this.owner = owner;\n    this.balance = initialBalance;\n  }\n\n  // Public method\n  public getBalance(): number {\n    return this.balance;\n  }\n\n  // Private method\n  private calculateInterest(): number {\n    return this.balance * 0.05;\n  }\n\n  // Protected method\n  protected logTransaction(amount: number): void {\n    console.log(`Transaction: ${amount}`);\n  }\n\n  public deposit(amount: number): void {\n    this.balance += amount;\n    this.logTransaction(amount);\n  }\n}\n\nconst account = new BankAccount(\"123456\", \"Alice\", 1000);\nconsole.log(account.accountNumber); // ✓ OK (public)\n// console.log(account.balance); // ✗ Error (private)\n// console.log(account.owner); // ✗ Error (protected)"
+    },
+    {
+      "title": "Readonly & Static",
+      "code": "class User {\n  readonly id: number; // can only be set in constructor\n  static userCount: number = 0; // shared across all instances\n\n  constructor(public name: string) {\n    this.id = Date.now();\n    User.userCount++;\n  }\n\n  // Static method\n  static getUserCount(): number {\n    return User.userCount;\n  }\n}\n\nconst user1 = new User(\"Alice\");\nconst user2 = new User(\"Bob\");\n\n// user1.id = 999; // ✗ Error: Cannot assign to 'id' because it is read-only\nconsole.log(User.getUserCount()); // 2"
+    },
+    {
+      "title": "Inheritance",
+      "code": "class Animal {\n  constructor(public name: string) {}\n\n  makeSound(): string {\n    return \"Some generic sound\";\n  }\n}\n\nclass Dog extends Animal {\n  constructor(name: string, public breed: string) {\n    super(name); // call parent constructor\n  }\n\n  // Override parent method\n  makeSound(): string {\n    return \"Woof! Woof!\";\n  }\n\n  // New method specific to Dog\n  fetch(): string {\n    return `${this.name} is fetching the ball`;\n  }\n}\n\nconst dog = new Dog(\"Buddy\", \"Golden Retriever\");\nconsole.log(dog.makeSound()); // \"Woof! Woof!\"\nconsole.log(dog.fetch()); // \"Buddy is fetching the ball\""
+    },
+    {
+      "title": "Abstract Classes",
+      "code": "// Abstract class - cannot be instantiated directly\nabstract class Shape {\n  constructor(public color: string) {}\n\n  // Abstract method - must be implemented by subclasses\n  abstract calculateArea(): number;\n\n  // Concrete method - inherited by subclasses\n  describe(): string {\n    return `A ${this.color} shape with area ${this.calculateArea()}`;\n  }\n}\n\nclass Circle extends Shape {\n  constructor(color: string, public radius: number) {\n    super(color);\n  }\n\n  calculateArea(): number {\n    return Math.PI * this.radius ** 2;\n  }\n}\n\nclass Rectangle extends Shape {\n  constructor(color: string, public width: number, public height: number) {\n    super(color);\n  }\n\n  calculateArea(): number {\n    return this.width * this.height;\n  }\n}\n\n// const shape = new Shape(\"red\"); // ✗ Error: Cannot create instance of abstract class\nconst circle = new Circle(\"red\", 5);\nconst rect = new Rectangle(\"blue\", 10, 5);\n\nconsole.log(circle.describe());\nconsole.log(rect.describe());"
+    },
+    {
+      "title": "Implementing Interfaces",
+      "code": "interface Printable {\n  print(): void;\n}\n\ninterface Saveable {\n  save(): void;\n}\n\n// Class can implement multiple interfaces\nclass Document implements Printable, Saveable {\n  constructor(public content: string) {}\n\n  print(): void {\n    console.log(`Printing: ${this.content}`);\n  }\n\n  save(): void {\n    console.log(`Saving: ${this.content}`);\n  }\n}\n\nconst doc = new Document(\"Hello World\");\ndoc.print();\ndoc.save();"
+    }
+  ],
+  "tip": "Use 'private' for internal implementation details, 'protected' for things subclasses need, and 'public' for the class's API."
+}

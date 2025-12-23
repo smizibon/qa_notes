@@ -1,0 +1,24 @@
+{
+  "id": "type-aliases",
+  "title": "Type Aliases",
+  "explanation": "Type aliases create a new name for a type. They're more flexible than interfaces but can't be extended the same way.",
+  "codeBlocks": [
+    {
+      "title": "Basic Type Aliases",
+      "code": "// Alias for primitive types\ntype ID = string | number;\ntype Username = string;\ntype Age = number;\n\nlet userId: ID = \"abc123\"; // ✓ OK\nuserId = 12345; // ✓ OK\n\n// Alias for object types\ntype Point = {\n  x: number;\n  y: number;\n};\n\nconst origin: Point = { x: 0, y: 0 };\n\n// Alias for function types\ntype MathOperation = (a: number, b: number) => number;\n\nconst add: MathOperation = (a, b) => a + b;\nconst multiply: MathOperation = (a, b) => a * b;"
+    },
+    {
+      "title": "Union Types",
+      "code": "// Union type - value can be one of several types\ntype Status = \"pending\" | \"approved\" | \"rejected\";\n\nlet orderStatus: Status = \"pending\";\norderStatus = \"approved\"; // ✓ OK\n// orderStatus = \"cancelled\"; // ✗ Error: not in union\n\n// Union with different types\ntype Result = string | number | boolean;\n\nfunction process(value: Result): void {\n  if (typeof value === \"string\") {\n    console.log(value.toUpperCase());\n  } else if (typeof value === \"number\") {\n    console.log(value.toFixed(2));\n  } else {\n    console.log(value ? \"TRUE\" : \"FALSE\");\n  }\n}\n\n// Discriminated unions (powerful pattern!)\ntype Success = { status: \"success\"; data: string };\ntype Error = { status: \"error\"; message: string };\ntype ApiResponse = Success | Error;\n\nfunction handleResponse(response: ApiResponse): void {\n  if (response.status === \"success\") {\n    console.log(response.data); // TypeScript knows it has 'data'\n  } else {\n    console.log(response.message); // TypeScript knows it has 'message'\n  }\n}"
+    },
+    {
+      "title": "Intersection Types",
+      "code": "// Intersection type - combines multiple types\ntype Person = {\n  name: string;\n  age: number;\n};\n\ntype Employee = {\n  employeeId: number;\n  department: string;\n};\n\n// Combine both types\ntype EmployeePerson = Person & Employee;\n\nconst worker: EmployeePerson = {\n  name: \"Alice\",\n  age: 30,\n  employeeId: 12345,\n  department: \"IT\"\n};\n\n// Useful for mixing capabilities\ntype Printable = { print: () => void };\ntype Saveable = { save: () => void };\ntype Document = Printable & Saveable;\n\nconst doc: Document = {\n  print() { console.log(\"Printing...\"); },\n  save() { console.log(\"Saving...\"); }\n};"
+    },
+    {
+      "title": "Type vs Interface - When to Use Which",
+      "code": "// Use INTERFACE for:\n// - Object shapes and class contracts\n// - When you need to extend/inherit\ninterface Animal {\n  name: string;\n}\ninterface Dog extends Animal {\n  breed: string;\n}\n\n// Use TYPE for:\n// - Unions and intersections\ntype StringOrNumber = string | number;\n\n// - Primitives and tuples\ntype Coordinate = [number, number];\n\n// - Complex type manipulations\ntype ReadonlyPerson = Readonly<Person>;\n\n// Both work for objects, but interface is preferred\ninterface Config1 { theme: string; }\ntype Config2 = { theme: string; };"
+    }
+  ],
+  "tip": "Use 'interface' for object shapes. Use 'type' for unions, intersections, and when you need more flexibility."
+}

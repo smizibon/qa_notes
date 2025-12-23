@@ -1,0 +1,204 @@
+{
+  "id": "lesson-interfaces",
+  "title": "Understanding Interfaces - Defining Object Shapes",
+  "description": "Learn how to use interfaces to define the structure of objects and create reusable, type-safe contracts in your code",
+  "sections": [
+    {
+      "title": "What is an Interface?",
+      "content": "An interface is like a contract or blueprint that defines the shape of an object. It specifies what properties an object must have and what types those properties should be. Think of it as a checklist - any object claiming to match the interface must have all the items on the checklist.",
+      "analogy": "Imagine a job posting. It lists required skills: 'Must have: name (string), experience (number), canCode (boolean)'. Anyone applying must meet all requirements. That's exactly what an interface does for objects in TypeScript!",
+      "example": {
+        "code": "interface Person {\n  name: string;\n  age: number;\n  email: string;\n}\n\nconst user: Person = {\n  name: 'Alice',\n  age: 30,\n  email: 'alice@example.com'\n}; // ✓ Valid - has all required properties\n\nconst invalid: Person = {\n  name: 'Bob',\n  age: 25\n}; // ✗ Error - missing 'email' property",
+        "explanation": "The Person interface requires name, age, and email. Any object typed as Person MUST have all three properties with the correct types."
+      }
+    },
+    {
+      "title": "Why Use Interfaces?",
+      "content": "Interfaces solve a fundamental problem in large codebases: consistency. When multiple parts of your code work with similar objects, interfaces ensure everyone follows the same structure.",
+      "benefits": [
+        "Consistency: Everyone uses the same structure for similar objects",
+        "Documentation: Interfaces serve as inline documentation showing what data looks like",
+        "Autocomplete: Your editor knows exactly what properties exist",
+        "Refactoring: Change the interface once, find all affected code instantly",
+        "Prevention: Catch structural errors before running code",
+        "Communication: Interfaces clearly communicate expectations between team members"
+      ],
+      "realWorldExample": {
+        "scenario": "You're building a user management system. Different developers work on login, profile, and admin features. Without interfaces, everyone might structure user data differently. With an interface:",
+        "code": "interface User {\n  id: number;\n  username: string;\n  email: string;\n  role: 'admin' | 'user' | 'guest';\n  createdAt: Date;\n}\n\n// Now everyone uses the same structure\nfunction loginUser(user: User) { }\nfunction updateProfile(user: User) { }\nfunction deleteUser(user: User) { }",
+        "benefit": "All functions expect the same User structure. No confusion, no bugs from mismatched data."
+      }
+    },
+    {
+      "title": "Basic Interface Syntax",
+      "content": "Let's break down the anatomy of an interface. Each part has a purpose.",
+      "syntax": {
+        "code": "interface InterfaceName {\n  property1: type1;\n  property2: type2;\n  property3?: type3;  // optional\n  readonly property4: type4;  // can't be changed\n}",
+        "parts": [
+          "interface keyword: Declares you're creating an interface",
+          "InterfaceName: By convention, use PascalCase (capitalize first letter)",
+          "property: type; : Each property and its type, separated by semicolons",
+          "property?: type : Optional property (may be omitted)",
+          "readonly property: Can't be modified after creation"
+        ]
+      },
+      "examples": [
+        {
+          "code": "interface Product {\n  id: number;\n  name: string;\n  price: number;\n  inStock: boolean;\n}",
+          "explanation": "A simple product with four required properties"
+        },
+        {
+          "code": "interface Book {\n  title: string;\n  author: string;\n  pages: number;\n  isbn?: string;  // Optional\n}\n\nconst book1: Book = {\n  title: 'TypeScript Basics',\n  author: 'John Doe',\n  pages: 200\n}; // Valid without isbn\n\nconst book2: Book = {\n  title: 'Advanced TS',\n  author: 'Jane Smith',\n  pages: 350,\n  isbn: '978-3-16-148410-0'\n}; // Also valid with isbn",
+          "explanation": "Optional properties can be included or omitted"
+        },
+        {
+          "code": "interface Config {\n  readonly apiKey: string;\n  readonly baseUrl: string;\n  timeout: number;\n}\n\nconst config: Config = {\n  apiKey: 'abc123',\n  baseUrl: 'https://api.example.com',\n  timeout: 5000\n};\n\nconfig.timeout = 10000;  // ✓ OK\nconfig.apiKey = 'new';   // ✗ Error - readonly!",
+          "explanation": "readonly properties can't be changed after object creation"
+        }
+      ]
+    },
+    {
+      "title": "Methods in Interfaces",
+      "content": "Interfaces can define not just properties, but also methods (functions that belong to the object). This lets you specify behavior as part of your contract.",
+      "syntax": "There are two ways to define methods in interfaces:",
+      "examples": [
+        {
+          "title": "Method Syntax (Recommended)",
+          "code": "interface Calculator {\n  add(a: number, b: number): number;\n  subtract(a: number, b: number): number;\n}\n\nconst calc: Calculator = {\n  add(a, b) {\n    return a + b;\n  },\n  subtract(a, b) {\n    return a - b;\n  }\n};",
+          "explanation": "Clean, readable syntax for methods. This is the preferred approach."
+        },
+        {
+          "title": "Property Function Syntax",
+          "code": "interface Calculator {\n  add: (a: number, b: number) => number;\n  subtract: (a: number, b: number) => number;\n}",
+          "explanation": "Alternative syntax treating methods as properties that hold functions. Works the same but less common."
+        },
+        {
+          "title": "Real-World Example",
+          "code": "interface Database {\n  connect(connectionString: string): Promise<void>;\n  query(sql: string): Promise<any[]>;\n  disconnect(): void;\n}\n\nconst db: Database = {\n  async connect(connStr) {\n    console.log('Connecting to:', connStr);\n  },\n  async query(sql) {\n    console.log('Executing:', sql);\n    return [];\n  },\n  disconnect() {\n    console.log('Disconnected');\n  }\n};",
+          "explanation": "Database interface defines required methods. Any database implementation must provide these methods."
+        }
+      ]
+    },
+    {
+      "title": "Extending Interfaces",
+      "content": "Interfaces can extend other interfaces, inheriting all their properties. This is perfect for creating specialized versions of base interfaces without repeating code.",
+      "analogy": "Think of extending like a form template. You have a 'Basic Info' template with name and email. For employees, you extend it to add employee ID and department. You don't repeat name and email - you inherit them!",
+      "syntax": "interface DerivedInterface extends BaseInterface { }",
+      "examples": [
+        {
+          "code": "interface Animal {\n  name: string;\n  age: number;\n}\n\ninterface Dog extends Animal {\n  breed: string;\n  bark(): void;\n}\n\nconst myDog: Dog = {\n  name: 'Rex',      // from Animal\n  age: 5,          // from Animal\n  breed: 'Labrador', // from Dog\n  bark() {          // from Dog\n    console.log('Woof!');\n  }\n};",
+          "explanation": "Dog inherits name and age from Animal, and adds breed and bark"
+        },
+        {
+          "code": "interface Person {\n  name: string;\n  email: string;\n}\n\ninterface Employee extends Person {\n  employeeId: number;\n  department: string;\n  salary: number;\n}\n\ninterface Manager extends Employee {\n  teamSize: number;\n  reports: Employee[];\n}\n\nconst manager: Manager = {\n  name: 'Sarah',          // from Person\n  email: 's@company.com', // from Person\n  employeeId: 101,        // from Employee\n  department: 'IT',       // from Employee\n  salary: 90000,          // from Employee\n  teamSize: 5,            // from Manager\n  reports: []             // from Manager\n};",
+          "explanation": "Multi-level inheritance: Manager extends Employee, which extends Person. Manager gets all properties from both!"
+        },
+        {
+          "code": "interface Flyable {\n  fly(): void;\n  maxAltitude: number;\n}\n\ninterface Swimmable {\n  swim(): void;\n  maxDepth: number;\n}\n\ninterface Duck extends Flyable, Swimmable {\n  quack(): void;\n}\n\nconst duck: Duck = {\n  fly() { console.log('Flying!'); },\n  maxAltitude: 1000,\n  swim() { console.log('Swimming!'); },\n  maxDepth: 10,\n  quack() { console.log('Quack!'); }\n};",
+          "explanation": "Multiple inheritance: Duck extends both Flyable and Swimmable, getting properties from both interfaces"
+        }
+      ]
+    },
+    {
+      "title": "Index Signatures",
+      "content": "Sometimes you don't know all property names ahead of time, but you know the pattern. Index signatures let you describe objects with dynamic keys.",
+      "analogy": "Imagine a dictionary where you don't know all the words, but you know: any word (key) will have a definition (string value). That's an index signature!",
+      "whenToUse": [
+        "Objects used as dictionaries/maps",
+        "Configuration objects with unknown keys",
+        "API responses with dynamic fields",
+        "Translation/localization objects"
+      ],
+      "examples": [
+        {
+          "code": "interface StringDictionary {\n  [key: string]: string;\n}\n\nconst translations: StringDictionary = {\n  hello: 'Bonjour',\n  goodbye: 'Au revoir',\n  thanks: 'Merci'\n};\n\ntranslations.welcome = 'Bienvenue';  // ✓ OK\ntranslations.count = 5;  // ✗ Error - value must be string",
+          "explanation": "Any string key is allowed, but all values must be strings"
+        },
+        {
+          "code": "interface NumberMap {\n  [key: string]: number;\n}\n\nconst scores: NumberMap = {\n  alice: 95,\n  bob: 87,\n  charlie: 92\n};\n\nconst aliceScore = scores['alice'];  // 95\nconst davidScore = scores['david'];  // undefined (but allowed)",
+          "explanation": "Keys are strings (player names), values are numbers (scores)"
+        },
+        {
+          "code": "interface User {\n  id: number;\n  name: string;\n  [key: string]: any;  // Allow any additional properties\n}\n\nconst user: User = {\n  id: 1,\n  name: 'Alice',\n  email: 'alice@example.com',  // Extra property OK\n  age: 30,                      // Another extra property OK\n  hobbies: ['reading', 'coding'] // Any type OK\n};",
+          "explanation": "Combining required properties with index signature. id and name are required, but any additional properties are allowed."
+        }
+      ],
+      "warning": "Be careful with [key: string]: any - it allows any property with any value, which reduces type safety. Use sparingly!"
+    },
+    {
+      "title": "Function Types in Interfaces",
+      "content": "You can use interfaces to describe the shape of functions themselves, not just objects with methods.",
+      "whenToUse": "Use this when you need a reusable type for functions, especially callback functions.",
+      "examples": [
+        {
+          "code": "interface Comparator {\n  (a: number, b: number): number;\n}\n\nconst ascending: Comparator = (a, b) => a - b;\nconst descending: Comparator = (a, b) => b - a;\n\nconst numbers = [3, 1, 4, 1, 5];\nnumbers.sort(ascending);  // [1, 1, 3, 4, 5]",
+          "explanation": "Comparator describes functions that take two numbers and return a number. Used for sorting."
+        },
+        {
+          "code": "interface Validator {\n  (input: string): boolean;\n}\n\nconst emailValidator: Validator = (input) => {\n  return input.includes('@');\n};\n\nconst phoneValidator: Validator = (input) => {\n  return /^\\d{10}$/.test(input);\n};\n\nfunction validateInput(value: string, validator: Validator): boolean {\n  return validator(value);\n}",
+          "explanation": "Validator describes any function that takes a string and returns whether it's valid"
+        }
+      ]
+    },
+    {
+      "title": "Interfaces vs Type Aliases",
+      "content": "Both interfaces and type aliases can describe object shapes. So which should you use?",
+      "generalRule": "Use interfaces for objects and classes. Use type aliases for unions, primitives, tuples, and function types.",
+      "keyDifferences": [
+        {
+          "feature": "Extension",
+          "interface": "Can be extended with 'extends' keyword",
+          "typeAlias": "Can be intersected with & operator",
+          "code": "// Interface\ninterface Animal { name: string; }\ninterface Dog extends Animal { breed: string; }\n\n// Type Alias\ntype Animal = { name: string };\ntype Dog = Animal & { breed: string; };"
+        },
+        {
+          "feature": "Declaration Merging",
+          "interface": "Multiple declarations merge automatically",
+          "typeAlias": "Cannot be redeclared",
+          "code": "// Interface - these merge!\ninterface Window { title: string; }\ninterface Window { resize(): void; }\n// Window now has both title and resize\n\n// Type Alias - Error!\ntype Window = { title: string; };\ntype Window = { resize(): void; }; // ✗ Duplicate"
+        },
+        {
+          "feature": "Computed Properties",
+          "interface": "Cannot use computed property names",
+          "typeAlias": "Can use computed properties",
+          "code": "// Type Alias only\nconst key = 'name';\ntype Person = {\n  [key]: string;  // OK\n};"
+        }
+      ],
+      "recommendation": "For most cases, interfaces are better for object types because they're more flexible and have better error messages. Use type aliases when you need features interfaces don't support."
+    },
+    {
+      "title": "Best Practices",
+      "content": "Professional tips for working with interfaces:",
+      "practices": [
+        {
+          "practice": "Name interfaces clearly and descriptively",
+          "bad": "interface Data { }",
+          "good": "interface UserProfile { }",
+          "why": "Clear names make code self-documenting"
+        },
+        {
+          "practice": "Keep interfaces focused and cohesive",
+          "bad": "interface Everything {\n  userId: number;\n  productName: string;\n  orderDate: Date;\n  companyAddress: string;\n}",
+          "good": "interface User { userId: number; }\ninterface Product { name: string; }\ninterface Order { date: Date; }",
+          "why": "Small, focused interfaces are easier to reuse and maintain"
+        },
+        {
+          "practice": "Use readonly for properties that shouldn't change",
+          "example": "interface Config {\n  readonly apiKey: string;\n  readonly environment: 'dev' | 'prod';\n}",
+          "why": "Prevents accidental modifications to important data"
+        },
+        {
+          "practice": "Prefer optional properties over undefined unions",
+          "bad": "interface User {\n  email: string | undefined;\n}",
+          "good": "interface User {\n  email?: string;\n}",
+          "why": "Optional properties are cleaner and more idiomatic"
+        },
+        {
+          "practice": "Document complex interfaces with comments",
+          "example": "interface PaymentOptions {\n  /** The payment amount in cents (not dollars!) */\n  amount: number;\n  /** ISO 4217 currency code (e.g., 'USD', 'EUR') */\n  currency: string;\n}",
+          "why": "Comments help other developers (and future you) understand the interface"
+        }
+      ]
+    }
+  ]
+}

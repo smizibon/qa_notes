@@ -1,0 +1,12 @@
+{
+  "id": "getting-started",
+  "title": "Getting Started",
+  "explanation": "TypeScript is JavaScript with syntax for types. It helps catch errors early and makes code more maintainable.",
+  "codeBlocks": [
+    {
+      "title": "Installation & Setup",
+      "code": "# Install TypeScript globally\nnpm install -g typescript\n\n# Check version\ntsc --version\n\n# Create a TypeScript file\ntouch index.ts\n\n# Compile TypeScript to JavaScript\ntsc index.ts\n\n# Watch mode (auto-compile on save)\ntsc index.ts --watch\n\n# Initialize tsconfig.json\ntsc --init"
+    }
+  ],
+  "tip": "Always use a tsconfig.json for projects. It centralizes compiler options and makes your project more maintainable."
+}

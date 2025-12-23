@@ -1,0 +1,326 @@
+{
+  "id": "lesson-common-errors",
+  "title": "Common TypeScript Errors - Understanding & Fixing",
+  "description": "Learn to understand, debug, and fix the most common TypeScript errors with clear explanations and solutions",
+  "sections": [
+    {
+      "title": "Understanding TypeScript Errors",
+      "content": "TypeScript errors can seem cryptic at first, but they follow patterns. Learning to read them is like learning a new language - once you understand the structure, they become incredibly helpful!",
+      "analogy": "Think of TypeScript errors like a GPS telling you 'Turn left in 100 feet'. At first it seems like nonsense, but once you learn the language, it's giving you exact directions to fix your code. TypeScript errors are precise instructions, not vague complaints!",
+      "errorAnatomy": {
+        "structure": "error TS[CODE]: [DESCRIPTION]\n  at [FILE]:[LINE]:[COLUMN]",
+        "example": "error TS2322: Type 'string' is not assignable to type 'number'.\n  at src/index.ts:5:7",
+        "breakdown": {
+          "TS2322": "Error code (you can Google 'TS2322' for more info)",
+          "Description": "What went wrong in plain English",
+          "Location": "Exact file, line, and column where the error occurred"
+        }
+      }
+    },
+    {
+      "title": "Type Assignment Errors (TS2322)",
+      "content": "The most common error: trying to assign a value of one type to a variable of another type.",
+      "error": "Type 'X' is not assignable to type 'Y'",
+      "examples": [
+        {
+          "problem": {
+            "code": "let age: number = 'thirty';  \n// ✗ Type 'string' is not assignable to type 'number'",
+            "explanation": "You declared age as number but assigned a string"
+          },
+          "solution": {
+            "code": "// Fix 1: Use correct type\nlet age: number = 30;\n\n// Fix 2: Change variable type\nlet age: string = 'thirty';\n\n// Fix 3: Use union type if both are valid\nlet age: number | string = 'thirty';",
+            "explanation": "Match the type or change the declaration"
+          }
+        },
+        {
+          "problem": {
+            "code": "interface User {\n  name: string;\n  age: number;\n}\n\nconst user: User = {\n  name: 'Alice'\n};  \n// ✗ Property 'age' is missing in type '{ name: string; }' but required in type 'User'",
+            "explanation": "Object is missing required properties"
+          },
+          "solution": {
+            "code": "// Fix 1: Add missing property\nconst user: User = {\n  name: 'Alice',\n  age: 30\n};\n\n// Fix 2: Make property optional\ninterface User {\n  name: string;\n  age?: number;  // Optional\n}\n\n// Fix 3: Use Partial<User>\nconst user: Partial<User> = {\n  name: 'Alice'\n};",
+            "explanation": "Provide all required properties or make them optional"
+          }
+        },
+        {
+          "problem": {
+            "code": "const numbers: number[] = [1, 2, 3];\nconst mixed: number[] = [1, 'two', 3];\n// ✗ Type 'string' is not assignable to type 'number'",
+            "explanation": "Array contains wrong type"
+          },
+          "solution": {
+            "code": "// Fix 1: Use correct types\nconst numbers: number[] = [1, 2, 3];\n\n// Fix 2: Use union array\nconst mixed: (number | string)[] = [1, 'two', 3];\n\n// Fix 3: Use any (not recommended!)\nconst mixed: any[] = [1, 'two', 3];",
+            "explanation": "Array type must match all elements"
+          }
+        }
+      ]
+    },
+    {
+      "title": "Property Does Not Exist Errors (TS2339)",
+      "content": "Trying to access a property that TypeScript doesn't know about.",
+      "error": "Property 'X' does not exist on type 'Y'",
+      "examples": [
+        {
+          "problem": {
+            "code": "const user = { name: 'Alice' };\nconsole.log(user.age);\n// ✗ Property 'age' does not exist on type '{ name: string; }'",
+            "explanation": "Property doesn't exist on the object"
+          },
+          "solution": {
+            "code": "// Fix 1: Add the property\nconst user = { name: 'Alice', age: 30 };\nconsole.log(user.age);\n\n// Fix 2: Make it optional\ninterface User {\n  name: string;\n  age?: number;\n}\nconst user: User = { name: 'Alice' };\nconsole.log(user.age);  // undefined, but valid\n\n// Fix 3: Type guard\nif ('age' in user) {\n  console.log(user.age);\n}",
+            "explanation": "Add property, make it optional, or check before accessing"
+          }
+        },
+        {
+          "problem": {
+            "code": "const data: unknown = JSON.parse('{\"name\":\"Alice\"}');\nconsole.log(data.name);\n// ✗ Property 'name' does not exist on type 'unknown'",
+            "explanation": "Can't access properties on unknown type"
+          },
+          "solution": {
+            "code": "// Fix 1: Type guard\nif (typeof data === 'object' && data !== null && 'name' in data) {\n  console.log((data as { name: string }).name);\n}\n\n// Fix 2: Type assertion (if you're sure)\ninterface User {\n  name: string;\n}\nconst user = data as User;\nconsole.log(user.name);\n\n// Fix 3: Validation function\nfunction isUser(value: unknown): value is User {\n  return (\n    typeof value === 'object' &&\n    value !== null &&\n    'name' in value\n  );\n}\nif (isUser(data)) {\n  console.log(data.name);  // Safe!\n}",
+            "explanation": "Validate unknown types before accessing properties"
+          }
+        }
+      ]
+    },
+    {
+      "title": "Cannot Find Name Errors (TS2304)",
+      "content": "TypeScript can't find a variable, function, or type you're trying to use.",
+      "error": "Cannot find name 'X'",
+      "examples": [
+        {
+          "problem": {
+            "code": "console.log(userName);\n// ✗ Cannot find name 'userName'",
+            "explanation": "Variable not declared or out of scope"
+          },
+          "solution": {
+            "code": "// Fix 1: Declare the variable\nconst userName = 'Alice';\nconsole.log(userName);\n\n// Fix 2: Import it\nimport { userName } from './user';\nconsole.log(userName);\n\n// Fix 3: Check spelling\nconst username = 'Alice';\nconsole.log(username);  // Was it lowercase?",
+            "explanation": "Declare, import, or check spelling"
+          }
+        },
+        {
+          "problem": {
+            "code": "const promise: Promise<string> = fetchData();\n// ✗ Cannot find name 'Promise'. Do you need to change your target library?",
+            "explanation": "Missing type definitions for built-in types"
+          },
+          "solution": {
+            "code": "// Fix: Update tsconfig.json\n{\n  \"compilerOptions\": {\n    \"lib\": [\"ES2015\", \"DOM\"]  // Add ES2015 for Promise\n  }\n}\n\n// Or install @types if needed:\n// npm install --save-dev @types/node",
+            "explanation": "Add required lib to tsconfig or install type definitions"
+          }
+        }
+      ]
+    },
+    {
+      "title": "Argument Type Errors (TS2345)",
+      "content": "Function called with wrong argument types.",
+      "error": "Argument of type 'X' is not assignable to parameter of type 'Y'",
+      "examples": [
+        {
+          "problem": {
+            "code": "function greet(name: string) {\n  console.log(`Hello, ${name}`);\n}\ngreet(123);\n// ✗ Argument of type 'number' is not assignable to parameter of type 'string'",
+            "explanation": "Passing number to function expecting string"
+          },
+          "solution": {
+            "code": "// Fix 1: Pass correct type\ngreet('Alice');\n\n// Fix 2: Convert the value\ngreet(String(123));\ngreet(123.toString());\n\n// Fix 3: Accept both types\nfunction greet(name: string | number) {\n  console.log(`Hello, ${name}`);\n}\ngreet(123);  // Now OK",
+            "explanation": "Match parameter type or make function more flexible"
+          }
+        },
+        {
+          "problem": {
+            "code": "function processUser(user: { name: string; age: number }) {\n  console.log(user);\n}\nprocessUser({ name: 'Alice' });\n// ✗ Argument of type '{ name: string; }' is not assignable to parameter",
+            "explanation": "Object missing required properties"
+          },
+          "solution": {
+            "code": "// Fix 1: Provide all properties\nprocessUser({ name: 'Alice', age: 30 });\n\n// Fix 2: Make properties optional\nfunction processUser(user: { name: string; age?: number }) {\n  console.log(user);\n}\nprocessUser({ name: 'Alice' });\n\n// Fix 3: Use Partial\nfunction processUser(user: Partial<User>) {\n  console.log(user);\n}",
+            "explanation": "Provide required properties or make them optional"
+          }
+        }
+      ]
+    },
+    {
+      "title": "Null and Undefined Errors (TS2532, TS2531)",
+      "content": "Accessing properties or calling methods on potentially null/undefined values.",
+      "error": "Object is possibly 'null' or 'undefined'",
+      "examples": [
+        {
+          "problem": {
+            "code": "function greet(name: string | null) {\n  console.log(name.toUpperCase());\n}\n// ✗ Object is possibly 'null'",
+            "explanation": "name could be null, can't call toUpperCase()"
+          },
+          "solution": {
+            "code": "// Fix 1: Check before using\nfunction greet(name: string | null) {\n  if (name) {\n    console.log(name.toUpperCase());\n  }\n}\n\n// Fix 2: Optional chaining\nfunction greet(name: string | null) {\n  console.log(name?.toUpperCase());\n}\n\n// Fix 3: Nullish coalescing\nfunction greet(name: string | null) {\n  console.log((name ?? 'Guest').toUpperCase());\n}\n\n// Fix 4: Non-null assertion (if you're 100% sure)\nfunction greet(name: string | null) {\n  console.log(name!.toUpperCase());  // Tells TS: trust me, it's not null\n}",
+            "explanation": "Always check or handle null/undefined before accessing properties"
+          }
+        },
+        {
+          "problem": {
+            "code": "const user = users.find(u => u.id === '123');\nconsole.log(user.name);\n// ✗ Object is possibly 'undefined'",
+            "explanation": "find() returns undefined if not found"
+          },
+          "solution": {
+            "code": "// Fix 1: Check existence\nconst user = users.find(u => u.id === '123');\nif (user) {\n  console.log(user.name);\n}\n\n// Fix 2: Optional chaining\nconsole.log(user?.name);\n\n// Fix 3: Provide default\nconst userName = user?.name ?? 'Unknown';\n\n// Fix 4: Throw if missing\nconst user = users.find(u => u.id === '123');\nif (!user) throw new Error('User not found');\nconsole.log(user.name);  // TypeScript knows user exists here",
+            "explanation": "Handle the case where value might not exist"
+          }
+        }
+      ]
+    },
+    {
+      "title": "Index Signature Errors (TS7053)",
+      "content": "Accessing object properties with computed/dynamic keys.",
+      "error": "Element implicitly has an 'any' type because expression of type 'X' can't be used to index type 'Y'",
+      "examples": [
+        {
+          "problem": {
+            "code": "const user = { name: 'Alice', age: 30 };\nconst key = 'name';\nconsole.log(user[key]);\n// ✗ Element implicitly has an 'any' type",
+            "explanation": "TypeScript doesn't know if key is a valid property"
+          },
+          "solution": {
+            "code": "// Fix 1: Type the key\nconst user = { name: 'Alice', age: 30 };\nconst key: keyof typeof user = 'name';\nconsole.log(user[key]);\n\n// Fix 2: Type assertion\nconst key = 'name' as keyof typeof user;\nconsole.log(user[key]);\n\n// Fix 3: Index signature on interface\ninterface User {\n  [key: string]: string | number;\n  name: string;\n  age: number;\n}\nconst user: User = { name: 'Alice', age: 30 };\nconst key = 'name';\nconsole.log(user[key]);  // OK now\n\n// Fix 4: Use type guard\nfunction isValidKey(key: string, obj: object): key is keyof typeof obj {\n  return key in obj;\n}\nconst key = 'name';\nif (isValidKey(key, user)) {\n  console.log(user[key]);\n}",
+            "explanation": "Tell TypeScript the key is valid"
+          }
+        }
+      ]
+    },
+    {
+      "title": "Cannot Redeclare Block-Scoped Variable (TS2451)",
+      "content": "Trying to declare the same variable twice in the same scope.",
+      "error": "Cannot redeclare block-scoped variable 'X'",
+      "examples": [
+        {
+          "problem": {
+            "code": "const name = 'Alice';\nconst name = 'Bob';\n// ✗ Cannot redeclare block-scoped variable 'name'",
+            "explanation": "Variable already declared"
+          },
+          "solution": {
+            "code": "// Fix 1: Use different names\nconst firstName = 'Alice';\nconst lastName = 'Bob';\n\n// Fix 2: Reassign (use let)\nlet name = 'Alice';\nname = 'Bob';\n\n// Fix 3: Use different scopes\nif (true) {\n  const name = 'Alice';\n}\nif (true) {\n  const name = 'Bob';  // Different scope, OK\n}",
+            "explanation": "Use unique names or different scopes"
+          }
+        },
+        {
+          "problem": {
+            "code": "// file1.ts\nconst API_KEY = 'abc123';\n\n// file2.ts\nconst API_KEY = 'xyz789';\n// ✗ Cannot redeclare block-scoped variable 'API_KEY'",
+            "explanation": "Both files are in global scope (not modules)"
+          },
+          "solution": {
+            "code": "// Fix: Add export to make files modules\n// file1.ts\nexport const API_KEY = 'abc123';\n\n// file2.ts\nexport const API_KEY = 'xyz789';\n\n// Or add: export {} to make it a module\nexport {};",
+            "explanation": "Files with imports/exports are modules with their own scope"
+          }
+        }
+      ]
+    },
+    {
+      "title": "Promise/Async Errors (TS1064, TS2339)",
+      "content": "Common mistakes with async/await and Promises.",
+      "examples": [
+        {
+          "problem": {
+            "code": "async function fetchUser() {\n  return { name: 'Alice' };\n}\n\nconst user = fetchUser();\nconsole.log(user.name);\n// ✗ Property 'name' does not exist on type 'Promise<{ name: string; }>'",
+            "explanation": "Async functions return Promises, not direct values"
+          },
+          "solution": {
+            "code": "// Fix 1: await the Promise\nasync function main() {\n  const user = await fetchUser();\n  console.log(user.name);  // OK\n}\n\n// Fix 2: Use .then()\nfetchUser().then(user => {\n  console.log(user.name);\n});\n\n// Fix 3: Access Promise type explicitly\nconst userPromise = fetchUser();\nuserPromise.then(user => console.log(user.name));",
+            "explanation": "Always await async functions or use .then()"
+          }
+        },
+        {
+          "problem": {
+            "code": "function fetchUser(): Promise<User> {\n  return { name: 'Alice' };\n}\n// ✗ Type '{ name: string; }' is not assignable to type 'Promise<User>'",
+            "explanation": "Function says it returns Promise but returns plain object"
+          },
+          "solution": {
+            "code": "// Fix 1: Make function async\nasync function fetchUser(): Promise<User> {\n  return { name: 'Alice', age: 30 };  // Automatically wrapped in Promise\n}\n\n// Fix 2: Return Promise explicitly\nfunction fetchUser(): Promise<User> {\n  return Promise.resolve({ name: 'Alice', age: 30 });\n}\n\n// Fix 3: Change return type\nfunction fetchUser(): User {\n  return { name: 'Alice', age: 30 };\n}",
+            "explanation": "Match return type with actual return value"
+          }
+        }
+      ]
+    },
+    {
+      "title": "Implicit Any Errors (TS7006)",
+      "content": "Variables or parameters with inferred 'any' type when noImplicitAny is enabled.",
+      "error": "Parameter 'X' implicitly has an 'any' type",
+      "examples": [
+        {
+          "problem": {
+            "code": "function processItems(items) {\n  return items.map(item => item.value);\n}\n// ✗ Parameter 'items' implicitly has an 'any' type\n// ✗ Parameter 'item' implicitly has an 'any' type",
+            "explanation": "No type specified, defaults to any"
+          },
+          "solution": {
+            "code": "// Fix: Add explicit types\nfunction processItems(items: Array<{ value: number }>) {\n  return items.map(item => item.value);\n}\n\n// Or use interface\ninterface Item {\n  value: number;\n}\nfunction processItems(items: Item[]) {\n  return items.map(item => item.value);\n}\n\n// Or let TypeScript infer from default value\nfunction greet(name = 'Guest') {  // Inferred as string\n  console.log(`Hello, ${name}`);\n}",
+            "explanation": "Always type function parameters explicitly"
+          }
+        }
+      ]
+    },
+    {
+      "title": "Debugging Strategies",
+      "content": "Techniques for finding and fixing TypeScript errors efficiently.",
+      "strategies": [
+        {
+          "strategy": "Read the error message carefully",
+          "tip": "TypeScript errors tell you exactly what's wrong and where. The location (file:line:column) is precise.",
+          "example": "Instead of guessing, go to the exact line and column number shown in the error."
+        },
+        {
+          "strategy": "Check the error code",
+          "tip": "Google 'TS' + error code (e.g., 'TS2322') for detailed explanations and solutions.",
+          "example": "Error TS2322? Search 'TS2322 typescript' for common solutions."
+        },
+        {
+          "strategy": "Use type annotations to narrow down issues",
+          "code": "// Add explicit types to see where mismatch occurs\nconst user: User = getUser();  // Error here? getUser returns wrong type\nconst name: string = user.name;  // Error here? user.name is wrong type",
+          "tip": "Adding type annotations helps isolate exactly where types don't match"
+        },
+        {
+          "strategy": "Hover over variables in VS Code",
+          "tip": "Hover to see what TypeScript inferred. Often reveals type mismatches.",
+          "example": "Hover over a variable to see 'const user: User | undefined' - aha! Need to check for undefined!"
+        },
+        {
+          "strategy": "Use console.log for runtime values",
+          "code": "console.log('Type:', typeof value, 'Value:', value);",
+          "tip": "TypeScript works at compile time, but runtime values can surprise you. Log to see actual data."
+        },
+        {
+          "strategy": "Simplify complex types",
+          "code": "// Instead of this complex type:\ntype Complex = Partial<Pick<Omit<User, 'password'>, 'name' | 'email'>>;\n\n// Break it down:\ntype WithoutPassword = Omit<User, 'password'>;\ntype NameAndEmail = Pick<WithoutPassword, 'name' | 'email'>;\ntype Final = Partial<NameAndEmail>;\n\n// Now errors are easier to understand",
+          "tip": "Complex types are hard to debug. Break them into named intermediate types."
+        },
+        {
+          "strategy": "Use type assertions cautiously",
+          "bad": "const user = data as User;  // Might hide errors!",
+          "good": "// Better: validate first\nif (isUser(data)) {\n  const user = data;  // TypeScript narrows automatically\n}",
+          "tip": "'as' tells TypeScript to trust you. Use sparingly and validate data first."
+        }
+      ]
+    },
+    {
+      "title": "Best Practices to Avoid Errors",
+      "content": "Proactive measures to prevent common errors.",
+      "practices": [
+        {
+          "practice": "Enable strict mode in tsconfig.json",
+          "code": "{\n  \"compilerOptions\": {\n    \"strict\": true\n  }\n}",
+          "why": "Catches more errors at compile time instead of runtime"
+        },
+        {
+          "practice": "Always type function parameters",
+          "code": "// Bad\nfunction process(data) { }\n\n// Good\nfunction process(data: User[]) { }",
+          "why": "Prevents implicit any and catches type errors early"
+        },
+        {
+          "practice": "Use optional chaining for nullable values",
+          "code": "// Instead of\nif (user && user.address && user.address.city) { }\n\n// Use\nconst city = user?.address?.city;",
+          "why": "Safer and more concise null checking"
+        },
+        {
+          "practice": "Validate external data",
+          "code": "const data: unknown = await response.json();\nif (isUser(data)) {\n  // Now safe to use as User\n}",
+          "why": "Never trust external data (APIs, user input). Always validate!"
+        },
+        {
+          "practice": "Use discriminated unions for state",
+          "code": "type State = \n  | { status: 'loading' }\n  | { status: 'success'; data: T }\n  | { status: 'error'; error: string };",
+          "why": "Makes invalid states impossible, reduces errors"
+        }
+      ]
+    }
+  ]
+}

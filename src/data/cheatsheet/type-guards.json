@@ -1,0 +1,28 @@
+{
+  "id": "type-guards",
+  "title": "Type Guards & Narrowing",
+  "explanation": "Type guards help TypeScript narrow down types within conditional blocks, making your code safer.",
+  "codeBlocks": [
+    {
+      "title": "typeof Type Guards",
+      "code": "function process(value: string | number): void {\n  if (typeof value === \"string\") {\n    // TypeScript knows value is string here\n    console.log(value.toUpperCase());\n  } else {\n    // TypeScript knows value is number here\n    console.log(value.toFixed(2));\n  }\n}\n\n// Works with: \"string\", \"number\", \"boolean\", \"object\", \"function\", \"undefined\"\nfunction example(x: string | number | boolean | undefined): void {\n  if (typeof x === \"string\") {\n    console.log(x.length);\n  } else if (typeof x === \"number\") {\n    console.log(x.toFixed());\n  } else if (typeof x === \"boolean\") {\n    console.log(x ? \"true\" : \"false\");\n  } else {\n    console.log(\"undefined\");\n  }\n}"
+    },
+    {
+      "title": "instanceof Type Guards",
+      "code": "class Dog {\n  bark(): void {\n    console.log(\"Woof!\");\n  }\n}\n\nclass Cat {\n  meow(): void {\n    console.log(\"Meow!\");\n  }\n}\n\nfunction makeSound(animal: Dog | Cat): void {\n  if (animal instanceof Dog) {\n    animal.bark(); // TypeScript knows it's a Dog\n  } else {\n    animal.meow(); // TypeScript knows it's a Cat\n  }\n}\n\n// Works with built-in types too\nfunction processValue(value: Date | string): void {\n  if (value instanceof Date) {\n    console.log(value.getFullYear());\n  } else {\n    console.log(value.toUpperCase());\n  }\n}"
+    },
+    {
+      "title": "in Operator",
+      "code": "interface Bird {\n  fly(): void;\n  wings: number;\n}\n\ninterface Fish {\n  swim(): void;\n  fins: number;\n}\n\nfunction move(animal: Bird | Fish): void {\n  if (\"fly\" in animal) {\n    animal.fly(); // TypeScript knows it's a Bird\n  } else {\n    animal.swim(); // TypeScript knows it's a Fish\n  }\n}\n\n// Useful for checking optional properties\ninterface User {\n  name: string;\n  email?: string;\n}\n\nfunction displayContact(user: User): void {\n  console.log(user.name);\n  if (\"email\" in user && user.email) {\n    console.log(user.email);\n  }\n}"
+    },
+    {
+      "title": "Custom Type Guards",
+      "code": "// User-defined type guard with 'is' keyword\ninterface Cat {\n  meow(): void;\n}\n\ninterface Dog {\n  bark(): void;\n}\n\n// Type predicate: 'pet is Cat'\nfunction isCat(pet: Cat | Dog): pet is Cat {\n  return (pet as Cat).meow !== undefined;\n}\n\nfunction makeSound(pet: Cat | Dog): void {\n  if (isCat(pet)) {\n    pet.meow(); // TypeScript knows it's a Cat\n  } else {\n    pet.bark(); // TypeScript knows it's a Dog\n  }\n}\n\n// Another example\ninterface Success {\n  success: true;\n  data: string;\n}\n\ninterface Failure {\n  success: false;\n  error: string;\n}\n\ntype Response = Success | Failure;\n\nfunction isSuccess(response: Response): response is Success {\n  return response.success === true;\n}\n\nfunction handleResponse(response: Response): void {\n  if (isSuccess(response)) {\n    console.log(response.data); // has data property\n  } else {\n    console.log(response.error); // has error property\n  }\n}"
+    },
+    {
+      "title": "Discriminated Unions",
+      "code": "// Use a common property to discriminate\ntype Circle = {\n  kind: \"circle\";\n  radius: number;\n};\n\ntype Square = {\n  kind: \"square\";\n  sideLength: number;\n};\n\ntype Rectangle = {\n  kind: \"rectangle\";\n  width: number;\n  height: number;\n};\n\ntype Shape = Circle | Square | Rectangle;\n\nfunction getArea(shape: Shape): number {\n  // TypeScript narrows based on 'kind'\n  switch (shape.kind) {\n    case \"circle\":\n      return Math.PI * shape.radius ** 2;\n    case \"square\":\n      return shape.sideLength ** 2;\n    case \"rectangle\":\n      return shape.width * shape.height;\n  }\n}\n\n// Exhaustiveness checking\nfunction assertNever(x: never): never {\n  throw new Error(\"Unexpected value: \" + x);\n}\n\nfunction getAreaSafe(shape: Shape): number {\n  switch (shape.kind) {\n    case \"circle\":\n      return Math.PI * shape.radius ** 2;\n    case \"square\":\n      return shape.sideLength ** 2;\n    case \"rectangle\":\n      return shape.width * shape.height;\n    default:\n      return assertNever(shape); // Error if we miss a case\n  }\n}"
+    }
+  ],
+  "tip": "Discriminated unions with a common 'kind' or 'type' property are one of TypeScript's most powerful patterns for type safety."
+}

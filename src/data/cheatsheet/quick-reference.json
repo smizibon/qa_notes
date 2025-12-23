@@ -1,0 +1,20 @@
+{
+  "id": "quick-reference",
+  "title": "Quick Reference & Cheat Codes",
+  "explanation": "Quick reference for TypeScript syntax and common patterns.",
+  "codeBlocks": [
+    {
+      "title": "Type Keywords Cheat Sheet",
+      "code": "// Type annotation\nlet name: string = \"Alice\";\n\n// Type alias\ntype ID = string | number;\n\n// Interface\ninterface User { name: string; }\n\n// Union (OR)\ntype Result = string | number;\n\n// Intersection (AND)\ntype Combined = TypeA & TypeB;\n\n// Optional property\ninterface Config { timeout?: number; }\n\n// Readonly property\ninterface Point { readonly x: number; }\n\n// Generic\nfunction identity<T>(arg: T): T { return arg; }\n\n// Type assertion\nlet value = someValue as string;\n\n// Non-null assertion\nlet name = user!.name;\n\n// Type guard\nif (typeof value === \"string\") { }\n\n// Keyof (keys of object)\ntype Keys = keyof User;\n\n// Typeof (get type)\nconst obj = { a: 1 };\ntype ObjType = typeof obj;\n\n// Indexed access\ntype Age = User[\"age\"];\n\n// Conditional type\ntype Check<T> = T extends string ? true : false;\n\n// Infer type\ntype Flatten<T> = T extends (infer U)[] ? U : T;\n\n// Template literal\ntype EventName = `on${string}`;"
+    },
+    {
+      "title": "Common Utility Types Quick Reference",
+      "code": "// Make all properties optional\nPartial<User>\n\n// Make all properties required\nRequired<User>\n\n// Make all properties readonly\nReadonly<User>\n\n// Pick specific properties\nPick<User, \"name\" | \"email\">\n\n// Omit specific properties\nOmit<User, \"password\">\n\n// Create object type with keys\nRecord<string, number>\n\n// Extract function return type\nReturnType<typeof func>\n\n// Extract function parameters\nParameters<typeof func>\n\n// Remove types from union\nExclude<T, U>\n\n// Keep only types from union\nExtract<T, U>\n\n// Remove null and undefined\nNonNullable<T>\n\n// Awaited type from Promise\nAwaited<Promise<string>> // string"
+    },
+    {
+      "title": "tsconfig Quick Snippets",
+      "code": "// Strict configuration\n{\n  \"compilerOptions\": {\n    \"strict\": true,\n    \"target\": \"ES2020\",\n    \"module\": \"commonjs\",\n    \"outDir\": \"./dist\",\n    \"rootDir\": \"./src\"\n  }\n}\n\n// React configuration\n{\n  \"compilerOptions\": {\n    \"jsx\": \"react-jsx\",\n    \"lib\": [\"ES2020\", \"DOM\"],\n    \"target\": \"ES2020\"\n  }\n}\n\n// Node.js configuration\n{\n  \"compilerOptions\": {\n    \"module\": \"commonjs\",\n    \"target\": \"ES2020\",\n    \"esModuleInterop\": true,\n    \"types\": [\"node\"]\n  }\n}"
+    }
+  ],
+  "tip": "Bookmark this page for quick reference when you need to remember TypeScript syntax!"
+}

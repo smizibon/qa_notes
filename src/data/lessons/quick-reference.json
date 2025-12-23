@@ -1,0 +1,252 @@
+{
+  "id": "lesson-quick-reference",
+  "title": "TypeScript Quick Reference - Cheat Sheet Summary",
+  "description": "A fast reference guide for TypeScript syntax, types, and common patterns",
+  "sections": [
+    {
+      "title": "Basic Types",
+      "quick_ref": [
+        { "syntax": "let name: string = 'Alice';", "desc": "String type" },
+        { "syntax": "let age: number = 30;", "desc": "Number type (int and float)" },
+        { "syntax": "let isActive: boolean = true;", "desc": "Boolean type" },
+        { "syntax": "let items: number[] = [1, 2, 3];", "desc": "Array of numbers" },
+        { "syntax": "let items: Array<number> = [1, 2, 3];", "desc": "Generic array syntax" },
+        { "syntax": "let tuple: [string, number] = ['Alice', 30];", "desc": "Tuple (fixed length array)" },
+        { "syntax": "let value: any = 'anything';", "desc": "Any type (avoid if possible)" },
+        { "syntax": "let value: unknown = 'something';", "desc": "Unknown (safer than any)" },
+        { "syntax": "let nothing: void = undefined;", "desc": "Void (no return value)" },
+        { "syntax": "let nullable: string | null = null;", "desc": "Nullable type" },
+        { "syntax": "let optional: string | undefined;", "desc": "Optional type" }
+      ]
+    },
+    {
+      "title": "Type Annotations",
+      "quick_ref": [
+        { "syntax": "function greet(name: string): string { }", "desc": "Function with types" },
+        { "syntax": "const add = (a: number, b: number): number => a + b;", "desc": "Arrow function" },
+        { "syntax": "function log(msg: string): void { console.log(msg); }", "desc": "Void return type" },
+        { "syntax": "const user: { name: string; age: number } = { };", "desc": "Object type" },
+        { "syntax": "let value: string | number = 'hello';", "desc": "Union type" },
+        { "syntax": "let point: { x: number } & { y: number };", "desc": "Intersection type" }
+      ]
+    },
+    {
+      "title": "Interfaces",
+      "quick_ref": [
+        { "syntax": "interface User { name: string; age: number; }", "desc": "Basic interface" },
+        { "syntax": "interface User { email?: string; }", "desc": "Optional property" },
+        { "syntax": "interface User { readonly id: number; }", "desc": "Readonly property" },
+        { "syntax": "interface Point { [key: string]: number; }", "desc": "Index signature" },
+        { "syntax": "interface Greet { (name: string): string; }", "desc": "Function interface" },
+        { "syntax": "interface Admin extends User { role: string; }", "desc": "Interface extension" }
+      ]
+    },
+    {
+      "title": "Type Aliases",
+      "quick_ref": [
+        { "syntax": "type Name = string;", "desc": "Alias for primitive" },
+        { "syntax": "type ID = string | number;", "desc": "Union type alias" },
+        { "syntax": "type User = { name: string; age: number; };", "desc": "Object type alias" },
+        { "syntax": "type Callback = (data: string) => void;", "desc": "Function type" },
+        { "syntax": "type Admin = User & { role: string; };", "desc": "Intersection type" },
+        { "syntax": "type Coords = [number, number];", "desc": "Tuple type" }
+      ]
+    },
+    {
+      "title": "Generics",
+      "quick_ref": [
+        { "syntax": "function identity<T>(arg: T): T { return arg; }", "desc": "Generic function" },
+        { "syntax": "interface Box<T> { value: T; }", "desc": "Generic interface" },
+        { "syntax": "class Container<T> { value: T; }", "desc": "Generic class" },
+        { "syntax": "type Pair<T, U> = [T, U];", "desc": "Multiple type parameters" },
+        { "syntax": "function log<T extends { name: string }>(obj: T) { }", "desc": "Generic constraint" },
+        { "syntax": "type Keys<T> = keyof T;", "desc": "Keyof operator" }
+      ]
+    },
+    {
+      "title": "Utility Types",
+      "quick_ref": [
+        { "syntax": "type Partial<T> = { [P in keyof T]?: T[P] };", "desc": "All properties optional" },
+        { "syntax": "type Required<T>", "desc": "All properties required" },
+        { "syntax": "type Readonly<T>", "desc": "All properties readonly" },
+        { "syntax": "type Pick<T, K>", "desc": "Select specific properties" },
+        { "syntax": "type Omit<T, K>", "desc": "Remove specific properties" },
+        { "syntax": "type Record<K, T>", "desc": "Object with keys K and values T" },
+        { "syntax": "type Exclude<T, U>", "desc": "Remove types from union" },
+        { "syntax": "type Extract<T, U>", "desc": "Extract types from union" },
+        { "syntax": "type NonNullable<T>", "desc": "Remove null and undefined" },
+        { "syntax": "type ReturnType<T>", "desc": "Extract function return type" },
+        { "syntax": "type Parameters<T>", "desc": "Extract function parameters" }
+      ]
+    },
+    {
+      "title": "Type Guards",
+      "quick_ref": [
+        { "syntax": "typeof value === 'string'", "desc": "Typeof guard" },
+        { "syntax": "value instanceof Array", "desc": "Instanceof guard" },
+        { "syntax": "'property' in object", "desc": "In operator guard" },
+        { "syntax": "function isString(val: unknown): val is string { }", "desc": "User-defined guard" },
+        { "syntax": "if (value !== null) { }", "desc": "Null check" },
+        { "syntax": "value?.property", "desc": "Optional chaining" },
+        { "syntax": "value ?? defaultValue", "desc": "Nullish coalescing" }
+      ]
+    },
+    {
+      "title": "Classes",
+      "quick_ref": [
+        { "syntax": "class Person { name: string; }", "desc": "Basic class" },
+        { "syntax": "constructor(name: string) { this.name = name; }", "desc": "Constructor" },
+        { "syntax": "public name: string;", "desc": "Public property" },
+        { "syntax": "private age: number;", "desc": "Private property" },
+        { "syntax": "protected email: string;", "desc": "Protected property" },
+        { "syntax": "readonly id: number;", "desc": "Readonly property" },
+        { "syntax": "static count: number = 0;", "desc": "Static property" },
+        { "syntax": "class Admin extends Person { }", "desc": "Class inheritance" },
+        { "syntax": "class Person implements User { }", "desc": "Implement interface" },
+        { "syntax": "abstract class Shape { abstract area(): number; }", "desc": "Abstract class" }
+      ]
+    },
+    {
+      "title": "Enums",
+      "quick_ref": [
+        { "syntax": "enum Color { Red, Green, Blue }", "desc": "Numeric enum (0, 1, 2)" },
+        { "syntax": "enum Color { Red = 1, Green = 2, Blue = 4 }", "desc": "Custom numeric values" },
+        { "syntax": "enum Status { Active = 'ACTIVE', Inactive = 'INACTIVE' }", "desc": "String enum" },
+        { "syntax": "const enum Size { Small, Medium, Large }", "desc": "Const enum (inlined)" },
+        { "syntax": "let color: Color = Color.Red;", "desc": "Using enum value" },
+        { "syntax": "let colorName = Color[0];", "desc": "Reverse mapping (numeric only)" }
+      ]
+    },
+    {
+      "title": "Advanced Types",
+      "quick_ref": [
+        { "syntax": "type Flatten<T> = T extends Array<infer U> ? U : T;", "desc": "Conditional type with infer" },
+        { "syntax": "type Nullable<T> = T | null;", "desc": "Generic nullable type" },
+        { "syntax": "type Readonly<T> = { readonly [P in keyof T]: T[P] };", "desc": "Mapped type" },
+        { "syntax": "type EventName = `on${Capitalize<string>}`;", "desc": "Template literal type" },
+        { "syntax": "type Props<T> = { [K in keyof T]: T[K] };", "desc": "Identity mapped type" },
+        { "syntax": "type Result = T extends U ? X : Y;", "desc": "Conditional type" }
+      ]
+    },
+    {
+      "title": "Assertions & Casting",
+      "quick_ref": [
+        { "syntax": "const value = input as string;", "desc": "Type assertion (as syntax)" },
+        { "syntax": "const value = <string>input;", "desc": "Type assertion (angle bracket)" },
+        { "syntax": "const value = input!;", "desc": "Non-null assertion" },
+        { "syntax": "const value = input as const;", "desc": "Const assertion" },
+        { "syntax": "const value = input as unknown as MyType;", "desc": "Double assertion" }
+      ]
+    },
+    {
+      "title": "Modules & Imports",
+      "quick_ref": [
+        { "syntax": "export const name = 'Alice';", "desc": "Named export" },
+        { "syntax": "export default class User { }", "desc": "Default export" },
+        { "syntax": "import { name } from './module';", "desc": "Named import" },
+        { "syntax": "import User from './module';", "desc": "Default import" },
+        { "syntax": "import * as Utils from './utils';", "desc": "Namespace import" },
+        { "syntax": "import type { User } from './types';", "desc": "Type-only import" },
+        { "syntax": "export type { User };", "desc": "Type-only export" },
+        { "syntax": "export { name as userName };", "desc": "Renamed export" }
+      ]
+    },
+    {
+      "title": "Common Patterns",
+      "quick_ref": [
+        { "syntax": "type Result<T, E> = { success: true; data: T } | { success: false; error: E };", "desc": "Result type" },
+        { "syntax": "type Option<T> = T | null | undefined;", "desc": "Optional value" },
+        { "syntax": "type Awaited<T> = T extends Promise<infer U> ? U : T;", "desc": "Unwrap Promise" },
+        { "syntax": "type DeepPartial<T> = { [P in keyof T]?: DeepPartial<T[P]> };", "desc": "Recursive partial" },
+        { "syntax": "interface State { status: 'idle' | 'loading' | 'success' | 'error'; }", "desc": "Discriminated union" }
+      ]
+    },
+    {
+      "title": "TSConfig Essentials",
+      "quick_ref": [
+        { "syntax": "\"strict\": true", "desc": "Enable all strict checks" },
+        { "syntax": "\"target\": \"ES2020\"", "desc": "Output JavaScript version" },
+        { "syntax": "\"module\": \"esnext\"", "desc": "Module system" },
+        { "syntax": "\"lib\": [\"ES2020\", \"DOM\"]", "desc": "Type definitions to include" },
+        { "syntax": "\"outDir\": \"./dist\"", "desc": "Output directory" },
+        { "syntax": "\"rootDir\": \"./src\"", "desc": "Source directory" },
+        { "syntax": "\"esModuleInterop\": true", "desc": "CommonJS/ES module interop" },
+        { "syntax": "\"skipLibCheck\": true", "desc": "Skip .d.ts type checking" },
+        { "syntax": "\"sourceMap\": true", "desc": "Generate source maps" },
+        { "syntax": "\"declaration\": true", "desc": "Generate .d.ts files" }
+      ]
+    },
+    {
+      "title": "Decorators (Experimental)",
+      "quick_ref": [
+        { "syntax": "@Component", "desc": "Class decorator" },
+        { "syntax": "@Input() name: string;", "desc": "Property decorator" },
+        { "syntax": "@Log", "desc": "Method decorator" },
+        { "syntax": "@validate", "desc": "Parameter decorator" },
+        { "note": "Enable with: \"experimentalDecorators\": true in tsconfig" }
+      ]
+    },
+    {
+      "title": "Quick Tips",
+      "tips": [
+        { "tip": "Hover over variables in VS Code to see their inferred types" },
+        { "tip": "Use 'unknown' instead of 'any' when type is uncertain" },
+        { "tip": "Enable strict mode for better type safety" },
+        { "tip": "Use type guards to narrow union types safely" },
+        { "tip": "Leverage utility types instead of writing complex mapped types" },
+        { "tip": "Use 'as const' for literal types" },
+        { "tip": "Prefer interfaces for object shapes, type aliases for unions" },
+        { "tip": "Use optional chaining (?.) to safely access nested properties" },
+        { "tip": "Validate external data with type guards" },
+        { "tip": "Break complex types into smaller, named types for clarity" }
+      ]
+    },
+    {
+      "title": "Common Mistakes to Avoid",
+      "mistakes": [
+        { "mistake": "Using 'any' everywhere", "fix": "Use 'unknown' or specific types" },
+        { "mistake": "Not handling null/undefined", "fix": "Use type guards or optional chaining" },
+        { "mistake": "Overusing type assertions", "fix": "Let TypeScript infer or use type guards" },
+        { "mistake": "Forgetting to export types", "fix": "Add 'export' to make types available" },
+        { "mistake": "Not enabling strict mode", "fix": "Set \"strict\": true in tsconfig" },
+        { "mistake": "Ignoring compiler errors", "fix": "Fix errors, don't silence them with 'any'" },
+        { "mistake": "Not validating external data", "fix": "Create type guards for API responses" },
+        { "mistake": "Using '!' non-null assertion carelessly", "fix": "Only use when absolutely certain" }
+      ]
+    },
+    {
+      "title": "Keyboard Shortcuts (VS Code)",
+      "shortcuts": [
+        { "action": "Go to Definition", "mac": "Cmd + Click", "win": "F12" },
+        { "action": "Find All References", "mac": "Shift + F12", "win": "Shift + F12" },
+        { "action": "Rename Symbol", "mac": "F2", "win": "F2" },
+        { "action": "Quick Fix", "mac": "Cmd + .", "win": "Ctrl + ." },
+        { "action": "Show Hover Info", "mac": "Cmd + K, Cmd + I", "win": "Ctrl + K, Ctrl + I" },
+        { "action": "Go to Type Definition", "mac": "Cmd + Click (type)", "win": "Ctrl + Click" },
+        { "action": "Trigger Suggest", "mac": "Ctrl + Space", "win": "Ctrl + Space" }
+      ]
+    },
+    {
+      "title": "TypeScript CLI Commands",
+      "commands": [
+        { "command": "tsc", "desc": "Compile TypeScript files" },
+        { "command": "tsc --init", "desc": "Create tsconfig.json" },
+        { "command": "tsc --watch", "desc": "Watch mode (recompile on changes)" },
+        { "command": "tsc --noEmit", "desc": "Type check without generating files" },
+        { "command": "tsc --project tsconfig.prod.json", "desc": "Use specific config file" },
+        { "command": "tsc --showConfig", "desc": "Show effective compiler options" },
+        { "command": "tsc --listFiles", "desc": "List all compiled files" }
+      ]
+    },
+    {
+      "title": "Useful Resources",
+      "resources": [
+        { "name": "TypeScript Handbook", "url": "https://www.typescriptlang.org/docs/handbook/" },
+        { "name": "TypeScript Playground", "url": "https://www.typescriptlang.org/play" },
+        { "name": "DefinitelyTyped (@types)", "url": "https://github.com/DefinitelyTyped/DefinitelyTyped" },
+        { "name": "TypeScript Deep Dive", "url": "https://basarat.gitbook.io/typescript/" },
+        { "name": "Type Challenges", "url": "https://github.com/type-challenges/type-challenges" }
+      ]
+    }
+  ]
+}

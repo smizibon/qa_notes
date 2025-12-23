@@ -1,0 +1,210 @@
+{
+  "id": "lesson-type-aliases",
+  "title": "Type Aliases - Creating Custom Type Names",
+  "description": "Learn how to create reusable type definitions and when to use type aliases vs interfaces",
+  "sections": [
+    {
+      "title": "What Are Type Aliases?",
+      "content": "Type aliases let you create custom names for any type - primitives, unions, intersections, tuples, or complex object shapes. Think of them as variables for types: you define a type once and reuse it everywhere by its name.",
+      "analogy": "Imagine you're ordering at a coffee shop. Instead of saying 'medium caramel macchiato with oat milk, extra shot, no whip' every time, you tell them to save it as 'My Usual'. That's a type alias - a shorthand name for something complex!",
+      "example": {
+        "code": "// Without type alias - repetitive and hard to maintain\nfunction processUser(user: { id: number; name: string; email: string }) {}\nfunction updateUser(user: { id: number; name: string; email: string }) {}\nfunction deleteUser(user: { id: number; name: string; email: string }) {}\n\n// With type alias - clean and maintainable\ntype User = { id: number; name: string; email: string };\n\nfunction processUser(user: User) {}\nfunction updateUser(user: User) {}\nfunction deleteUser(user: User) {}",
+        "explanation": "Define once, use everywhere. Change the User type definition and all functions update automatically!"
+      }
+    },
+    {
+      "title": "Basic Type Alias Syntax",
+      "content": "Type aliases use the 'type' keyword followed by the alias name, an equals sign, and the type definition.",
+      "syntax": "type AliasName = TypeDefinition;",
+      "examples": [
+        {
+          "title": "Primitive Aliases",
+          "code": "type ID = number;\ntype Username = string;\ntype IsActive = boolean;\n\nlet userId: ID = 123;\nlet username: Username = 'alice';\nlet active: IsActive = true;",
+          "explanation": "Creates semantic meaning for primitive types. ID communicates intent better than just 'number'."
+        },
+        {
+          "title": "Union Type Aliases",
+          "code": "type Status = 'pending' | 'approved' | 'rejected';\ntype Result = number | string | boolean;\ntype Nullable<T> = T | null;\n\nlet orderStatus: Status = 'pending';\nlet value: Result = 42;\nlet userName: Nullable<string> = null;",
+          "explanation": "Union types are perfect candidates for aliases. Much cleaner than repeating the union everywhere!"
+        },
+        {
+          "title": "Object Type Aliases",
+          "code": "type Point = {\n  x: number;\n  y: number;\n};\n\ntype User = {\n  id: number;\n  name: string;\n  email: string;\n  role: 'admin' | 'user' | 'guest';\n};\n\nconst origin: Point = { x: 0, y: 0 };\nconst admin: User = {\n  id: 1,\n  name: 'Alice',\n  email: 'alice@example.com',\n  role: 'admin'\n};",
+          "explanation": "Object shapes are the most common use case for type aliases."
+        }
+      ]
+    },
+    {
+      "title": "Type Aliases vs Interfaces",
+      "content": "Both can describe object shapes, but they have key differences. Understanding when to use each is crucial for writing idiomatic TypeScript.",
+      "comparison": [
+        {
+          "feature": "Syntax",
+          "typeAlias": "type Point = { x: number; y: number };",
+          "interface": "interface Point { x: number; y: number; }",
+          "note": "Type uses '=' and semicolons, interface doesn't"
+        },
+        {
+          "feature": "Extending",
+          "typeAlias": "type Point3D = Point & { z: number };  // Intersection",
+          "interface": "interface Point3D extends Point { z: number; }  // Extends",
+          "note": "Both work, different syntax"
+        },
+        {
+          "feature": "Declaration Merging",
+          "typeAlias": "❌ Cannot redeclare - causes error",
+          "interface": "✅ Multiple declarations automatically merge",
+          "example": "// Interface merging\ninterface User { name: string; }\ninterface User { age: number; }\n// User now has both name and age!\n\n// Type alias - ERROR\ntype User = { name: string; };\ntype User = { age: number; };  // ✗ Duplicate identifier"
+        },
+        {
+          "feature": "Union Types",
+          "typeAlias": "✅ type ID = string | number;",
+          "interface": "❌ Cannot represent unions",
+          "note": "Type aliases are more flexible for unions"
+        },
+        {
+          "feature": "Tuple Types",
+          "typeAlias": "✅ type Coords = [number, number];",
+          "interface": "❌ Cannot represent tuples directly",
+          "note": "Use type aliases for tuples"
+        },
+        {
+          "feature": "Mapped Types",
+          "typeAlias": "✅ type ReadOnly<T> = { readonly [K in keyof T]: T[K] };",
+          "interface": "❌ Cannot create mapped types",
+          "note": "Advanced type manipulation requires type aliases"
+        }
+      ],
+      "guidelines": {
+        "useInterface": [
+          "When defining object shapes that might be extended",
+          "When building libraries (allows users to extend your types)",
+          "When declaration merging is beneficial",
+          "For public APIs"
+        ],
+        "useTypeAlias": [
+          "For unions and intersections",
+          "For tuples",
+          "For mapped types and advanced type operations",
+          "For primitive aliases",
+          "For function type signatures",
+          "When you need computed property names"
+        ]
+      }
+    },
+    {
+      "title": "Union and Intersection Types",
+      "content": "Type aliases excel at creating union (OR) and intersection (AND) types.",
+      "examples": [
+        {
+          "title": "Union Types - OR Logic",
+          "code": "type StringOrNumber = string | number;\ntype Status = 'success' | 'error' | 'loading';\ntype Response<T> = { success: true; data: T } | { success: false; error: string };\n\nfunction processValue(value: StringOrNumber) {\n  if (typeof value === 'string') {\n    console.log(value.toUpperCase());\n  } else {\n    console.log(value.toFixed(2));\n  }\n}\n\nfunction handleResponse(response: Response<User>) {\n  if (response.success) {\n    console.log('User:', response.data);\n  } else {\n    console.log('Error:', response.error);\n  }\n}",
+          "explanation": "Union types mean 'one of these types'. Perfect for values that can be multiple types or discriminated unions."
+        },
+        {
+          "title": "Intersection Types - AND Logic",
+          "code": "type Timestamped = {\n  createdAt: Date;\n  updatedAt: Date;\n};\n\ntype User = {\n  id: number;\n  name: string;\n};\n\ntype UserWithTimestamps = User & Timestamped;\n\nconst user: UserWithTimestamps = {\n  id: 1,\n  name: 'Alice',\n  createdAt: new Date(),\n  updatedAt: new Date()\n};",
+          "explanation": "Intersection combines types - the result must have ALL properties from both types."
+        },
+        {
+          "title": "Complex Combinations",
+          "code": "type Admin = { role: 'admin'; permissions: string[] };\ntype User = { role: 'user'; };\ntype Guest = { role: 'guest'; readonly: true };\n\ntype Person = Admin | User | Guest;\n\ntype WithId = { id: number };\ntype WithEmail = { email: string };\n\ntype IdentifiableUser = (User | Admin) & WithId & WithEmail;\n\nconst admin: IdentifiableUser = {\n  role: 'admin',\n  permissions: ['read', 'write'],\n  id: 1,\n  email: 'admin@example.com'\n};",
+          "explanation": "Combine unions and intersections to create sophisticated type combinations!"
+        }
+      ]
+    },
+    {
+      "title": "Function Type Aliases",
+      "content": "Type aliases are excellent for defining function signatures, especially when functions are passed as parameters.",
+      "examples": [
+        {
+          "code": "type MathOperation = (a: number, b: number) => number;\n\nconst add: MathOperation = (a, b) => a + b;\nconst multiply: MathOperation = (a, b) => a * b;\n\nfunction calculate(op: MathOperation, x: number, y: number): number {\n  return op(x, y);\n}\n\nconsole.log(calculate(add, 5, 3));       // 8\nconsole.log(calculate(multiply, 5, 3));  // 15",
+          "explanation": "Reusable function signature. All operations must match the MathOperation type."
+        },
+        {
+          "code": "type EventHandler<T> = (event: T) => void;\ntype AsyncHandler<T, R> = (data: T) => Promise<R>;\n\ntype ClickHandler = EventHandler<MouseEvent>;\ntype SubmitHandler = EventHandler<FormEvent>;\n\nconst handleClick: ClickHandler = (e) => {\n  console.log('Clicked at:', e.clientX, e.clientY);\n};\n\ntype DataFetcher = AsyncHandler<string, User[]>;\n\nconst fetchUsers: DataFetcher = async (url) => {\n  const response = await fetch(url);\n  return response.json();\n};",
+          "explanation": "Generic function type aliases for flexible, reusable patterns!"
+        }
+      ]
+    },
+    {
+      "title": "Tuple Type Aliases",
+      "content": "Tuples are arrays with fixed length and specific types at each position. Type aliases make them readable and reusable.",
+      "examples": [
+        {
+          "code": "type Coordinates = [number, number];\ntype RGB = [number, number, number];\ntype NameAndAge = [string, number];\n\nconst point: Coordinates = [10, 20];\nconst color: RGB = [255, 128, 0];\nconst person: NameAndAge = ['Alice', 30];\n\n// Destructuring works great with tuples\nconst [x, y] = point;\nconst [red, green, blue] = color;\nconst [name, age] = person;",
+          "explanation": "Tuples are perfect for fixed-structure arrays. Much clearer with type aliases!"
+        },
+        {
+          "code": "type ApiResponse<T> = [T, null] | [null, Error];\n\nfunction fetchData(): ApiResponse<User> {\n  try {\n    const user = { id: 1, name: 'Alice' };\n    return [user, null];\n  } catch (error) {\n    return [null, error as Error];\n  }\n}\n\nconst [data, error] = fetchData();\nif (error) {\n  console.error('Error:', error);\n} else {\n  console.log('User:', data);\n}",
+          "explanation": "Tuples are great for returning multiple values, especially for error handling patterns!"
+        }
+      ]
+    },
+    {
+      "title": "Conditional Types with Aliases",
+      "content": "Type aliases can include conditional logic, creating types that change based on conditions.",
+      "examples": [
+        {
+          "code": "type IsString<T> = T extends string ? true : false;\n\ntype A = IsString<string>;   // true\ntype B = IsString<number>;   // false\ntype C = IsString<'hello'>;  // true",
+          "explanation": "Conditional types: if T extends string, resolve to true, otherwise false."
+        },
+        {
+          "code": "type NonNullable<T> = T extends null | undefined ? never : T;\n\ntype A = NonNullable<string | null>;      // string\ntype B = NonNullable<number | undefined>;  // number\ntype C = NonNullable<string | null | undefined>;  // string",
+          "explanation": "Filter out null and undefined from a type. Useful for non-nullable versions!"
+        },
+        {
+          "code": "type Flatten<T> = T extends Array<infer U> ? U : T;\n\ntype A = Flatten<string[]>;     // string\ntype B = Flatten<number[]>;     // number  \ntype C = Flatten<string>;       // string (not an array)\ntype D = Flatten<User[]>;       // User",
+          "explanation": "Extract the element type from arrays, or return the type itself if not an array. 'infer' captures the array element type!"
+        }
+      ]
+    },
+    {
+      "title": "Recursive Type Aliases",
+      "content": "Type aliases can reference themselves, enabling recursive data structures like trees and nested objects.",
+      "examples": [
+        {
+          "code": "type JSONValue = \n  | string\n  | number\n  | boolean\n  | null\n  | JSONValue[]\n  | { [key: string]: JSONValue };\n\nconst data: JSONValue = {\n  name: 'Alice',\n  age: 30,\n  hobbies: ['reading', 'coding'],\n  address: {\n    city: 'New York',\n    coords: [40.7128, -74.0060]\n  }\n};",
+          "explanation": "JSONValue references itself! Can represent any valid JSON structure."
+        },
+        {
+          "code": "type TreeNode<T> = {\n  value: T;\n  children?: TreeNode<T>[];\n};\n\nconst tree: TreeNode<number> = {\n  value: 1,\n  children: [\n    { value: 2, children: [{ value: 4 }, { value: 5 }] },\n    { value: 3 }\n  ]\n};",
+          "explanation": "Perfect for tree structures! TreeNode can contain more TreeNodes."
+        }
+      ]
+    },
+    {
+      "title": "Best Practices",
+      "content": "Professional guidelines for using type aliases effectively:",
+      "practices": [
+        {
+          "practice": "Use descriptive names",
+          "bad": "type T = string | number;",
+          "good": "type StringOrNumber = string | number;\ntype UserId = string | number;",
+          "why": "Clear names make code self-documenting and easier to understand"
+        },
+        {
+          "practice": "Keep aliases focused",
+          "bad": "type Everything = { user: User; posts: Post[]; comments: Comment[]; likes: Like[]; settings: Settings; /* 50 more properties */ };",
+          "good": "type UserProfile = { user: User; posts: Post[] };\ntype UserActivity = { comments: Comment[]; likes: Like[] };\ntype UserSettings = { settings: Settings };",
+          "why": "Smaller, focused types are easier to understand and maintain"
+        },
+        {
+          "practice": "Prefer interfaces for objects in public APIs",
+          "code": "// Library code - use interface\nexport interface Config {\n  apiKey: string;\n  endpoint: string;\n}\n\n// Internal code - type alias is fine\ntype InternalState = {\n  cache: Map<string, any>;\n  loading: boolean;\n};",
+          "why": "Interfaces can be extended by library users; type aliases cannot"
+        },
+        {
+          "practice": "Use type aliases for unions and complex types",
+          "code": "type Status = 'idle' | 'loading' | 'success' | 'error';\ntype Result<T, E = Error> = { success: true; data: T } | { success: false; error: E };\ntype DeepReadonly<T> = { readonly [P in keyof T]: DeepReadonly<T[P]> };",
+          "why": "Type aliases are the only way to represent these patterns"
+        },
+        {
+          "practice": "Export type aliases for reusability",
+          "code": "// types.ts\nexport type User = { id: number; name: string };\nexport type ApiResponse<T> = { data: T; status: number };\n\n// other-file.ts\nimport { User, ApiResponse } from './types';\nconst response: ApiResponse<User> = await fetchUser();",
+          "why": "Shared types ensure consistency across your codebase"
+        }
+      ]
+    }
+  ]
+}

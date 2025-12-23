@@ -1,0 +1,139 @@
+{
+  "id": "lesson-getting-started",
+  "title": "Getting Started with TypeScript",
+  "description": "A complete beginner's guide to understanding and setting up TypeScript",
+  "sections": [
+    {
+      "title": "What is TypeScript?",
+      "content": "TypeScript is a programming language developed by Microsoft that builds on JavaScript by adding static types. Think of it as JavaScript with superpowers! While JavaScript lets you write code without declaring what type of data you're working with, TypeScript requires you to be explicit about your data types. This helps catch errors before your code even runs.",
+      "example": "// JavaScript - no type checking\nlet message = 'Hello';\nmessage = 42; // This works but might cause bugs\n\n// TypeScript - with type checking\nlet message: string = 'Hello';\nmessage = 42; // Error! Can't assign number to string",
+      "keyPoints": [
+        "TypeScript is a superset of JavaScript - all JavaScript code is valid TypeScript",
+        "It adds optional static typing to catch errors during development",
+        "TypeScript code compiles down to plain JavaScript",
+        "Major companies like Microsoft, Google, and Airbnb use TypeScript"
+      ]
+    },
+    {
+      "title": "Why Learn TypeScript?",
+      "content": "Imagine you're building a house. JavaScript is like building without blueprints - you can do it, but mistakes are easy to make. TypeScript gives you those blueprints. It helps you catch mistakes early, makes your code easier to understand, and provides better tooling support with autocomplete and documentation.",
+      "benefits": [
+        "Catch bugs before runtime - your editor will show you errors as you type",
+        "Better autocomplete - your editor knows what properties and methods are available",
+        "Easier refactoring - when you change code, TypeScript helps find all affected areas",
+        "Self-documenting code - types serve as inline documentation",
+        "Scales better for large projects - easier to maintain as your codebase grows"
+      ]
+    },
+    {
+      "title": "Setting Up Your First TypeScript Project",
+      "content": "Let's walk through setting up TypeScript step by step. Don't worry if this seems like a lot - you only need to do this once per project!",
+      "steps": [
+        {
+          "step": "Install Node.js",
+          "description": "First, you need Node.js installed on your computer. Download it from nodejs.org. This gives you npm (Node Package Manager), which we'll use to install TypeScript.",
+          "command": "node --version",
+          "explanation": "Run this to verify Node.js is installed. You should see a version number like v18.0.0"
+        },
+        {
+          "step": "Install TypeScript",
+          "description": "Open your terminal or command prompt and run this command. The -g flag installs TypeScript globally so you can use it anywhere on your computer.",
+          "command": "npm install -g typescript",
+          "explanation": "This downloads and installs the TypeScript compiler on your system"
+        },
+        {
+          "step": "Create Your Project Folder",
+          "description": "Create a new folder for your project and navigate into it.",
+          "command": "mkdir my-typescript-project\ncd my-typescript-project\nnpm init -y",
+          "explanation": "This creates a folder and initializes a Node.js project with a package.json file"
+        },
+        {
+          "step": "Initialize TypeScript Configuration",
+          "description": "Create a tsconfig.json file that tells TypeScript how to compile your code.",
+          "command": "tsc --init",
+          "explanation": "This creates a tsconfig.json file with sensible defaults and lots of comments explaining each option"
+        },
+        {
+          "step": "Create Your First TypeScript File",
+          "description": "Create a file named index.ts (note the .ts extension for TypeScript files)",
+          "command": "// index.ts\nfunction greet(name: string): string {\n  return `Hello, ${name}!`;\n}\n\nconst message = greet('World');\nconsole.log(message);",
+          "explanation": "This simple function takes a string parameter and returns a string. TypeScript will ensure you always pass a string to this function."
+        },
+        {
+          "step": "Compile and Run Your Code",
+          "description": "Use the TypeScript compiler to convert your .ts file to JavaScript, then run it with Node.",
+          "command": "tsc index.ts\nnode index.js",
+          "explanation": "The tsc command compiles index.ts to index.js. Then Node.js runs the JavaScript file."
+        }
+      ]
+    },
+    {
+      "title": "Understanding the Compilation Process",
+      "content": "TypeScript doesn't run directly in browsers or Node.js. It needs to be compiled (converted) to JavaScript first. Think of TypeScript as a translator that converts your type-safe code into regular JavaScript that can run anywhere.",
+      "process": [
+        "You write TypeScript code (.ts files)",
+        "TypeScript compiler checks for type errors",
+        "If no errors, it generates JavaScript files (.js files)",
+        "The JavaScript files run in browsers or Node.js",
+        "During compilation, all type information is removed - it only exists to help you during development"
+      ]
+    },
+    {
+      "title": "Your Development Workflow",
+      "content": "Here's how you'll typically work with TypeScript day-to-day:",
+      "workflow": [
+        {
+          "phase": "Write",
+          "description": "Write your TypeScript code in .ts files. Your code editor (like VS Code) will show type errors in real-time as you type."
+        },
+        {
+          "phase": "Check",
+          "description": "TypeScript continuously checks your code for type errors. Red squiggly lines indicate problems."
+        },
+        {
+          "phase": "Compile",
+          "description": "Run 'tsc' to compile your TypeScript to JavaScript. Fix any errors the compiler finds."
+        },
+        {
+          "phase": "Run",
+          "description": "Run your compiled JavaScript code in Node.js or a browser."
+        },
+        {
+          "phase": "Debug",
+          "description": "Use source maps to debug your original TypeScript code even though JavaScript is running."
+        }
+      ]
+    },
+    {
+      "title": "Common Beginner Mistakes to Avoid",
+      "content": "Here are mistakes that trip up newcomers:",
+      "mistakes": [
+        {
+          "mistake": "Not understanding the difference between .ts and .js files",
+          "solution": "Remember: .ts files are your source code with types. .js files are the compiled output that actually runs. Never edit the .js files - always edit .ts files."
+        },
+        {
+          "mistake": "Trying to run .ts files directly",
+          "solution": "You must compile TypeScript to JavaScript first. Use 'tsc filename.ts' then 'node filename.js'"
+        },
+        {
+          "mistake": "Using 'any' type everywhere",
+          "solution": "The 'any' type defeats the purpose of TypeScript. Use specific types to get the benefits of type checking."
+        },
+        {
+          "mistake": "Not reading compiler error messages",
+          "solution": "TypeScript error messages are actually very helpful! They tell you exactly what's wrong and where."
+        }
+      ]
+    },
+    {
+      "title": "Next Steps",
+      "content": "Now that you have TypeScript set up, you're ready to learn about types! The next lesson will cover basic types - the building blocks of TypeScript. Take your time with each lesson and practice writing code. The more you use TypeScript, the more natural it will feel.",
+      "resources": [
+        "Official TypeScript Handbook: typescriptlang.org/docs",
+        "TypeScript Playground: Try code in your browser without setup",
+        "VS Code: The best editor for TypeScript development"
+      ]
+    }
+  ]
+}

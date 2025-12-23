@@ -1,0 +1,137 @@
+{
+  "id": "lesson-common-patterns",
+  "title": "Common TypeScript Patterns - Best Practices & Idioms",
+  "description": "Learn proven TypeScript patterns for building maintainable, type-safe applications",
+  "sections": [
+    {
+      "title": "What Are TypeScript Patterns?",
+      "content": "TypeScript patterns are proven solutions to common programming problems. They leverage TypeScript's type system to create safe, maintainable, and expressive code. Think of them as recipes that expert TypeScript developers use repeatedly.",
+      "analogy": "Patterns are like cooking recipes. Once you learn to make a great pasta sauce, you use that technique for different dishes. Similarly, once you learn these TypeScript patterns, you'll recognize when and how to apply them in your projects!",
+      "benefits": [
+        "Reduce bugs through type safety",
+        "Make code more maintainable",
+        "Improve developer experience with autocomplete",
+        "Enable better refactoring",
+        "Create self-documenting APIs"
+      ]
+    },
+    {
+      "title": "Builder Pattern with Types",
+      "content": "The Builder pattern creates complex objects step-by-step. TypeScript makes it type-safe!",
+      "example": {
+        "code": "class UserBuilder {\n  private user: Partial<User> = {};\n\n  setName(name: string): this {\n    this.user.name = name;\n    return this;\n  }\n\n  setEmail(email: string): this {\n    this.user.email = email;\n    return this;\n  }\n\n  setAge(age: number): this {\n    this.user.age = age;\n    return this;\n  }\n\n  build(): User {\n    if (!this.user.name || !this.user.email) {\n      throw new Error('Name and email are required');\n    }\n    return this.user as User;\n  }\n}\n\n// Usage:\nconst user = new UserBuilder()\n  .setName('Alice')\n  .setEmail('alice@example.com')\n  .setAge(30)\n  .build();",
+        "explanation": "Method chaining with 'return this' allows fluent API. Partial<User> allows building incrementally!"
+      },
+      "advancedVersion": {
+        "title": "Type-Safe Builder (Ensures Required Fields)",
+        "code": "type Builder<T, K extends keyof T = never> = {\n  [P in keyof T]: (value: T[P]) => Builder<T, K | P>;\n} & (K extends keyof T ? { build: () => T } : {});\n\nfunction createBuilder<T>(): Builder<T> {\n  const data: any = {};\n  \n  const builder: any = new Proxy({}, {\n    get(target, prop) {\n      if (prop === 'build') {\n        return () => data;\n      }\n      return (value: any) => {\n        data[prop] = value;\n        return builder;\n      };\n    }\n  });\n  \n  return builder;\n}\n\nconst user = createBuilder<User>()\n  .name('Alice')\n  .email('alice@example.com')\n  .build();  // Only available after all required fields are set!",
+        "explanation": "Advanced: Type system prevents calling build() until all required fields are provided!"
+      }
+    },
+    {
+      "title": "Factory Pattern",
+      "content": "Factory pattern creates objects based on input, returning different types that share a common interface.",
+      "example": {
+        "code": "interface Logger {\n  log(message: string): void;\n}\n\nclass ConsoleLogger implements Logger {\n  log(message: string) {\n    console.log(`[Console] ${message}`);\n  }\n}\n\nclass FileLogger implements Logger {\n  constructor(private filename: string) {}\n  \n  log(message: string) {\n    // Write to file...\n    console.log(`[File: ${this.filename}] ${message}`);\n  }\n}\n\nclass RemoteLogger implements Logger {\n  constructor(private endpoint: string) {}\n  \n  log(message: string) {\n    // Send to server...\n    fetch(this.endpoint, {\n      method: 'POST',\n      body: JSON.stringify({ message })\n    });\n  }\n}\n\nclass LoggerFactory {\n  static create(type: 'console'): ConsoleLogger;\n  static create(type: 'file', filename: string): FileLogger;\n  static create(type: 'remote', endpoint: string): RemoteLogger;\n  static create(type: string, ...args: any[]): Logger {\n    switch (type) {\n      case 'console':\n        return new ConsoleLogger();\n      case 'file':\n        return new FileLogger(args[0]);\n      case 'remote':\n        return new RemoteLogger(args[0]);\n      default:\n        throw new Error(`Unknown logger type: ${type}`);\n    }\n  }\n}\n\n// Usage with full type safety:\nconst logger1 = LoggerFactory.create('console');\nconst logger2 = LoggerFactory.create('file', 'app.log');\nconst logger3 = LoggerFactory.create('remote', 'https://api.example.com/logs');",
+        "explanation": "Function overloads ensure the right parameters for each logger type. Type-safe factory!"
+      }
+    },
+    {
+      "title": "Repository Pattern",
+      "content": "Repository pattern abstracts data access, making it easy to swap implementations (API, localStorage, mock data).",
+      "example": {
+        "code": "interface User {\n  id: string;\n  name: string;\n  email: string;\n}\n\ninterface Repository<T> {\n  find(id: string): Promise<T | null>;\n  findAll(): Promise<T[]>;\n  create(item: Omit<T, 'id'>): Promise<T>;\n  update(id: string, item: Partial<T>): Promise<T>;\n  delete(id: string): Promise<void>;\n}\n\nclass ApiUserRepository implements Repository<User> {\n  constructor(private baseUrl: string) {}\n\n  async find(id: string): Promise<User | null> {\n    const response = await fetch(`${this.baseUrl}/users/${id}`);\n    return response.ok ? response.json() : null;\n  }\n\n  async findAll(): Promise<User[]> {\n    const response = await fetch(`${this.baseUrl}/users`);\n    return response.json();\n  }\n\n  async create(user: Omit<User, 'id'>): Promise<User> {\n    const response = await fetch(`${this.baseUrl}/users`, {\n      method: 'POST',\n      body: JSON.stringify(user)\n    });\n    return response.json();\n  }\n\n  async update(id: string, user: Partial<User>): Promise<User> {\n    const response = await fetch(`${this.baseUrl}/users/${id}`, {\n      method: 'PATCH',\n      body: JSON.stringify(user)\n    });\n    return response.json();\n  }\n\n  async delete(id: string): Promise<void> {\n    await fetch(`${this.baseUrl}/users/${id}`, { method: 'DELETE' });\n  }\n}\n\nclass MockUserRepository implements Repository<User> {\n  private users: User[] = [];\n  private nextId = 1;\n\n  async find(id: string): Promise<User | null> {\n    return this.users.find(u => u.id === id) || null;\n  }\n\n  async findAll(): Promise<User[]> {\n    return [...this.users];\n  }\n\n  async create(user: Omit<User, 'id'>): Promise<User> {\n    const newUser = { ...user, id: String(this.nextId++) };\n    this.users.push(newUser);\n    return newUser;\n  }\n\n  async update(id: string, updates: Partial<User>): Promise<User> {\n    const user = await this.find(id);\n    if (!user) throw new Error('User not found');\n    Object.assign(user, updates);\n    return user;\n  }\n\n  async delete(id: string): Promise<void> {\n    this.users = this.users.filter(u => u.id !== id);\n  }\n}\n\n// Usage - swap implementations easily:\nconst prodRepo: Repository<User> = new ApiUserRepository('https://api.example.com');\nconst testRepo: Repository<User> = new MockUserRepository();",
+        "explanation": "Interface ensures all repositories have the same methods. Easy to test with mock implementation!"
+      }
+    },
+    {
+      "title": "Result/Either Pattern (Error Handling)",
+      "content": "Instead of throwing exceptions, return a Result type that explicitly represents success or failure.",
+      "example": {
+        "code": "type Success<T> = { success: true; value: T };\ntype Failure<E> = { success: false; error: E };\ntype Result<T, E = Error> = Success<T> | Failure<E>;\n\n// Helper functions\nfunction ok<T>(value: T): Success<T> {\n  return { success: true, value };\n}\n\nfunction err<E>(error: E): Failure<E> {\n  return { success: false, error };\n}\n\n// Usage:\nfunction divide(a: number, b: number): Result<number, string> {\n  if (b === 0) {\n    return err('Cannot divide by zero');\n  }\n  return ok(a / b);\n}\n\nconst result = divide(10, 2);\nif (result.success) {\n  console.log('Result:', result.value);  // TypeScript knows: value exists\n} else {\n  console.error('Error:', result.error);  // TypeScript knows: error exists\n}\n\n// Real-world async example:\nasync function fetchUser(id: string): Promise<Result<User, string>> {\n  try {\n    const response = await fetch(`/api/users/${id}`);\n    if (!response.ok) {\n      return err(`HTTP Error: ${response.status}`);\n    }\n    const user = await response.json();\n    return ok(user);\n  } catch (error) {\n    return err(`Network error: ${error}`);\n  }\n}\n\n// Usage:\nconst userResult = await fetchUser('123');\nif (userResult.success) {\n  console.log('User:', userResult.value.name);\n} else {\n  console.error('Failed to fetch user:', userResult.error);\n}",
+        "explanation": "Explicit error handling in the type system. No surprises, no forgotten try-catch blocks!"
+      }
+    },
+    {
+      "title": "Branded Types (Nominal Typing)",
+      "content": "Create types that are structurally identical but nominally different, preventing accidental misuse.",
+      "problem": {
+        "code": "type UserId = string;\ntype PostId = string;\n\nfunction getUser(id: UserId) { /* ... */ }\nfunction getPost(id: PostId) { /* ... */ }\n\nconst userId: UserId = '123';\nconst postId: PostId = '456';\n\ngetUser(postId);  // ✗ Should be an error, but isn't!\ngetPost(userId);  // ✗ Should be an error, but isn't!",
+        "issue": "Both are just strings, TypeScript can't tell them apart"
+      },
+      "solution": {
+        "code": "// Branded type using intersection with a unique symbol\ntype Brand<K, T> = K & { __brand: T };\n\ntype UserId = Brand<string, 'UserId'>;\ntype PostId = Brand<string, 'PostId'>;\n\nfunction createUserId(id: string): UserId {\n  return id as UserId;\n}\n\nfunction createPostId(id: string): PostId {\n  return id as PostId;\n}\n\nfunction getUser(id: UserId) { /* ... */ }\nfunction getPost(id: PostId) { /* ... */ }\n\nconst userId = createUserId('123');\nconst postId = createPostId('456');\n\ngetUser(postId);  // ✓ Type error! Argument of type 'PostId' is not assignable to 'UserId'\ngetPost(userId);  // ✓ Type error! Argument of type 'UserId' is not assignable to 'PostId'\n\ngetUser(userId);  // ✓ OK\ngetPost(postId);  // ✓ OK",
+        "explanation": "Branded types prevent mixing up structurally identical types!"
+      },
+      "advancedExample": {
+        "title": "Email and URL Validation",
+        "code": "type Email = Brand<string, 'Email'>;\ntype URL = Brand<string, 'URL'>;\n\nfunction createEmail(email: string): Email | null {\n  const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;\n  return emailRegex.test(email) ? (email as Email) : null;\n}\n\nfunction createURL(url: string): URL | null {\n  try {\n    new window.URL(url);\n    return url as URL;\n  } catch {\n    return null;\n  }\n}\n\nfunction sendEmail(to: Email, subject: string) {\n  // TypeScript guarantees 'to' is a validated email\n}\n\nfunction openLink(url: URL) {\n  // TypeScript guarantees 'url' is a validated URL\n}\n\nconst email = createEmail('alice@example.com');\nconst url = createURL('https://example.com');\n\nif (email) sendEmail(email, 'Hello');\nif (url) openLink(url);",
+        "benefit": "Validation happens at creation, type system enforces it everywhere!"
+      }
+    },
+    {
+      "title": "Option/Maybe Pattern",
+      "content": "Explicit handling of optional values instead of null/undefined.",
+      "implementation": {
+        "code": "type Some<T> = { type: 'some'; value: T };\ntype None = { type: 'none' };\ntype Option<T> = Some<T> | None;\n\nfunction some<T>(value: T): Some<T> {\n  return { type: 'some', value };\n}\n\nfunction none(): None {\n  return { type: 'none' };\n}\n\n// Helper methods\nfunction map<T, U>(option: Option<T>, fn: (value: T) => U): Option<U> {\n  return option.type === 'some' ? some(fn(option.value)) : none();\n}\n\nfunction flatMap<T, U>(option: Option<T>, fn: (value: T) => Option<U>): Option<U> {\n  return option.type === 'some' ? fn(option.value) : none();\n}\n\nfunction getOrElse<T>(option: Option<T>, defaultValue: T): T {\n  return option.type === 'some' ? option.value : defaultValue;\n}\n\n// Usage:\nfunction findUser(id: string): Option<User> {\n  const user = database.get(id);\n  return user ? some(user) : none();\n}\n\nconst userOption = findUser('123');\nconst userName = map(userOption, user => user.name);\nconst displayName = getOrElse(userName, 'Anonymous');\n\nconsole.log(displayName);",
+        "explanation": "Explicit optional values with helpful utility functions. Forces you to handle the missing case!"
+      }
+    },
+    {
+      "title": "State Machine Pattern",
+      "content": "Model application state with discriminated unions, ensuring impossible states are impossible!",
+      "example": {
+        "code": "type IdleState = {\n  type: 'idle';\n};\n\ntype LoadingState = {\n  type: 'loading';\n  startedAt: Date;\n};\n\ntype SuccessState<T> = {\n  type: 'success';\n  data: T;\n  loadedAt: Date;\n};\n\ntype ErrorState = {\n  type: 'error';\n  error: string;\n  failedAt: Date;\n};\n\ntype AsyncState<T> = IdleState | LoadingState | SuccessState<T> | ErrorState;\n\nclass DataFetcher<T> {\n  private state: AsyncState<T> = { type: 'idle' };\n\n  getState(): AsyncState<T> {\n    return this.state;\n  }\n\n  async fetch(url: string): Promise<void> {\n    // Can only start loading from idle or error state\n    if (this.state.type === 'loading') {\n      throw new Error('Already loading');\n    }\n\n    this.state = { type: 'loading', startedAt: new Date() };\n\n    try {\n      const response = await fetch(url);\n      const data = await response.json();\n      this.state = { type: 'success', data, loadedAt: new Date() };\n    } catch (error) {\n      this.state = {\n        type: 'error',\n        error: String(error),\n        failedAt: new Date()\n      };\n    }\n  }\n}\n\n// Usage with type-safe state handling:\nconst fetcher = new DataFetcher<User[]>();\nawait fetcher.fetch('/api/users');\n\nconst state = fetcher.getState();\nswitch (state.type) {\n  case 'idle':\n    console.log('Not started yet');\n    break;\n  case 'loading':\n    console.log('Loading since', state.startedAt);\n    break;\n  case 'success':\n    console.log('Loaded', state.data.length, 'users at', state.loadedAt);\n    break;\n  case 'error':\n    console.error('Failed:', state.error, 'at', state.failedAt);\n    break;\n}\n\n// Impossible states are impossible:\n// - Can't have both data and error\n// - Can't have data without loadedAt timestamp\n// - Each state has exactly the data it needs!",
+        "explanation": "Discriminated unions make invalid states unrepresentable. Compiler enforces correct state handling!"
+      }
+    },
+    {
+      "title": "Dependency Injection",
+      "content": "Pass dependencies explicitly instead of importing them, making code testable and flexible.",
+      "example": {
+        "code": "// Services as interfaces\ninterface Logger {\n  log(message: string): void;\n}\n\ninterface UserRepository {\n  findById(id: string): Promise<User | null>;\n}\n\ninterface EmailService {\n  sendEmail(to: string, subject: string, body: string): Promise<void>;\n}\n\n// Business logic depends on interfaces, not implementations\nclass UserService {\n  constructor(\n    private logger: Logger,\n    private userRepo: UserRepository,\n    private emailService: EmailService\n  ) {}\n\n  async registerUser(name: string, email: string): Promise<User> {\n    this.logger.log(`Registering user: ${email}`);\n\n    const user = await this.userRepo.create({ name, email });\n\n    await this.emailService.sendEmail(\n      email,\n      'Welcome!',\n      `Hello ${name}, welcome to our app!`\n    );\n\n    this.logger.log(`User registered: ${user.id}`);\n    return user;\n  }\n}\n\n// Production implementation:\nconst userService = new UserService(\n  new ConsoleLogger(),\n  new ApiUserRepository('https://api.example.com'),\n  new SendGridEmailService(API_KEY)\n);\n\n// Test implementation:\nconst testUserService = new UserService(\n  new MockLogger(),\n  new MockUserRepository(),\n  new MockEmailService()\n);\n\n// Easy to test and swap implementations!",
+        "explanation": "Dependencies injected through constructor. Easy to test, easy to change implementations!"
+      }
+    },
+    {
+      "title": "Strategy Pattern",
+      "content": "Define a family of algorithms, encapsulate each one, and make them interchangeable.",
+      "example": {
+        "code": "interface SortStrategy<T> {\n  sort(items: T[]): T[];\n}\n\nclass QuickSort<T> implements SortStrategy<T> {\n  sort(items: T[]): T[] {\n    // QuickSort implementation\n    return items.sort();\n  }\n}\n\nclass MergeSort<T> implements SortStrategy<T> {\n  sort(items: T[]): T[] {\n    // MergeSort implementation\n    return items.sort();\n  }\n}\n\nclass Sorter<T> {\n  constructor(private strategy: SortStrategy<T>) {}\n\n  setStrategy(strategy: SortStrategy<T>) {\n    this.strategy = strategy;\n  }\n\n  sort(items: T[]): T[] {\n    return this.strategy.sort(items);\n  }\n}\n\n// Usage:\nconst sorter = new Sorter(new QuickSort());\nlet sorted = sorter.sort([3, 1, 4, 1, 5]);\n\n// Switch strategy at runtime:\nsorter.setStrategy(new MergeSort());\nsorted = sorter.sort([3, 1, 4, 1, 5]);",
+        "explanation": "Algorithms are interchangeable. Choose the right one at runtime!"
+      },
+      "practicalExample": {
+        "title": "Payment Processing",
+        "code": "interface PaymentStrategy {\n  pay(amount: number): Promise<{ success: boolean; transactionId?: string }>;\n}\n\nclass CreditCardPayment implements PaymentStrategy {\n  constructor(private cardNumber: string, private cvv: string) {}\n  \n  async pay(amount: number) {\n    // Process credit card payment\n    return { success: true, transactionId: 'CC123' };\n  }\n}\n\nclass PayPalPayment implements PaymentStrategy {\n  constructor(private email: string) {}\n  \n  async pay(amount: number) {\n    // Process PayPal payment\n    return { success: true, transactionId: 'PP456' };\n  }\n}\n\nclass CryptoPayment implements PaymentStrategy {\n  constructor(private walletAddress: string) {}\n  \n  async pay(amount: number) {\n    // Process crypto payment\n    return { success: true, transactionId: 'BTC789' };\n  }\n}\n\nclass ShoppingCart {\n  private paymentStrategy?: PaymentStrategy;\n\n  setPaymentMethod(strategy: PaymentStrategy) {\n    this.paymentStrategy = strategy;\n  }\n\n  async checkout(amount: number) {\n    if (!this.paymentStrategy) {\n      throw new Error('Payment method not set');\n    }\n    return this.paymentStrategy.pay(amount);\n  }\n}\n\n// Usage:\nconst cart = new ShoppingCart();\ncart.setPaymentMethod(new CreditCardPayment('1234-5678-9012-3456', '123'));\nawait cart.checkout(99.99);",
+        "benefit": "Add new payment methods without modifying existing code!"
+      }
+    },
+    {
+      "title": "Best Practices",
+      "content": "Guidelines for using these patterns effectively.",
+      "practices": [
+        {
+          "practice": "Use discriminated unions for state management",
+          "code": "type State = \n  | { status: 'idle' }\n  | { status: 'loading'; progress: number }\n  | { status: 'success'; data: T }\n  | { status: 'error'; error: string };",
+          "why": "Makes impossible states impossible, compiler ensures exhaustive handling"
+        },
+        {
+          "practice": "Prefer composition over inheritance",
+          "code": "// Instead of inheritance:\nclass Animal { }\nclass Dog extends Animal { }\n\n// Use composition:\ninterface Walkable { walk(): void; }\ninterface Barkable { bark(): void; }\nclass Dog implements Walkable, Barkable { }",
+          "why": "More flexible, easier to test, avoids deep inheritance hierarchies"
+        },
+        {
+          "practice": "Make illegal states unrepresentable",
+          "bad": "type User = {\n  isLoading: boolean;\n  data: User | null;\n  error: string | null;\n};  // Can have data AND error!",
+          "good": "type UserState = \n  | { type: 'loading' }\n  | { type: 'success'; data: User }\n  | { type: 'error'; error: string };",
+          "why": "Type system prevents invalid combinations"
+        },
+        {
+          "practice": "Use branded types for validation",
+          "code": "type ValidatedEmail = Brand<string, 'ValidatedEmail'>;\nfunction createEmail(email: string): ValidatedEmail | null {\n  return isValid(email) ? email as ValidatedEmail : null;\n}",
+          "why": "Validation happens once, type system enforces it everywhere"
+        }
+      ]
+    }
+  ]
+}

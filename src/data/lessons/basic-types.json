@@ -1,0 +1,308 @@
+{
+  "id": "lesson-basic-types",
+  "title": "Understanding Basic Types in TypeScript",
+  "description": "Learn the fundamental building blocks of TypeScript - the basic types that represent different kinds of data",
+  "sections": [
+    {
+      "title": "What Are Types?",
+      "content": "In programming, a 'type' describes what kind of data a variable can hold. Think of types as labels that tell you (and TypeScript) what you can do with a piece of data. For example, you can add numbers together, but you can't add a number to a piece of text. Types help prevent these kinds of mistakes.",
+      "analogy": "Imagine types as containers in your kitchen: a water bottle holds liquids, a jar holds solids, and a freezer bag holds frozen items. You wouldn't put soup in a freezer bag or freeze water in a jar without consequences. Similarly, TypeScript types ensure data goes in the right 'container'.",
+      "example": "// Without types (JavaScript)\nlet age = 25;\nage = 'twenty-five'; // This works but is confusing!\n\n// With types (TypeScript)\nlet age: number = 25;\nage = 'twenty-five'; // Error! Can't assign string to number"
+    },
+    {
+      "title": "The String Type",
+      "content": "Strings represent text - any sequence of characters. This could be a name, a sentence, a paragraph, or even an empty string. In TypeScript, we use the 'string' type to indicate that a variable should hold text data.",
+      "explanation": "Think of strings as anything you might write in a text message or type in a word processor. They're surrounded by quotes (single, double, or backticks).",
+      "examples": [
+        {
+          "code": "let firstName: string = 'John';",
+          "explanation": "A simple string with single quotes"
+        },
+        {
+          "code": "let message: string = \"Hello, World!\";",
+          "explanation": "A string with double quotes - works the same as single quotes"
+        },
+        {
+          "code": "let greeting: string = `Hello, ${firstName}`;",
+          "explanation": "Template literals (backticks) let you embed variables inside strings using ${}"
+        },
+        {
+          "code": "let empty: string = '';",
+          "explanation": "An empty string is still a string type"
+        }
+      ],
+      "commonOperations": [
+        "Concatenation: 'Hello' + ' ' + 'World' gives 'Hello World'",
+        "Length: 'Hello'.length gives 5",
+        "Uppercase: 'hello'.toUpperCase() gives 'HELLO'",
+        "Substring: 'Hello'.substring(0, 3) gives 'Hel'"
+      ]
+    },
+    {
+      "title": "The Number Type",
+      "content": "Numbers in TypeScript represent any numeric value - integers (whole numbers) or decimals (floating-point numbers). Unlike some languages, TypeScript doesn't distinguish between integers and decimals; they're all just 'number'.",
+      "explanation": "Use the number type for anything you'd count, measure, or calculate. This includes positive numbers, negative numbers, decimals, and even special values like Infinity.",
+      "examples": [
+        {
+          "code": "let age: number = 25;",
+          "explanation": "An integer (whole number)"
+        },
+        {
+          "code": "let price: number = 19.99;",
+          "explanation": "A decimal number"
+        },
+        {
+          "code": "let temperature: number = -5;",
+          "explanation": "Negative numbers work too"
+        },
+        {
+          "code": "let hexValue: number = 0xFF;",
+          "explanation": "You can write numbers in hexadecimal (0xFF = 255)"
+        },
+        {
+          "code": "let binary: number = 0b1010;",
+          "explanation": "Binary notation (0b1010 = 10)"
+        },
+        {
+          "code": "let result: number = 10 / 3;",
+          "explanation": "Math operations result in numbers (3.333...)"
+        }
+      ],
+      "commonOperations": [
+        "Addition: 5 + 3 = 8",
+        "Subtraction: 10 - 4 = 6",
+        "Multiplication: 4 * 5 = 20",
+        "Division: 20 / 4 = 5",
+        "Modulo (remainder): 10 % 3 = 1",
+        "Exponentiation: 2 ** 3 = 8"
+      ]
+    },
+    {
+      "title": "The Boolean Type",
+      "content": "Boolean is the simplest type - it can only be one of two values: true or false. That's it! Booleans are used for yes/no questions, on/off switches, and logical conditions.",
+      "explanation": "Think of booleans as light switches - they're either on (true) or off (false). They're perfect for tracking state or making decisions in your code.",
+      "examples": [
+        {
+          "code": "let isStudent: boolean = true;",
+          "explanation": "A simple true value"
+        },
+        {
+          "code": "let hasLicense: boolean = false;",
+          "explanation": "A false value"
+        },
+        {
+          "code": "let isAdult: boolean = age >= 18;",
+          "explanation": "Result of a comparison (true if age is 18 or more)"
+        },
+        {
+          "code": "let canVote: boolean = isAdult && hasCitizenship;",
+          "explanation": "Combining multiple conditions with logical operators"
+        }
+      ],
+      "useCases": [
+        "Conditional logic: if (isLoggedIn) { ... }",
+        "Feature flags: if (isFeatureEnabled) { showNewFeature(); }",
+        "Validation: let isValid = email.includes('@');",
+        "Toggle states: let isDarkMode = false;"
+      ]
+    },
+    {
+      "title": "The Array Type",
+      "content": "Arrays are collections that hold multiple values of the same type. Think of an array as a numbered list where each item has a position (called an index), starting from 0.",
+      "explanation": "Imagine a row of mailboxes, each numbered and containing something. That's an array! You can access any mailbox by its number, and all mailboxes hold the same type of thing.",
+      "twoSyntaxes": {
+        "description": "TypeScript gives you two ways to declare arrays:",
+        "syntax1": "type[] - For example: number[] or string[]",
+        "syntax2": "Array<type> - For example: Array<number> or Array<string>"
+      },
+      "examples": [
+        {
+          "code": "let numbers: number[] = [1, 2, 3, 4, 5];",
+          "explanation": "An array of numbers using the bracket notation"
+        },
+        {
+          "code": "let names: Array<string> = ['Alice', 'Bob', 'Charlie'];",
+          "explanation": "An array of strings using the generic notation"
+        },
+        {
+          "code": "let scores: number[] = [];",
+          "explanation": "An empty array that will hold numbers"
+        },
+        {
+          "code": "let firstNumber = numbers[0];",
+          "explanation": "Accessing the first element (index 0) gives us 1"
+        },
+        {
+          "code": "numbers.push(6);",
+          "explanation": "Adding a new element to the end of the array"
+        },
+        {
+          "code": "let length = numbers.length;",
+          "explanation": "Getting the number of elements in the array"
+        }
+      ],
+      "commonOperations": [
+        "Access by index: array[0], array[1], etc.",
+        "Add to end: array.push(item)",
+        "Remove from end: array.pop()",
+        "Add to start: array.unshift(item)",
+        "Remove from start: array.shift()",
+        "Find element: array.find(item => item > 5)",
+        "Filter elements: array.filter(item => item > 0)",
+        "Map/transform: array.map(item => item * 2)"
+      ]
+    },
+    {
+      "title": "The Tuple Type",
+      "content": "A tuple is a special type of array where you know exactly how many elements there are and what type each element is. Unlike regular arrays where all elements are the same type, tuples can have different types in specific positions.",
+      "explanation": "Think of a tuple as a form with specific fields. For example, a form might have [Name: string, Age: number, IsStudent: boolean]. Each position has a meaning and a specific type.",
+      "whenToUse": "Use tuples when you're working with a fixed structure of related data, like coordinates [x, y], database records [id, name, date], or function return values.",
+      "examples": [
+        {
+          "code": "let person: [string, number] = ['Alice', 30];",
+          "explanation": "A tuple with name (string) and age (number). Order matters!"
+        },
+        {
+          "code": "let point: [number, number] = [10, 20];",
+          "explanation": "Representing a 2D coordinate as [x, y]"
+        },
+        {
+          "code": "let rgb: [number, number, number] = [255, 128, 0];",
+          "explanation": "RGB color values as a tuple of three numbers"
+        },
+        {
+          "code": "let [name, age] = person;",
+          "explanation": "Destructuring - extract tuple values into separate variables"
+        }
+      ],
+      "vsArray": "Array: All same type, any length. Example: number[] = [1, 2, 3, 4, ...]\nTuple: Fixed length, specific types. Example: [string, number] = ['Bob', 25]"
+    },
+    {
+      "title": "The Any Type",
+      "content": "The 'any' type is TypeScript's escape hatch - it means 'this can be any type'. When you use 'any', you're telling TypeScript 'don't check this, I know what I'm doing'. This turns off type checking for that variable.",
+      "explanation": "Think of 'any' as turning off the safety features of TypeScript. It's like taking off your seatbelt - sometimes necessary, but usually not a good idea.",
+      "whenToUse": [
+        "When migrating JavaScript code to TypeScript gradually",
+        "When working with third-party libraries that don't have type definitions",
+        "When you genuinely don't know what type something will be (though there are better options)"
+      ],
+      "warning": "IMPORTANT: Avoid using 'any' when possible! It defeats the purpose of TypeScript. Use specific types or 'unknown' instead.",
+      "examples": [
+        {
+          "code": "let data: any = 'Hello';",
+          "explanation": "Can be a string..."
+        },
+        {
+          "code": "data = 42;",
+          "explanation": "...then a number (no error!)"
+        },
+        {
+          "code": "data = { name: 'Bob' };",
+          "explanation": "...then an object. TypeScript won't complain."
+        },
+        {
+          "code": "data.anyMethod();",
+          "explanation": "Can call any method - TypeScript won't check if it exists!"
+        }
+      ]
+    },
+    {
+      "title": "The Unknown Type",
+      "content": "'Unknown' is the type-safe counterpart to 'any'. It means 'this could be any type, but I need to check what it is before using it'. It's like 'any', but safer.",
+      "explanation": "Think of 'unknown' as a locked box. You know there's something inside, but you need to open it and check what it is before you can use it. 'any' is like an open box - you can grab whatever's inside without looking.",
+      "examples": [
+        {
+          "code": "let value: unknown = 'Hello';",
+          "explanation": "Can be assigned any value"
+        },
+        {
+          "code": "let str: string = value;",
+          "explanation": "ERROR! Can't assign unknown to string without checking"
+        },
+        {
+          "code": "if (typeof value === 'string') {\n  let str: string = value;\n}",
+          "explanation": "This works! We checked the type first"
+        },
+        {
+          "code": "value.toUpperCase();",
+          "explanation": "ERROR! Must verify it's a string first"
+        }
+      ],
+      "bestPractice": "Use 'unknown' instead of 'any' when you don't know the type. It forces you to check the type before using the value, preventing errors."
+    },
+    {
+      "title": "The Void Type",
+      "content": "'Void' means 'nothing' or 'no value'. It's typically used as the return type of functions that don't return anything. If a function just does something (like printing to console) but doesn't give back a value, its return type is void.",
+      "explanation": "Think of void functions as tasks you ask someone to do without expecting anything back. 'Please turn off the lights' - you don't expect a return value, just an action.",
+      "examples": [
+        {
+          "code": "function logMessage(message: string): void {\n  console.log(message);\n}",
+          "explanation": "This function prints but doesn't return anything"
+        },
+        {
+          "code": "function updateDatabase(id: number): void {\n  // Updates database but returns nothing\n}",
+          "explanation": "Does something but has no return value"
+        },
+        {
+          "code": "let result: void = undefined;",
+          "explanation": "Variables can be void but can only be assigned undefined (rarely used)"
+        }
+      ],
+      "note": "You rarely declare variables as void. It's almost exclusively used for function return types."
+    },
+    {
+      "title": "The Null and Undefined Types",
+      "content": "These represent the absence of a value, but in slightly different ways. 'undefined' means a variable has been declared but not assigned a value. 'null' means intentionally setting 'no value'.",
+      "explanation": "Think of a form: an empty field is 'undefined' (nothing entered yet). Writing 'N/A' is 'null' (intentionally marking as not applicable).",
+      "difference": {
+        "undefined": "Variable exists but has no value yet. It's uninitialized.",
+        "null": "Explicitly set to 'no value'. It's intentionally empty."
+      },
+      "examples": [
+        {
+          "code": "let notAssigned: undefined = undefined;",
+          "explanation": "Explicitly undefined"
+        },
+        {
+          "code": "let intentionallyEmpty: null = null;",
+          "explanation": "Intentionally set to null"
+        },
+        {
+          "code": "let name: string | null = null;",
+          "explanation": "String that can also be null (union type)"
+        },
+        {
+          "code": "if (value !== null && value !== undefined) {\n  // Now safe to use value\n}",
+          "explanation": "Checking for null/undefined before use"
+        }
+      ],
+      "strictNullChecks": "With TypeScript's 'strictNullChecks' option enabled, you must explicitly allow null/undefined in your types. This prevents many common bugs!"
+    },
+    {
+      "title": "Practical Tips for Using Types",
+      "content": "Here's how to apply what you've learned in real code:",
+      "tips": [
+        {
+          "tip": "Let TypeScript infer when obvious",
+          "example": "let count = 5; // TypeScript knows it's a number\nlet name = 'Alice'; // TypeScript knows it's a string",
+          "explanation": "You don't always need to write the type explicitly. TypeScript can figure it out!"
+        },
+        {
+          "tip": "Be explicit for function parameters",
+          "example": "function greet(name: string) {\n  return `Hello, ${name}`;\n}",
+          "explanation": "Always specify types for function parameters. TypeScript can't guess these!"
+        },
+        {
+          "tip": "Use const for values that won't change",
+          "example": "const PI = 3.14159;\nconst API_KEY = 'abc123';",
+          "explanation": "'const' prevents reassignment and TypeScript infers the exact value as the type"
+        },
+        {
+          "tip": "Choose the most specific type possible",
+          "example": "// Bad\nlet status: string = 'active';\n// Good\nlet status: 'active' | 'inactive' | 'pending' = 'active';",
+          "explanation": "More specific types catch more errors and make your code self-documenting"
+        }
+      ]
+    }
+  ]
+}

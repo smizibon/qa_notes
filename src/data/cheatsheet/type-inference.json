@@ -1,0 +1,12 @@
+{
+  "id": "type-inference",
+  "title": "Type Inference",
+  "explanation": "TypeScript can often figure out types automatically. You don't always need to explicitly write them.",
+  "codeBlocks": [
+    {
+      "title": "When TypeScript Infers Types",
+      "code": "// TypeScript infers type from initial value\nlet message = \"Hello\"; // inferred as string\nlet count = 42; // inferred as number\nlet isComplete = false; // inferred as boolean\n\n// message = 123; // ✗ Error: Type 'number' is not assignable to 'string'\n\n// Arrays are also inferred\nlet nums = [1, 2, 3]; // inferred as number[]\nlet mixed = [1, \"two\", true]; // inferred as (string | number | boolean)[]\n\n// Function return types are inferred\nfunction add(a: number, b: number) {\n  return a + b; // return type inferred as number\n}\n\n// When to be explicit\nlet value; // inferred as 'any' - not helpful!\nlet betterValue: string; // explicit is better here\n\n// Const vs Let\nlet flexible = \"hello\"; // type: string (can be reassigned)\nconst fixed = \"hello\"; // type: \"hello\" (literal type, cannot be reassigned)"
+    }
+  ],
+  "tip": "Let TypeScript infer when it's obvious. Be explicit when initialization is separate from declaration, or when you want to be extra clear."
+}

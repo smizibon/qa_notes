@@ -1,0 +1,28 @@
+{
+  "id": "utility-types",
+  "title": "Utility Types",
+  "explanation": "TypeScript provides built-in utility types that transform existing types. These save time and make code more maintainable.",
+  "codeBlocks": [
+    {
+      "title": "Partial, Required, Readonly",
+      "code": "interface User {\n  id: number;\n  name: string;\n  email: string;\n  age: number;\n}\n\n// Partial - makes all properties optional\ntype PartialUser = Partial<User>;\n// Same as: { id?: number; name?: string; email?: string; age?: number; }\n\nfunction updateUser(user: User, updates: PartialUser): User {\n  return { ...user, ...updates };\n}\n\nconst user: User = { id: 1, name: \"Alice\", email: \"alice@example.com\", age: 30 };\nconst updated = updateUser(user, { age: 31 }); // only update age\n\n// Required - makes all properties required\ninterface OptionalConfig {\n  host?: string;\n  port?: number;\n}\n\ntype RequiredConfig = Required<OptionalConfig>;\n// Same as: { host: string; port: number; }\n\n// Readonly - makes all properties readonly\ntype ReadonlyUser = Readonly<User>;\n\nconst readonlyUser: ReadonlyUser = { id: 1, name: \"Bob\", email: \"bob@example.com\", age: 25 };\n// readonlyUser.name = \"Charlie\"; // ✗ Error: Cannot assign to 'name'"
+    },
+    {
+      "title": "Pick, Omit",
+      "code": "interface Product {\n  id: number;\n  name: string;\n  description: string;\n  price: number;\n  stock: number;\n  category: string;\n}\n\n// Pick - select specific properties\ntype ProductPreview = Pick<Product, \"id\" | \"name\" | \"price\">;\n// Same as: { id: number; name: string; price: number; }\n\nconst preview: ProductPreview = {\n  id: 1,\n  name: \"Laptop\",\n  price: 999\n};\n\n// Omit - exclude specific properties\ntype ProductWithoutId = Omit<Product, \"id\">;\n// Same as: { name: string; description: string; price: number; stock: number; category: string; }\n\nconst newProduct: ProductWithoutId = {\n  name: \"Mouse\",\n  description: \"Wireless mouse\",\n  price: 29.99,\n  stock: 100,\n  category: \"Accessories\"\n};\n\n// Omit multiple properties\ntype ProductSummary = Omit<Product, \"description\" | \"stock\">;"
+    },
+    {
+      "title": "Record",
+      "code": "// Record - create object type with specific keys and value type\ntype Role = \"admin\" | \"user\" | \"guest\";\n\ntype Permissions = Record<Role, string[]>;\n// Same as: { admin: string[]; user: string[]; guest: string[]; }\n\nconst permissions: Permissions = {\n  admin: [\"read\", \"write\", \"delete\"],\n  user: [\"read\", \"write\"],\n  guest: [\"read\"]\n};\n\n// Another example\ntype ProductId = \"product1\" | \"product2\" | \"product3\";\ntype ProductPrices = Record<ProductId, number>;\n\nconst prices: ProductPrices = {\n  product1: 19.99,\n  product2: 29.99,\n  product3: 39.99\n};\n\n// Dynamic keys\ntype StringDictionary = Record<string, number>;\n\nconst scores: StringDictionary = {\n  alice: 95,\n  bob: 87,\n  charlie: 92\n};"
+    },
+    {
+      "title": "ReturnType, Parameters",
+      "code": "// ReturnType - extract return type of function\nfunction getUser() {\n  return {\n    id: 1,\n    name: \"Alice\",\n    email: \"alice@example.com\"\n  };\n}\n\ntype User = ReturnType<typeof getUser>;\n// Same as: { id: number; name: string; email: string; }\n\n// Parameters - extract parameter types of function\nfunction createProduct(name: string, price: number, inStock: boolean) {\n  return { name, price, inStock };\n}\n\ntype ProductParams = Parameters<typeof createProduct>;\n// Same as: [name: string, price: number, inStock: boolean]\n\n// Use it to create functions with same signature\nfunction logProductCreation(...args: ProductParams): void {\n  console.log(\"Creating product with:\", args);\n}"
+    },
+    {
+      "title": "Exclude, Extract, NonNullable",
+      "code": "// Exclude - remove types from union\ntype AllTypes = string | number | boolean | null;\ntype WithoutNull = Exclude<AllTypes, null>;\n// Same as: string | number | boolean\n\ntype Status = \"pending\" | \"approved\" | \"rejected\" | \"cancelled\";\ntype ActiveStatus = Exclude<Status, \"cancelled\">;\n// Same as: \"pending\" | \"approved\" | \"rejected\"\n\n// Extract - keep only specific types from union\ntype Numbers = Extract<string | number | boolean, number>;\n// Same as: number\n\ntype AdminRoles = \"admin\" | \"superadmin\" | \"user\" | \"guest\";\ntype AdminOnly = Extract<AdminRoles, \"admin\" | \"superadmin\">;\n// Same as: \"admin\" | \"superadmin\"\n\n// NonNullable - remove null and undefined\ntype MaybeString = string | null | undefined;\ntype DefiniteString = NonNullable<MaybeString>;\n// Same as: string\n\nfunction process(value: string | null | undefined): NonNullable<typeof value> {\n  if (value === null || value === undefined) {\n    throw new Error(\"Value is required\");\n  }\n  return value; // guaranteed to be string\n}"
+    }
+  ],
+  "tip": "Utility types help you transform and manipulate types without duplication. Use Partial for update functions, Pick for API responses, and Record for dictionaries."
+}

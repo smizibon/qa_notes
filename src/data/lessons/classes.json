@@ -1,0 +1,200 @@
+{
+  "id": "lesson-classes",
+  "title": "Working with Classes in TypeScript",
+  "description": "Master object-oriented programming with TypeScript classes - learn encapsulation, inheritance, and access modifiers",
+  "sections": [
+    {
+      "title": "What is a Class?",
+      "content": "A class is a blueprint for creating objects. It defines what properties (data) and methods (behavior) objects of that type will have. Classes are the foundation of object-oriented programming (OOP).",
+      "analogy": "Think of a class like a cookie cutter. The cookie cutter (class) defines the shape. Each cookie you make (object/instance) has that shape but can have different decorations (property values). You can make many cookies from one cookie cutter, just like you can create many objects from one class.",
+      "realWorldExample": {
+        "description": "Imagine you're building a game with characters:",
+        "code": "class Character {\n  name: string;\n  health: number;\n  level: number;\n\n  constructor(name: string) {\n    this.name = name;\n    this.health = 100;\n    this.level = 1;\n  }\n\n  attack(): void {\n    console.log(`${this.name} attacks!`);\n  }\n}\n\n// Create multiple characters from the same class\nconst hero = new Character('Knight');\nconst villain = new Character('Dragon');\n\nhero.attack();  // 'Knight attacks!'\nvillain.attack();  // 'Dragon attacks!'",
+        "explanation": "The Character class is the blueprint. hero and villain are separate objects created from that blueprint, each with their own name but sharing the same structure and behavior."
+      }
+    },
+    {
+      "title": "Class Anatomy - Understanding the Parts",
+      "content": "Let's break down every part of a class and understand what each does.",
+      "parts": [
+        {
+          "name": "Properties (Fields)",
+          "description": "Variables that belong to the class. Each instance gets its own copy.",
+          "code": "class Person {\n  name: string;  // Property\n  age: number;   // Property\n}",
+          "explanation": "Properties store data. Every Person object will have its own name and age."
+        },
+        {
+          "name": "Constructor",
+          "description": "Special method that runs when creating a new instance. Used to initialize properties.",
+          "code": "class Person {\n  name: string;\n  age: number;\n\n  constructor(name: string, age: number) {\n    this.name = name;  // Set instance's name\n    this.age = age;    // Set instance's age\n  }\n}",
+          "explanation": "constructor() is called when you write 'new Person()'. It sets up the initial state."
+        },
+        {
+          "name": "Methods",
+          "description": "Functions that belong to the class. Define behavior.",
+          "code": "class Person {\n  name: string;\n\n  greet(): void {  // Method\n    console.log(`Hello, I'm ${this.name}`);\n  }\n}",
+          "explanation": "Methods are actions the object can perform. All instances share the same methods."
+        },
+        {
+          "name": "The 'this' Keyword",
+          "description": "'this' refers to the current instance. Use it to access properties and methods.",
+          "code": "class Counter {\n  count: number = 0;\n\n  increment(): void {\n    this.count++;  // Access this instance's count\n  }\n\n  getCount(): number {\n    return this.count;  // Return this instance's count\n  }\n}",
+          "explanation": "'this.count' means 'the count property of THIS specific Counter instance'"
+        }
+      ]
+    },
+    {
+      "title": "Access Modifiers - Controlling Visibility",
+      "content": "TypeScript has three access modifiers that control where properties and methods can be accessed from. This is called 'encapsulation' - hiding internal details.",
+      "modifiers": [
+        {
+          "name": "public (default)",
+          "description": "Accessible from anywhere - inside the class, outside the class, in subclasses. This is the default if you don't specify.",
+          "code": "class Person {\n  public name: string;  // Can be accessed anywhere\n\n  constructor(name: string) {\n    this.name = name;\n  }\n}\n\nconst person = new Person('Alice');\nconsole.log(person.name);  // ✓ OK - public property",
+          "whenToUse": "For properties and methods that are part of the class's public API"
+        },
+        {
+          "name": "private",
+          "description": "Only accessible inside the class. Not accessible from outside or in subclasses.",
+          "code": "class BankAccount {\n  private balance: number = 0;  // Private - hidden detail\n\n  deposit(amount: number): void {\n    this.balance += amount;  // ✓ OK - inside class\n  }\n\n  getBalance(): number {\n    return this.balance;  // ✓ OK - inside class\n  }\n}\n\nconst account = new BankAccount();\naccount.deposit(100);\nconsole.log(account.balance);  // ✗ Error - private!\nconsole.log(account.getBalance());  // ✓ OK - public method",
+          "whenToUse": "For internal implementation details that shouldn't be accessed directly. Enforces proper encapsulation.",
+          "benefit": "Prevents outside code from breaking your class's internal logic"
+        },
+        {
+          "name": "protected",
+          "description": "Accessible inside the class and in subclasses, but not from outside.",
+          "code": "class Animal {\n  protected energy: number = 100;  // Protected\n\n  protected rest(): void {  // Protected method\n    this.energy = 100;\n  }\n}\n\nclass Dog extends Animal {\n  bark(): void {\n    if (this.energy > 50) {  // ✓ OK - in subclass\n      console.log('Woof!');\n      this.energy -= 10;\n    } else {\n      this.rest();  // ✓ OK - protected method\n    }\n  }\n}\n\nconst dog = new Dog();\ndog.bark();  // ✓ OK\nconsole.log(dog.energy);  // ✗ Error - protected!",
+          "whenToUse": "For properties/methods that subclasses need but external code shouldn't access"
+        }
+      ],
+      "bestPractice": "Start with private by default. Only make things public if they truly need to be accessed from outside. This is the principle of 'least privilege'."
+    },
+    {
+      "title": "Parameter Properties - Constructor Shorthand",
+      "content": "TypeScript has a shorthand that lets you declare and initialize properties right in the constructor parameters. This reduces boilerplate code significantly.",
+      "comparison": {
+        "longWay": "class Person {\n  name: string;\n  age: number;\n\n  constructor(name: string, age: number) {\n    this.name = name;\n    this.age = age;\n  }\n}",
+        "shortWay": "class Person {\n  constructor(\n    public name: string,\n    public age: number\n  ) {}\n}",
+        "explanation": "Both do the same thing! The shorthand automatically creates properties and assigns them. Much cleaner!"
+      },
+      "examples": [
+        {
+          "code": "class Product {\n  constructor(\n    public id: number,\n    public name: string,\n    public price: number,\n    private cost: number  // Private parameter property\n  ) {}\n\n  getProfit(): number {\n    return this.price - this.cost;  // Can access private cost\n  }\n}\n\nconst product = new Product(1, 'Widget', 29.99, 15.00);\nconsole.log(product.name);  // ✓ OK - public\nconsole.log(product.cost);  // ✗ Error - private!",
+          "explanation": "Parameter properties work with all access modifiers. Public, private, and protected all work."
+        },
+        {
+          "code": "class User {\n  // Mix parameter properties with regular properties\n  lastLogin: Date;\n\n  constructor(\n    public id: number,\n    public email: string,\n    private password: string\n  ) {\n    this.lastLogin = new Date();\n  }\n}",
+          "explanation": "You can mix parameter properties with regular properties. Parameter properties are initialized automatically, regular ones you initialize manually."
+        }
+      ],
+      "tip": "Parameter properties are a TypeScript feature, not JavaScript. They're syntactic sugar that makes code cleaner."
+    },
+    {
+      "title": "Readonly Properties",
+      "content": "The readonly modifier prevents a property from being changed after initialization. Once set (in the constructor or declaration), it can't be modified.",
+      "analogy": "Think of readonly like writing something in permanent marker vs pencil. Once written, it can't be changed.",
+      "examples": [
+        {
+          "code": "class Person {\n  readonly id: number;  // Can only be set once\n  name: string;\n\n  constructor(id: number, name: string) {\n    this.id = id;  // ✓ OK - setting in constructor\n    this.name = name;\n  }\n\n  updateId(newId: number): void {\n    this.id = newId;  // ✗ Error - readonly!\n  }\n\n  updateName(newName: string): void {\n    this.name = newName;  // ✓ OK - not readonly\n  }\n}",
+          "explanation": "id can only be set in the constructor. After that, it's immutable."
+        },
+        {
+          "code": "class Config {\n  constructor(\n    public readonly apiUrl: string,\n    public readonly apiKey: string,\n    public timeout: number\n  ) {}\n}\n\nconst config = new Config(\n  'https://api.example.com',\n  'secret-key',\n  5000\n);\n\nconfig.timeout = 10000;  // ✓ OK\nconfig.apiKey = 'new';   // ✗ Error - readonly!",
+          "explanation": "Combining readonly with parameter properties. apiUrl and apiKey can't change, but timeout can."
+        }
+      ],
+      "whenToUse": [
+        "IDs that shouldn't change",
+        "Configuration values",
+        "Creation timestamps",
+        "Any value that should be immutable after initialization"
+      ]
+    },
+    {
+      "title": "Inheritance - Extending Classes",
+      "content": "Classes can extend (inherit from) other classes, reusing code and creating specialized versions. The extending class (child/subclass) inherits all properties and methods from the base class (parent/superclass).",
+      "analogy": "Think of inheritance like genealogy. A child inherits traits from their parents but can also have their own unique traits. A Dog class might inherit from Animal (getting basic animal features) but add dog-specific features like bark().",
+      "syntax": "class Child extends Parent { }",
+      "examples": [
+        {
+          "code": "class Animal {\n  constructor(public name: string) {}\n\n  move(distance: number): void {\n    console.log(`${this.name} moved ${distance}m`);\n  }\n}\n\nclass Dog extends Animal {\n  bark(): void {\n    console.log(`${this.name} barks: Woof!`);\n  }\n}\n\nconst dog = new Dog('Rex');\ndog.move(10);  // Inherited from Animal\ndog.bark();    // Defined in Dog",
+          "explanation": "Dog inherits name property and move() method from Animal, and adds its own bark() method."
+        },
+        {
+          "code": "class Vehicle {\n  constructor(\n    public brand: string,\n    protected speed: number = 0\n  ) {}\n\n  accelerate(amount: number): void {\n    this.speed += amount;\n    console.log(`Speed: ${this.speed}`);\n  }\n}\n\nclass Car extends Vehicle {\n  constructor(\n    brand: string,\n    public doors: number  // Car-specific property\n  ) {\n    super(brand);  // Call parent constructor\n  }\n\n  honk(): void {\n    console.log(`${this.brand} goes beep!`);\n  }\n}\n\nconst car = new Car('Toyota', 4);\ncar.accelerate(50);  // From Vehicle\ncar.honk();          // From Car",
+          "explanation": "Car extends Vehicle, adding doors property and honk() method. Must call super() in constructor to initialize parent class."
+        }
+      ],
+      "superKeyword": {
+        "description": "'super' is used to call the parent class:",
+        "uses": [
+          "super() - Call parent constructor (required in child constructor)",
+          "super.method() - Call parent class method from child class"
+        ],
+        "example": "class Parent {\n  greet(): void {\n    console.log('Hi from parent');\n  }\n}\n\nclass Child extends Parent {\n  greet(): void {\n    super.greet();  // Call parent's greet\n    console.log('Hi from child');\n  }\n}"
+      }
+    },
+    {
+      "title": "Method Overriding",
+      "content": "When a subclass provides its own implementation of a method that exists in the parent class, that's called overriding. The subclass version 'overrides' (replaces) the parent version.",
+      "examples": [
+        {
+          "code": "class Animal {\n  makeSound(): void {\n    console.log('Some generic sound');\n  }\n}\n\nclass Dog extends Animal {\n  makeSound(): void {  // Override parent method\n    console.log('Woof!');\n  }\n}\n\nclass Cat extends Animal {\n  makeSound(): void {  // Different override\n    console.log('Meow!');\n  }\n}\n\nconst dog = new Dog();\nconst cat = new Cat();\ndog.makeSound();  // 'Woof!' - Dog's version\ncat.makeSound();  // 'Meow!' - Cat's version",
+          "explanation": "Both Dog and Cat override makeSound() with their own implementations. Each animal has its own sound!"
+        },
+        {
+          "code": "class Employee {\n  constructor(public name: string, protected salary: number) {}\n\n  getAnnualBonus(): number {\n    return this.salary * 0.1;  // 10% bonus\n  }\n}\n\nclass Manager extends Employee {\n  getAnnualBonus(): number {\n    return this.salary * 0.2;  // Override: 20% bonus for managers\n  }\n}\n\nclass Director extends Manager {\n  getAnnualBonus(): number {\n    const managerBonus = super.getAnnualBonus();  // Get Manager's bonus\n    return managerBonus + 10000;  // Add extra $10k\n  }\n}",
+          "explanation": "Each level overrides getAnnualBonus(). Director even calls Manager's version with super before adding more."
+        }
+      ],
+      "bestPractice": "When overriding, maintain the same method signature (parameter types and return type) or make it more specific. Don't break the contract!"
+    },
+    {
+      "title": "Abstract Classes",
+      "content": "Abstract classes are base classes that can't be instantiated directly. They exist only to be extended. They can contain abstract methods (methods without implementation) that subclasses must implement.",
+      "analogy": "Think of an abstract class like a template. You can't use the template directly - you must fill in the blanks first. Abstract methods are the blanks that subclasses must fill in.",
+      "whenToUse": [
+        "When you have a common base but different implementations",
+        "When you want to enforce that subclasses implement certain methods",
+        "When you want to share some code but make subclasses provide the rest"
+      ],
+      "examples": [
+        {
+          "code": "abstract class Shape {\n  constructor(public color: string) {}\n\n  // Abstract method - no implementation\n  abstract getArea(): number;\n  abstract getPerimeter(): number;\n\n  // Concrete method - has implementation\n  describe(): void {\n    console.log(`A ${this.color} shape with area ${this.getArea()}`);\n  }\n}\n\nclass Circle extends Shape {\n  constructor(color: string, public radius: number) {\n    super(color);\n  }\n\n  getArea(): number {\n    return Math.PI * this.radius ** 2;\n  }\n\n  getPerimeter(): number {\n    return 2 * Math.PI * this.radius;\n  }\n}\n\nclass Rectangle extends Shape {\n  constructor(\n    color: string,\n    public width: number,\n    public height: number\n  ) {\n    super(color);\n  }\n\n  getArea(): number {\n    return this.width * this.height;\n  }\n\n  getPerimeter(): number {\n    return 2 * (this.width + this.height);\n  }\n}\n\n// const shape = new Shape('red');  // ✗ Error - can't instantiate abstract class!\nconst circle = new Circle('blue', 5);  // ✓ OK\nconst rect = new Rectangle('red', 10, 20);  // ✓ OK\n\ncircle.describe();  // 'A blue shape with area 78.54...'",
+          "explanation": "Shape is abstract - it defines what methods shapes must have but doesn't implement them. Circle and Rectangle provide the actual implementations."
+        }
+      ],
+      "rules": [
+        "Abstract classes cannot be instantiated with 'new'",
+        "Abstract methods must be implemented by non-abstract subclasses",
+        "Abstract classes can have both abstract and concrete methods",
+        "A class with any abstract method must be marked abstract"
+      ]
+    },
+    {
+      "title": "Static Members",
+      "content": "Static properties and methods belong to the class itself, not to instances. You access them through the class name, not through 'this' or an instance.",
+      "analogy": "Think of a factory. Instance methods are like workers who build products (each product is different). Static methods are like the factory's general policies - they apply to the whole factory, not individual products.",
+      "whenToUse": [
+        "Utility functions related to the class",
+        "Constants that all instances share",
+        "Factory methods that create instances",
+        "Counters or shared state"
+      ],
+      "examples": [
+        {
+          "code": "class MathUtils {\n  static PI: number = 3.14159;  // Static property\n\n  static circleArea(radius: number): number {  // Static method\n    return this.PI * radius ** 2;\n  }\n\n  static rectangleArea(width: number, height: number): number {\n    return width * height;\n  }\n}\n\n// Access through class name, not instance\nconsole.log(MathUtils.PI);  // 3.14159\nconsole.log(MathUtils.circleArea(5));  // 78.54\n\n// Can't access through instance\nconst utils = new MathUtils();\nconsole.log(utils.PI);  // ✗ Error - PI is static!",
+          "explanation": "Static members belong to the class. Use ClassName.member, not instance.member"
+        },
+        {
+          "code": "class User {\n  private static nextId: number = 1;  // Static counter\n  public readonly id: number;\n\n  constructor(public name: string) {\n    this.id = User.nextId++;  // Use static counter\n  }\n\n  static getNextId(): number {\n    return User.nextId;\n  }\n}\n\nconst user1 = new User('Alice');  // id: 1\nconst user2 = new User('Bob');    // id: 2\nconst user3 = new User('Charlie'); // id: 3\n\nconsole.log(User.getNextId());  // 4 (next ID to be assigned)",
+          "explanation": "Static counter shared across all instances. Each user gets a unique ID from the shared counter."
+        },
+        {
+          "code": "class Temperature {\n  constructor(private celsius: number) {}\n\n  // Static factory methods\n  static fromCelsius(celsius: number): Temperature {\n    return new Temperature(celsius);\n  }\n\n  static fromFahrenheit(fahrenheit: number): Temperature {\n    return new Temperature((fahrenheit - 32) * 5 / 9);\n  }\n\n  static fromKelvin(kelvin: number): Temperature {\n    return new Temperature(kelvin - 273.15);\n  }\n\n  getCelsius(): number {\n    return this.celsius;\n  }\n}\n\nconst temp1 = Temperature.fromCelsius(25);\nconst temp2 = Temperature.fromFahrenheit(77);\nconst temp3 = Temperature.fromKelvin(298.15);",
+          "explanation": "Static factory methods provide different ways to create Temperature instances. Clean, descriptive API."
+        }
+      ]
+    }
+  ]
+}

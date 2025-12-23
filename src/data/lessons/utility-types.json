@@ -1,0 +1,212 @@
+{
+  "id": "lesson-utility-types",
+  "title": "Built-in Utility Types - TypeScript's Power Tools",
+  "description": "Master TypeScript's built-in utility types to transform and manipulate types with ease",
+  "sections": [
+    {
+      "title": "What Are Utility Types?",
+      "content": "Utility types are built-in generic types that TypeScript provides to transform existing types in common ways. Instead of manually creating variations of your types, you use these helpers to generate them automatically.",
+      "analogy": "Think of utility types like photo filters. You have one original photo (base type), and filters (utility types) transform it: make it black & white (Readonly), crop it (Pick), blur parts (Partial), etc. Same source, different transformations!",
+      "benefits": [
+        "Save time - no need to rewrite similar types",
+        "Less error-prone - transformations are automatic",
+        "More maintainable - change base type, utilities update automatically",
+        "Industry standard - everyone understands these patterns"
+      ]
+    },
+    {
+      "title": "Partial<T> - Make All Properties Optional",
+      "content": "Partial<T> takes a type and makes all its properties optional. Perfect for update operations where you only provide changed fields.",
+      "syntax": "Partial<Type>",
+      "examples": [
+        {
+          "code": "interface User {\n  id: number;\n  name: string;\n  email: string;\n  age: number;\n}\n\n// Without Partial - must provide everything\nconst user: User = {\n  id: 1,\n  name: 'Alice',\n  email: 'alice@example.com',\n  age: 30\n};\n\n// With Partial - provide only what you want\nconst updates: Partial<User> = {\n  name: 'Alice Smith',  // Only updating name\n  age: 31               // and age\n};\n// id and email are optional now!",
+          "explanation": "Partial<User> is the same as { id?: number; name?: string; email?: string; age?: number; }"
+        },
+        {
+          "code": "function updateUser(\n  id: number,\n  updates: Partial<User>\n): User {\n  const existingUser = getUser(id);\n  return { ...existingUser, ...updates };\n}\n\n// Can update any subset of properties\nupdateUser(1, { name: 'New Name' });\nupdateUser(1, { email: 'new@email.com', age: 31 });\nupdateUser(1, {});  // Empty update is valid too!",
+          "explanation": "Perfect for update functions - accept any combination of properties!"
+        }
+      ],
+      "realWorld": "Used extensively in APIs, forms, database updates - anywhere you need to update only some fields."
+    },
+    {
+      "title": "Required<T> - Make All Properties Required",
+      "content": "Required<T> is the opposite of Partial - it makes all properties required, even if they were optional.",
+      "syntax": "Required<Type>",
+      "examples": [
+        {
+          "code": "interface Config {\n  host?: string;\n  port?: number;\n  timeout?: number;\n}\n\n// Config allows missing properties\nconst config1: Config = { host: 'localhost' };  // ✓ OK\n\n// Required version needs everything\nconst config2: Required<Config> = {\n  host: 'localhost',\n  port: 3000,\n  timeout: 5000\n};  // ✓ OK\n\nconst config3: Required<Config> = {\n  host: 'localhost'\n};  // ✗ Error - missing port and timeout!",
+          "explanation": "Required<Config> ensures all properties are provided, no missing values."
+        },
+        {
+          "code": "interface FormData {\n  name?: string;\n  email?: string;\n  age?: number;\n}\n\nfunction validateForm(data: FormData): data is Required<FormData> {\n  return (\n    data.name !== undefined &&\n    data.email !== undefined &&\n    data.age !== undefined\n  );\n}\n\nfunction submitForm(data: FormData): void {\n  if (validateForm(data)) {\n    // TypeScript now knows all properties exist!\n    console.log(data.name.toUpperCase());  // Safe!\n    console.log(data.email.toLowerCase());  // Safe!\n  } else {\n    console.log('Form incomplete');\n  }\n}",
+          "explanation": "Use Required in type guards to prove all optional properties exist."
+        }
+      ]
+    },
+    {
+      "title": "Readonly<T> - Make All Properties Read-Only",
+      "content": "Readonly<T> makes all properties readonly - they can't be modified after creation. Great for immutable data structures.",
+      "syntax": "Readonly<Type>",
+      "examples": [
+        {
+          "code": "interface Point {\n  x: number;\n  y: number;\n}\n\nconst mutablePoint: Point = { x: 10, y: 20 };\nmutablePoint.x = 30;  // ✓ OK\n\nconst immutablePoint: Readonly<Point> = { x: 10, y: 20 };\nimmutablePoint.x = 30;  // ✗ Error - readonly!",
+          "explanation": "Readonly<Point> prevents any modifications. Use for data that shouldn't change."
+        },
+        {
+          "code": "interface Config {\n  apiKey: string;\n  apiUrl: string;\n  timeout: number;\n}\n\nconst config: Readonly<Config> = {\n  apiKey: 'secret',\n  apiUrl: 'https://api.example.com',\n  timeout: 5000\n};\n\n// Later in code...\nconfig.apiKey = 'newkey';  // ✗ Error - can't change config!\nconfig.timeout = 10000;    // ✗ Error - readonly!",
+          "explanation": "Protect configuration from accidental changes. Read but don't modify!"
+        },
+        {
+          "code": "function processData(data: Readonly<User[]>): void {\n  // Can read the array and its contents\n  console.log(data[0].name);\n  \n  // But can't modify\n  data.push(newUser);      // ✗ Error\n  data[0].name = 'Changed';  // ✗ Error\n  data = [];               // ✗ Error\n}",
+          "explanation": "Readonly arrays prevent modifications to both the array and its contents."
+        }
+      ]
+    },
+    {
+      "title": "Pick<T, K> - Select Specific Properties",
+      "content": "Pick<T, K> creates a new type by selecting only specific properties from an existing type. Like cherry-picking fields you want.",
+      "syntax": "Pick<Type, 'key1' | 'key2' | ...>",
+      "examples": [
+        {
+          "code": "interface User {\n  id: number;\n  name: string;\n  email: string;\n  password: string;\n  createdAt: Date;\n  updatedAt: Date;\n}\n\n// Pick only public-facing fields\ntype PublicUser = Pick<User, 'id' | 'name' | 'email'>;\n\nconst publicUser: PublicUser = {\n  id: 1,\n  name: 'Alice',\n  email: 'alice@example.com'\n  // password, createdAt, updatedAt excluded!\n};",
+          "explanation": "PublicUser has only id, name, and email. Perfect for API responses that shouldn't include sensitive data!"
+        },
+        {
+          "code": "interface Product {\n  id: number;\n  name: string;\n  description: string;\n  price: number;\n  stock: number;\n  category: string;\n}\n\n// For shopping cart, only need these fields\ntype CartItem = Pick<Product, 'id' | 'name' | 'price'>;\n\nconst item: CartItem = {\n  id: 1,\n  name: 'Widget',\n  price: 29.99\n};",
+          "explanation": "CartItem is a lightweight version with only essential fields. Saves memory and reduces complexity!"
+        }
+      ],
+      "realWorld": "Used for API responses, database queries (selecting columns), form subsets, and anywhere you need a slice of a larger type."
+    },
+    {
+      "title": "Omit<T, K> - Exclude Specific Properties",
+      "content": "Omit<T, K> is the opposite of Pick - it creates a new type by excluding specific properties. Keep everything except what you omit.",
+      "syntax": "Omit<Type, 'key1' | 'key2' | ...>",
+      "examples": [
+        {
+          "code": "interface User {\n  id: number;\n  name: string;\n  email: string;\n  password: string;\n}\n\n// Remove sensitive fields\ntype SafeUser = Omit<User, 'password'>;\n\nconst safeUser: SafeUser = {\n  id: 1,\n  name: 'Alice',\n  email: 'alice@example.com'\n  // password is excluded!\n};",
+          "explanation": "SafeUser has everything except password. Perfect for sending data to the frontend!"
+        },
+        {
+          "code": "interface DatabaseUser {\n  id: number;\n  name: string;\n  email: string;\n  createdAt: Date;\n  updatedAt: Date;\n}\n\n// For creating new users, exclude auto-generated fields\ntype CreateUserInput = Omit<DatabaseUser, 'id' | 'createdAt' | 'updatedAt'>;\n\nconst newUser: CreateUserInput = {\n  name: 'Bob',\n  email: 'bob@example.com'\n  // id, createdAt, updatedAt excluded - database generates these!\n};",
+          "explanation": "Remove fields that shouldn't be provided by user (auto-generated IDs, timestamps, etc.)"
+        }
+      ],
+      "pickVsOmit": {
+        "pick": "Use when you want a small subset (few properties to include)",
+        "omit": "Use when you want most properties (few properties to exclude)"
+      }
+    },
+    {
+      "title": "Record<K, T> - Create Object Type with Specific Keys",
+      "content": "Record<K, T> creates an object type with keys of type K and values of type T. Perfect for dictionaries and maps.",
+      "syntax": "Record<KeyType, ValueType>",
+      "examples": [
+        {
+          "code": "// Map string keys to numbers\ntype Scores = Record<string, number>;\n\nconst testScores: Scores = {\n  alice: 95,\n  bob: 87,\n  charlie: 92\n};\n\ntestScores.david = 88;  // ✓ OK - any string key, number value",
+          "explanation": "Record<string, number> means any string key with number value. Like a dictionary!"
+        },
+        {
+          "code": "type Role = 'admin' | 'user' | 'guest';\ntype Permissions = Record<Role, string[]>;\n\nconst permissions: Permissions = {\n  admin: ['read', 'write', 'delete'],\n  user: ['read', 'write'],\n  guest: ['read']\n};  // Must have all three keys!",
+          "explanation": "When key type is a union, Record ensures ALL keys are present. No missing roles!"
+        },
+        {
+          "code": "type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';\ntype RouteHandler = (req: Request) => Response;\n\ntype Routes = Record<HttpMethod, Record<string, RouteHandler>>;\n\nconst routes: Routes = {\n  GET: {\n    '/users': getUsersHandler,\n    '/products': getProductsHandler\n  },\n  POST: {\n    '/users': createUserHandler\n  },\n  PUT: {\n    '/users/:id': updateUserHandler\n  },\n  DELETE: {\n    '/users/:id': deleteUserHandler\n  }\n};",
+          "explanation": "Nested Records! Routes maps each HTTP method to a dictionary of path handlers. Fully typed routing!"
+        }
+      ]
+    },
+    {
+      "title": "Exclude<T, U> and Extract<T, U>",
+      "content": "These utilities work with union types. Exclude removes types from a union, Extract keeps only specific types.",
+      "examples": [
+        {
+          "name": "Exclude<T, U> - Remove types from union",
+          "code": "type AllShapes = 'circle' | 'square' | 'triangle' | 'rectangle';\n\n// Remove specific shapes\ntype RoundShapes = Exclude<AllShapes, 'square' | 'rectangle' | 'triangle'>;\n// RoundShapes = 'circle'\n\ntype AngularShapes = Exclude<AllShapes, 'circle'>;\n// AngularShapes = 'square' | 'triangle' | 'rectangle'",
+          "explanation": "Exclude removes specified types from a union. What's left is the result."
+        },
+        {
+          "name": "Extract<T, U> - Keep only specific types",
+          "code": "type AllValues = string | number | boolean | null | undefined;\n\n// Keep only primitive types\ntype Primitives = Extract<AllValues, string | number | boolean>;\n// Primitives = string | number | boolean\n\n// Keep only nullable types\ntype Nullable = Extract<AllValues, null | undefined>;\n// Nullable = null | undefined",
+          "explanation": "Extract keeps only types that match. Opposite of Exclude!"
+        },
+        {
+          "name": "Real-world example",
+          "code": "type Event = \n  | { type: 'click'; x: number; y: number }\n  | { type: 'keypress'; key: string }\n  | { type: 'focus' }\n  | { type: 'blur' };\n\n// Get only events with data\ntype EventsWithData = Extract<Event, { type: 'click' } | { type: 'keypress' }>;\n// { type: 'click'; x: number; y: number } | { type: 'keypress'; key: string }\n\n// Get events without data\ntype SimpleEvents = Exclude<Event, { x: number } | { key: string }>;\n// { type: 'focus' } | { type: 'blur' }",
+          "explanation": "Filter event types by their properties. Very powerful for discriminated unions!"
+        }
+      ]
+    },
+    {
+      "title": "ReturnType<T> and Parameters<T>",
+      "content": "Extract type information from functions - what they return and what parameters they accept.",
+      "examples": [
+        {
+          "name": "ReturnType<T> - Get function's return type",
+          "code": "function getUser(id: number): { name: string; email: string } {\n  return { name: 'Alice', email: 'alice@example.com' };\n}\n\n// Extract the return type\ntype User = ReturnType<typeof getUser>;\n// User = { name: string; email: string }\n\nconst user: User = {\n  name: 'Bob',\n  email: 'bob@example.com'\n};",
+          "explanation": "ReturnType extracts what a function returns. No need to manually type it twice!"
+        },
+        {
+          "name": "Parameters<T> - Get function's parameter types",
+          "code": "function createUser(name: string, age: number, email: string): User {\n  return { name, age, email };\n}\n\n// Extract parameter types as tuple\ntype CreateUserParams = Parameters<typeof createUser>;\n// CreateUserParams = [string, number, string]\n\nconst params: CreateUserParams = ['Alice', 30, 'alice@example.com'];\ncreateUser(...params);  // Perfect fit!",
+          "explanation": "Parameters extracts parameter types as a tuple. Useful for function wrappers!"
+        },
+        {
+          "name": "Practical example - Function decorator",
+          "code": "function logger<T extends (...args: any[]) => any>(\n  fn: T\n): (...args: Parameters<T>) => ReturnType<T> {\n  return function (...args: Parameters<T>): ReturnType<T> {\n    console.log('Called with:', args);\n    const result = fn(...args);\n    console.log('Returned:', result);\n    return result;\n  };\n}\n\nfunction add(a: number, b: number): number {\n  return a + b;\n}\n\nconst loggedAdd = logger(add);\nloggedAdd(2, 3);  // Logs: Called with [2, 3], Returned: 5",
+          "explanation": "Use Parameters and ReturnType to preserve function signatures when wrapping. Type-safe decorators!"
+        }
+      ]
+    },
+    {
+      "title": "Combining Utility Types",
+      "content": "The real power comes from combining utility types to create complex transformations.",
+      "examples": [
+        {
+          "name": "Partial + Pick - Optional subset",
+          "code": "interface User {\n  id: number;\n  name: string;\n  email: string;\n  age: number;\n}\n\n// Pick some fields, make them optional\ntype UserUpdate = Partial<Pick<User, 'name' | 'email' | 'age'>>;\n\nconst update: UserUpdate = {\n  name: 'New Name'  // id excluded, others optional\n};",
+          "explanation": "First Pick selected fields, then Partial made them optional. Chaining utilities!"
+        },
+        {
+          "name": "Readonly + Record - Immutable dictionary",
+          "code": "type UserRoles = Readonly<Record<number, 'admin' | 'user' | 'guest'>>;\n\nconst roles: UserRoles = {\n  1: 'admin',\n  2: 'user',\n  3: 'guest'\n};\n\nroles[1] = 'user';  // ✗ Error - readonly!",
+          "explanation": "Record creates dictionary, Readonly makes it immutable. Protected configuration!"
+        },
+        {
+          "name": "Omit + Partial - Update without ID",
+          "code": "interface Product {\n  id: number;\n  name: string;\n  price: number;\n  stock: number;\n}\n\n// For updates: omit ID, make rest optional\ntype ProductUpdate = Partial<Omit<Product, 'id'>>;\n\nfunction updateProduct(\n  id: number,\n  updates: ProductUpdate\n): Product {\n  // Can update any field except id\n  return { ...getProduct(id), ...updates };\n}\n\nupdateProduct(1, { price: 29.99 });  // ✓ OK\nupdateProduct(1, { id: 2 });          // ✗ Error - id omitted!",
+          "explanation": "Remove auto-generated fields, make rest optional. Perfect update function signature!"
+        }
+      ]
+    },
+    {
+      "title": "Best Practices",
+      "content": "Tips for using utility types effectively:",
+      "practices": [
+        {
+          "practice": "Use utility types instead of duplicating type definitions",
+          "bad": "interface User { id: number; name: string; email: string; }\ninterface UserUpdate { name?: string; email?: string; }",
+          "good": "interface User { id: number; name: string; email: string; }\ntype UserUpdate = Partial<Omit<User, 'id'>>;",
+          "why": "DRY principle. Changes to User automatically update UserUpdate!"
+        },
+        {
+          "practice": "Name transformed types clearly",
+          "bad": "type U = Partial<User>;",
+          "good": "type PartialUser = Partial<User>;\ntype UserUpdateInput = Partial<Omit<User, 'id'>>;",
+          "why": "Clear names document intent and make code self-explanatory"
+        },
+        {
+          "practice": "Use Pick when selecting few properties, Omit when excluding few",
+          "guideline": "If selecting < 50% of properties: use Pick\nIf keeping > 50% of properties: use Omit"
+        },
+        {
+          "practice": "Combine utilities to create precise types",
+          "example": "type RequiredPublicUser = Required<Pick<User, 'id' | 'name' | 'email'>>;",
+          "why": "Layering utilities creates exact types you need without manual definition"
+        }
+      ]
+    }
+  ]
+}

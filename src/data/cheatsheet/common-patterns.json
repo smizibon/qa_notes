@@ -1,0 +1,28 @@
+{
+  "id": "common-patterns",
+  "title": "Common Patterns & Best Practices",
+  "explanation": "These patterns solve real-world problems and represent TypeScript best practices used in production codebases.",
+  "codeBlocks": [
+    {
+      "title": "API Response Handling",
+      "code": "// Type-safe API responses\ntype ApiSuccess<T> = {\n  success: true;\n  data: T;\n};\n\ntype ApiError = {\n  success: false;\n  error: {\n    message: string;\n    code: number;\n  };\n};\n\ntype ApiResponse<T> = ApiSuccess<T> | ApiError;\n\n// Usage\ninterface User {\n  id: number;\n  name: string;\n  email: string;\n}\n\nasync function fetchUser(id: number): Promise<ApiResponse<User>> {\n  try {\n    const response = await fetch(`/api/users/${id}`);\n    const data = await response.json();\n    return { success: true, data };\n  } catch (error) {\n    return {\n      success: false,\n      error: { message: \"Failed to fetch user\", code: 500 }\n    };\n  }\n}\n\n// Type-safe handling\nconst result = await fetchUser(1);\n\nif (result.success) {\n  console.log(result.data.name); // TypeScript knows 'data' exists\n} else {\n  console.error(result.error.message); // TypeScript knows 'error' exists\n}"
+    },
+    {
+      "title": "Builder Pattern",
+      "code": "// Type-safe builder pattern\nclass UserBuilder {\n  private user: Partial<{\n    name: string;\n    email: string;\n    age: number;\n    role: string;\n  }> = {};\n\n  setName(name: string): this {\n    this.user.name = name;\n    return this;\n  }\n\n  setEmail(email: string): this {\n    this.user.email = email;\n    return this;\n  }\n\n  setAge(age: number): this {\n    this.user.age = age;\n    return this;\n  }\n\n  setRole(role: string): this {\n    this.user.role = role;\n    return this;\n  }\n\n  build(): Required<typeof this.user> {\n    if (!this.user.name || !this.user.email) {\n      throw new Error(\"Name and email are required\");\n    }\n    return this.user as Required<typeof this.user>;\n  }\n}\n\n// Usage\nconst user = new UserBuilder()\n  .setName(\"Alice\")\n  .setEmail(\"alice@example.com\")\n  .setAge(30)\n  .setRole(\"admin\")\n  .build();"
+    },
+    {
+      "title": "Const Assertions",
+      "code": "// const assertions preserve literal types\nconst config = {\n  apiUrl: \"https://api.example.com\",\n  timeout: 5000,\n  retries: 3\n}; // Type: { apiUrl: string; timeout: number; retries: number }\n\nconst configConst = {\n  apiUrl: \"https://api.example.com\",\n  timeout: 5000,\n  retries: 3\n} as const; // Type: { readonly apiUrl: \"https://api.example.com\"; readonly timeout: 5000; ... }\n\n// Useful for arrays\nconst colors = [\"red\", \"green\", \"blue\"]; // Type: string[]\nconst colorsConst = [\"red\", \"green\", \"blue\"] as const; // Type: readonly [\"red\", \"green\", \"blue\"]\n\ntype Color = typeof colorsConst[number]; // \"red\" | \"green\" | \"blue\"\n\n// Useful for configuration objects\nconst routes = {\n  home: \"/\",\n  about: \"/about\",\n  contact: \"/contact\"\n} as const;\n\ntype RoutePath = typeof routes[keyof typeof routes]; // \"/\" | \"/about\" | \"/contact\""
+    },
+    {
+      "title": "Type-safe Event Emitters",
+      "code": "// Type-safe event emitter\ntype Events = {\n  userLogin: { userId: number; timestamp: Date };\n  userLogout: { userId: number };\n  dataUpdate: { id: string; data: any };\n};\n\nclass TypedEventEmitter {\n  private listeners: {\n    [K in keyof Events]?: Array<(data: Events[K]) => void>;\n  } = {};\n\n  on<K extends keyof Events>(event: K, callback: (data: Events[K]) => void): void {\n    if (!this.listeners[event]) {\n      this.listeners[event] = [];\n    }\n    this.listeners[event]!.push(callback);\n  }\n\n  emit<K extends keyof Events>(event: K, data: Events[K]): void {\n    const callbacks = this.listeners[event];\n    if (callbacks) {\n      callbacks.forEach(callback => callback(data));\n    }\n  }\n}\n\n// Usage - fully type-safe!\nconst emitter = new TypedEventEmitter();\n\nemitter.on(\"userLogin\", (data) => {\n  console.log(`User ${data.userId} logged in`); // data is typed!\n});\n\nemitter.emit(\"userLogin\", { userId: 123, timestamp: new Date() }); // Type-checked!\n\n// emitter.emit(\"userLogin\", { wrong: \"data\" }); // ✗ Error: wrong shape"
+    },
+    {
+      "title": "Branded Types",
+      "code": "// Create distinct types from primitives\ntype Brand<K, T> = K & { __brand: T };\n\ntype UserId = Brand<number, \"UserId\">;\ntype ProductId = Brand<number, \"ProductId\">;\n\n// Helper functions to create branded types\nfunction createUserId(id: number): UserId {\n  return id as UserId;\n}\n\nfunction createProductId(id: number): ProductId {\n  return id as ProductId;\n}\n\n// These are NOT compatible even though both are numbers!\nfunction getUser(id: UserId): void {\n  console.log(`Getting user ${id}`);\n}\n\nfunction getProduct(id: ProductId): void {\n  console.log(`Getting product ${id}`);\n}\n\nconst userId = createUserId(123);\nconst productId = createProductId(456);\n\ngetUser(userId); // ✓ OK\n// getUser(productId); // ✗ Error: ProductId is not assignable to UserId\n// getUser(123); // ✗ Error: number is not assignable to UserId"
+    }
+  ],
+  "tip": "Use discriminated unions for complex state, const assertions for configuration, and branded types to prevent mixing similar primitives like different ID types."
+}

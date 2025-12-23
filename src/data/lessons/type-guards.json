@@ -1,0 +1,203 @@
+{
+  "id": "lesson-type-guards",
+  "title": "Type Guards - Runtime Type Checking",
+  "description": "Learn how to safely narrow types at runtime using typeof, instanceof, and custom type guards",
+  "sections": [
+    {
+      "title": "What Are Type Guards?",
+      "content": "Type guards are expressions that perform runtime checks and tell TypeScript to narrow the type within a specific code block. They bridge the gap between TypeScript's compile-time types and JavaScript's runtime behavior.",
+      "analogy": "Imagine a security checkpoint at an airport. You show your passport (runtime check), and based on that, you're allowed into different areas (type narrowing). Type guards work the same way - they check values at runtime and TypeScript trusts those checks to narrow types!",
+      "problem": {
+        "description": "Without type guards, TypeScript can't narrow union types safely:",
+        "code": "function process(value: string | number) {\n  console.log(value.toUpperCase());  // ✗ Error! number doesn't have toUpperCase\n  console.log(value.toFixed(2));     // ✗ Error! string doesn't have toFixed\n}",
+        "issue": "TypeScript only knows value is string OR number, not which one"
+      },
+      "solution": {
+        "description": "With type guards, TypeScript narrows the type:",
+        "code": "function process(value: string | number) {\n  if (typeof value === 'string') {\n    console.log(value.toUpperCase());  // ✓ OK! TypeScript knows it's a string\n  } else {\n    console.log(value.toFixed(2));     // ✓ OK! Must be a number\n  }\n}",
+        "benefit": "Type guards give TypeScript confidence about runtime types!"
+      }
+    },
+    {
+      "title": "typeof Type Guards",
+      "content": "The typeof operator checks primitive types at runtime. TypeScript recognizes typeof checks and narrows types accordingly.",
+      "supportedTypes": [
+        "'string'",
+        "'number'",
+        "'boolean'",
+        "'symbol'",
+        "'undefined'",
+        "'function'",
+        "'object' (includes arrays, null, objects)"
+      ],
+      "examples": [
+        {
+          "title": "Basic typeof Guards",
+          "code": "function processValue(value: string | number | boolean) {\n  if (typeof value === 'string') {\n    // TypeScript knows: value is string\n    console.log(value.toUpperCase());\n    console.log(value.length);\n  } else if (typeof value === 'number') {\n    // TypeScript knows: value is number\n    console.log(value.toFixed(2));\n    console.log(value * 2);\n  } else {\n    // TypeScript knows: value is boolean\n    console.log(value ? 'yes' : 'no');\n  }\n}",
+          "explanation": "Each if block narrows the type automatically"
+        },
+        {
+          "title": "Filtering with typeof",
+          "code": "function filterNumbers(values: (string | number)[]): number[] {\n  return values.filter((v): v is number => typeof v === 'number');\n}\n\nconst mixed = [1, 'hello', 2, 'world', 3];\nconst numbers = filterNumbers(mixed);  // [1, 2, 3]\n// numbers is typed as number[], not (string | number)[]",
+          "explanation": "Type predicate 'v is number' tells TypeScript the filtered array contains only numbers"
+        },
+        {
+          "title": "Null and Object Gotcha",
+          "code": "function handleValue(value: string | object | null) {\n  if (typeof value === 'object') {\n    // ⚠️ value could be object OR null!\n    // typeof null === 'object' is a JavaScript quirk\n    \n    if (value === null) {\n      console.log('It\\'s null');\n    } else {\n      // Now it's definitely an object\n      console.log(value);\n    }\n  }\n}",
+          "explanation": "Be careful! typeof null returns 'object'. Always check for null explicitly."
+        }
+      ]
+    },
+    {
+      "title": "instanceof Type Guards",
+      "content": "The instanceof operator checks if an object is an instance of a class or constructor function. Perfect for class-based type narrowing.",
+      "syntax": "object instanceof Constructor",
+      "examples": [
+        {
+          "title": "Class Instance Checks",
+          "code": "class Dog {\n  bark() { console.log('Woof!'); }\n}\n\nclass Cat {\n  meow() { console.log('Meow!'); }\n}\n\nfunction makeSound(animal: Dog | Cat) {\n  if (animal instanceof Dog) {\n    animal.bark();  // TypeScript knows it's a Dog\n  } else {\n    animal.meow();  // Must be a Cat\n  }\n}\n\nconst dog = new Dog();\nmakeSound(dog);",
+          "explanation": "instanceof checks the prototype chain and narrows to the specific class type"
+        },
+        {
+          "title": "Built-in Types",
+          "code": "function processInput(input: Date | string[] | Error) {\n  if (input instanceof Date) {\n    console.log('Year:', input.getFullYear());\n  } else if (input instanceof Array) {\n    console.log('Length:', input.length);\n    console.log('Items:', input.join(', '));\n  } else {\n    // Must be Error\n    console.log('Error:', input.message);\n  }\n}",
+          "explanation": "Works with built-in JavaScript classes too!"
+        },
+        {
+          "title": "Error Handling",
+          "code": "async function fetchData() {\n  try {\n    const response = await fetch('/api/data');\n    return await response.json();\n  } catch (error) {\n    // error is 'unknown' by default\n    if (error instanceof Error) {\n      console.error('Error message:', error.message);\n      console.error('Stack trace:', error.stack);\n    } else {\n      console.error('Unknown error:', error);\n    }\n  }\n}",
+          "explanation": "Always check if caught errors are Error instances - they might not be!"
+        }
+      ],
+      "limitations": "instanceof only works with classes and constructor functions, not with type aliases or interfaces"
+    },
+    {
+      "title": "in Operator Type Guards",
+      "content": "The 'in' operator checks if a property exists on an object. TypeScript uses this to narrow types.",
+      "syntax": "'propertyName' in object",
+      "examples": [
+        {
+          "title": "Discriminating Object Types",
+          "code": "type Dog = { bark: () => void };\ntype Cat = { meow: () => void };\n\nfunction makeSound(animal: Dog | Cat) {\n  if ('bark' in animal) {\n    animal.bark();  // TypeScript knows it's a Dog\n  } else {\n    animal.meow();  // Must be a Cat\n  }\n}",
+          "explanation": "Check for a unique property to distinguish between types"
+        },
+        {
+          "title": "Optional Properties",
+          "code": "interface User {\n  name: string;\n  email?: string;\n  phone?: string;\n}\n\nfunction contactUser(user: User) {\n  if ('email' in user && user.email) {\n    console.log('Emailing:', user.email);\n  } else if ('phone' in user && user.phone) {\n    console.log('Calling:', user.phone);\n  } else {\n    console.log('No contact info');\n  }\n}",
+          "explanation": "Check for optional properties before using them"
+        },
+        {
+          "title": "Discriminated Unions",
+          "code": "type Success = { status: 'success'; data: string };\ntype Failure = { status: 'error'; error: string };\ntype Result = Success | Failure;\n\nfunction handleResult(result: Result) {\n  if ('data' in result) {\n    // TypeScript knows it's Success\n    console.log('Data:', result.data);\n  } else {\n    // Must be Failure\n    console.log('Error:', result.error);\n  }\n}\n\n// Even better - check the discriminant:\nfunction handleResult2(result: Result) {\n  if (result.status === 'success') {\n    console.log('Data:', result.data);\n  } else {\n    console.log('Error:', result.error);\n  }\n}",
+          "explanation": "Use discriminated unions (common property with literal types) for clearer type narrowing"
+        }
+      ]
+    },
+    {
+      "title": "Custom Type Guards (User-Defined)",
+      "content": "Create your own type guard functions with type predicates. These are the most powerful and flexible type guards!",
+      "syntax": "function isType(value: any): value is SpecificType { return /* check */; }",
+      "typePredicateFormat": "parameterName is Type",
+      "examples": [
+        {
+          "title": "Basic Custom Type Guard",
+          "code": "interface User {\n  id: number;\n  name: string;\n  email: string;\n}\n\nfunction isUser(value: unknown): value is User {\n  return (\n    typeof value === 'object' &&\n    value !== null &&\n    'id' in value &&\n    'name' in value &&\n    'email' in value &&\n    typeof (value as User).id === 'number' &&\n    typeof (value as User).name === 'string' &&\n    typeof (value as User).email === 'string'\n  );\n}\n\nfunction processData(data: unknown) {\n  if (isUser(data)) {\n    // TypeScript knows data is User\n    console.log(`User: ${data.name} (${data.email})`);\n  } else {\n    console.log('Not a valid user');\n  }\n}",
+          "explanation": "Custom type guards validate complex object shapes. The 'value is User' return type tells TypeScript to narrow the type."
+        },
+        {
+          "title": "Array Type Guards",
+          "code": "function isStringArray(value: unknown): value is string[] {\n  return (\n    Array.isArray(value) &&\n    value.every(item => typeof item === 'string')\n  );\n}\n\nfunction processInput(input: unknown) {\n  if (isStringArray(input)) {\n    // TypeScript knows input is string[]\n    input.forEach(str => console.log(str.toUpperCase()));\n  }\n}",
+          "explanation": "Check if all array elements match a specific type"
+        },
+        {
+          "title": "Generic Type Guards",
+          "code": "function isArrayOf<T>(\n  value: unknown,\n  itemGuard: (item: unknown) => item is T\n): value is T[] {\n  return Array.isArray(value) && value.every(itemGuard);\n}\n\nfunction isNumber(value: unknown): value is number {\n  return typeof value === 'number';\n}\n\nfunction isString(value: unknown): value is string {\n  return typeof value === 'string';\n}\n\nconst data: unknown = [1, 2, 3];\n\nif (isArrayOf(data, isNumber)) {\n  // data is number[]\n  const sum = data.reduce((a, b) => a + b, 0);\n}",
+          "explanation": "Reusable generic type guard for arrays of any type!"
+        },
+        {
+          "title": "Nullable Type Guards",
+          "code": "function isDefined<T>(value: T | null | undefined): value is T {\n  return value !== null && value !== undefined;\n}\n\nconst values: (string | null | undefined)[] = ['hello', null, 'world', undefined];\nconst defined = values.filter(isDefined);\n// defined is string[], not (string | null | undefined)[]",
+          "explanation": "Filter out null and undefined while narrowing the type"
+        }
+      ]
+    },
+    {
+      "title": "Discriminated Unions",
+      "content": "Discriminated unions (tagged unions) use a common property with literal types to enable type narrowing. This is the most elegant pattern for complex types!",
+      "pattern": "Each type in the union has a common property (discriminant) with a unique literal value",
+      "examples": [
+        {
+          "title": "API Response Pattern",
+          "code": "type SuccessResponse = {\n  status: 'success';\n  data: { id: number; name: string };\n};\n\ntype ErrorResponse = {\n  status: 'error';\n  error: { code: number; message: string };\n};\n\ntype LoadingResponse = {\n  status: 'loading';\n};\n\ntype ApiResponse = SuccessResponse | ErrorResponse | LoadingResponse;\n\nfunction handleResponse(response: ApiResponse) {\n  switch (response.status) {\n    case 'success':\n      // TypeScript knows it's SuccessResponse\n      console.log('User:', response.data.name);\n      break;\n    case 'error':\n      // TypeScript knows it's ErrorResponse\n      console.error('Error:', response.error.message);\n      break;\n    case 'loading':\n      // TypeScript knows it's LoadingResponse\n      console.log('Loading...');\n      break;\n  }\n}",
+          "explanation": "The 'status' property discriminates between response types. TypeScript automatically narrows!"
+        },
+        {
+          "title": "Shape Types",
+          "code": "type Circle = {\n  kind: 'circle';\n  radius: number;\n};\n\ntype Rectangle = {\n  kind: 'rectangle';\n  width: number;\n  height: number;\n};\n\ntype Triangle = {\n  kind: 'triangle';\n  base: number;\n  height: number;\n};\n\ntype Shape = Circle | Rectangle | Triangle;\n\nfunction calculateArea(shape: Shape): number {\n  switch (shape.kind) {\n    case 'circle':\n      return Math.PI * shape.radius ** 2;\n    case 'rectangle':\n      return shape.width * shape.height;\n    case 'triangle':\n      return (shape.base * shape.height) / 2;\n  }\n}\n\nconst circle: Circle = { kind: 'circle', radius: 10 };\nconsole.log(calculateArea(circle));  // 314.159...",
+          "explanation": "Classic discriminated union pattern - 'kind' property identifies the shape type"
+        },
+        {
+          "title": "Exhaustive Checks",
+          "code": "type Action =\n  | { type: 'ADD'; value: number }\n  | { type: 'SUBTRACT'; value: number }\n  | { type: 'MULTIPLY'; value: number }\n  | { type: 'RESET' };\n\nfunction reducer(state: number, action: Action): number {\n  switch (action.type) {\n    case 'ADD':\n      return state + action.value;\n    case 'SUBTRACT':\n      return state - action.value;\n    case 'MULTIPLY':\n      return state * action.value;\n    case 'RESET':\n      return 0;\n    default:\n      // Exhaustiveness check\n      const _exhaustive: never = action;\n      throw new Error(`Unhandled action: ${JSON.stringify(_exhaustive)}`);\n  }\n}\n\n// If you add a new action type and forget to handle it,\n// TypeScript will error at the _exhaustive assignment!",
+          "explanation": "The 'never' type ensures all cases are handled. Add a new action? TypeScript will remind you to handle it!"
+        }
+      ]
+    },
+    {
+      "title": "Assertion Functions",
+      "content": "Assertion functions throw errors if conditions aren't met, and TypeScript narrows types based on the assertion.",
+      "syntax": "function assert(condition: boolean): asserts condition",
+      "examples": [
+        {
+          "title": "Basic Assertion",
+          "code": "function assert(condition: boolean, message?: string): asserts condition {\n  if (!condition) {\n    throw new Error(message || 'Assertion failed');\n  }\n}\n\nfunction processValue(value: string | null) {\n  assert(value !== null, 'Value must not be null');\n  // After this line, TypeScript knows value is string (not string | null)\n  console.log(value.toUpperCase());\n}",
+          "explanation": "If the assertion passes, TypeScript narrows the type"
+        },
+        {
+          "title": "Type Assertion Functions",
+          "code": "function assertIsString(value: unknown): asserts value is string {\n  if (typeof value !== 'string') {\n    throw new Error('Value must be a string');\n  }\n}\n\nfunction processInput(input: unknown) {\n  assertIsString(input);\n  // After this line, input is string\n  console.log(input.toUpperCase());\n}",
+          "explanation": "Combines type guards with error throwing - very powerful!"
+        },
+        {
+          "title": "Non-Null Assertion",
+          "code": "function assertDefined<T>(value: T | null | undefined): asserts value is T {\n  if (value === null || value === undefined) {\n    throw new Error('Value must be defined');\n  }\n}\n\nfunction getUserName(user: { name?: string }) {\n  assertDefined(user.name);\n  // user.name is now string, not string | undefined\n  return user.name.toUpperCase();\n}",
+          "explanation": "Assert that optional values are present"
+        }
+      ]
+    },
+    {
+      "title": "Best Practices",
+      "content": "Expert tips for using type guards effectively:",
+      "practices": [
+        {
+          "practice": "Prefer discriminated unions over instanceof",
+          "better": "type Result = \n  | { status: 'success'; data: string }\n  | { status: 'error'; error: Error };",
+          "worse": "class Success { constructor(public data: string) {} }\nclass Failure { constructor(public error: Error) {} }",
+          "why": "Discriminated unions are more functional, serializable, and easier to work with"
+        },
+        {
+          "practice": "Use type predicates for reusable guards",
+          "code": "// Reusable\nfunction isNonNull<T>(value: T | null): value is T {\n  return value !== null;\n}\n\nconst values = [1, null, 2, null, 3];\nconst filtered = values.filter(isNonNull);  // number[]",
+          "why": "Type predicates make guards composable and reusable"
+        },
+        {
+          "practice": "Always check for null with typeof 'object'",
+          "bad": "if (typeof value === 'object') {\n  value.prop;  // ✗ Could be null!\n}",
+          "good": "if (typeof value === 'object' && value !== null) {\n  value.prop;  // ✓ Safe\n}",
+          "why": "typeof null === 'object' is a JavaScript quirk"
+        },
+        {
+          "practice": "Use unknown instead of any for type guards",
+          "bad": "function isString(value: any): value is string {\n  return typeof value === 'string';\n}",
+          "good": "function isString(value: unknown): value is string {\n  return typeof value === 'string';\n}",
+          "why": "unknown forces you to check the type; any bypasses type checking"
+        },
+        {
+          "practice": "Validate external data with type guards",
+          "code": "async function fetchUser(): Promise<User | null> {\n  const response = await fetch('/api/user');\n  const data: unknown = await response.json();\n  \n  if (isUser(data)) {\n    return data;\n  }\n  return null;\n}\n\nfunction isUser(value: unknown): value is User {\n  return (\n    typeof value === 'object' &&\n    value !== null &&\n    'id' in value &&\n    'name' in value\n  );\n}",
+          "why": "Never trust external data - always validate with type guards"
+        }
+      ]
+    }
+  ]
+}

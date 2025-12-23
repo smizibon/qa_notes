@@ -1,0 +1,28 @@
+{
+  "id": "common-errors",
+  "title": "Common Errors & How to Fix Them",
+  "explanation": "Learn to recognize and fix the most common TypeScript errors you'll encounter.",
+  "codeBlocks": [
+    {
+      "title": "Type 'X' is not assignable to type 'Y'",
+      "code": "// Problem: Assigning wrong type\nlet name: string = \"Alice\";\n// name = 123; // ✗ Error: Type 'number' is not assignable to type 'string'\n\n// Solution 1: Use correct type\nname = \"Bob\"; // ✓ OK\n\n// Solution 2: Use union type if needed\nlet value: string | number = \"Alice\";\nvalue = 123; // ✓ OK\n\n// Problem: Missing properties\ninterface User {\n  name: string;\n  age: number;\n}\n\n// const user: User = { name: \"Alice\" }; // ✗ Error: Property 'age' is missing\n\n// Solution: Provide all required properties\nconst user: User = { name: \"Alice\", age: 30 }; // ✓ OK\n\n// Or make properties optional\ninterface FlexibleUser {\n  name: string;\n  age?: number;\n}\n\nconst flexUser: FlexibleUser = { name: \"Bob\" }; // ✓ OK"
+    },
+    {
+      "title": "Object is possibly 'undefined' or 'null'",
+      "code": "// Problem: Not handling null/undefined\ninterface User {\n  name: string;\n  email?: string;\n}\n\nfunction sendEmail(user: User): void {\n  // console.log(user.email.toLowerCase()); // ✗ Error: Object is possibly 'undefined'\n}\n\n// Solution 1: Optional chaining\nfunction sendEmailSafe1(user: User): void {\n  console.log(user.email?.toLowerCase()); // Returns undefined if email is undefined\n}\n\n// Solution 2: Type guard\nfunction sendEmailSafe2(user: User): void {\n  if (user.email) {\n    console.log(user.email.toLowerCase()); // ✓ OK - TypeScript knows it's defined\n  }\n}\n\n// Solution 3: Nullish coalescing\nfunction sendEmailSafe3(user: User): void {\n  const email = user.email ?? \"no-email@example.com\";\n  console.log(email.toLowerCase());\n}\n\n// Solution 4: Non-null assertion (use carefully!)\nfunction sendEmailDangerous(user: User): void {\n  console.log(user.email!.toLowerCase()); // ! tells TS it's definitely not null/undefined\n}"
+    },
+    {
+      "title": "Cannot find name 'X'",
+      "code": "// Problem: Using undeclared variable or wrong import\n// console.log(userName); // ✗ Error: Cannot find name 'userName'\n\n// Solution 1: Declare the variable\nlet userName = \"Alice\";\nconsole.log(userName); // ✓ OK\n\n// Problem: Missing import\n// const result = someLibrary.get('/api/data'); // ✗ Error: Cannot find name 'someLibrary'\n\n// Solution 2: Import what you need\nimport someLibrary from 'some-library';\nconst result = someLibrary.get('/api/data'); // ✓ OK\n\n// Problem: Missing type declaration file\n// For third-party libraries without types, install @types package:\n// npm install --save-dev @types/lodash"
+    },
+    {
+      "title": "Type 'X' has no properties in common with type 'Y'",
+      "code": "// Problem: Object shape doesn't match interface\ninterface User {\n  name: string;\n  age: number;\n}\n\n// const user: User = {\n//   username: \"Alice\", // ✗ Error: 'username' does not exist in type 'User'\n//   yearsOld: 30\n// };\n\n// Solution: Use correct property names\nconst user: User = {\n  name: \"Alice\",\n  age: 30\n};"
+    },
+    {
+      "title": "Implicit 'any' type",
+      "code": "// Problem: TypeScript can't infer type\n// function process(data) { // ✗ Error: Parameter 'data' implicitly has an 'any' type\n//   return data.value;\n// }\n\n// Solution 1: Add explicit type\nfunction process(data: { value: string }): string {\n  return data.value;\n}\n\n// Solution 2: Use interface\ninterface Data {\n  value: string;\n}\n\nfunction processData(data: Data): string {\n  return data.value;\n}\n\n// Problem: Uninitialized variable\n// let value; // Type is 'any'\n\n// Solution: Initialize or type explicitly\nlet value: string;\nlet value2 = \"hello\"; // inferred as string"
+    }
+  ],
+  "tip": "Most errors are TypeScript protecting you from runtime bugs. Read the error message carefully - it usually tells you exactly what's wrong and where."
+}

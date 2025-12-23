@@ -1,0 +1,20 @@
+{
+  "id": "tsconfig",
+  "title": "tsconfig.json Configuration",
+  "explanation": "The tsconfig.json file controls how TypeScript compiles your code. These settings affect type checking strictness and output.",
+  "codeBlocks": [
+    {
+      "title": "Essential tsconfig.json",
+      "code": "{\n  \"compilerOptions\": {\n    /* Language and Environment */\n    \"target\": \"ES2020\",              // JavaScript version to compile to\n    \"lib\": [\"ES2020\", \"DOM\"],        // Built-in type definitions to include\n    \n    /* Modules */\n    \"module\": \"commonjs\",            // Module system (commonjs, es2015, esnext)\n    \"moduleResolution\": \"node\",      // How to resolve modules\n    \"esModuleInterop\": true,         // Better interop with CommonJS\n    \n    /* Type Checking */\n    \"strict\": true,                  // Enable all strict type checking (RECOMMENDED!)\n    \"noImplicitAny\": true,           // Error on implied 'any' type\n    \"strictNullChecks\": true,        // null/undefined handled separately\n    \"strictFunctionTypes\": true,     // Strict function type checking\n    \"noUnusedLocals\": true,          // Error on unused local variables\n    \"noUnusedParameters\": true,      // Error on unused function parameters\n    \n    /* Emit */\n    \"outDir\": \"./dist\",              // Output directory for compiled files\n    \"rootDir\": \"./src\",              // Root directory of source files\n    \"removeComments\": true,          // Remove comments from output\n    \"sourceMap\": true,               // Generate .map files for debugging\n    \n    /* Interop Constraints */\n    \"skipLibCheck\": true,            // Skip type checking of .d.ts files\n    \"forceConsistentCasingInFileNames\": true // Ensure consistent file casing\n  },\n  \n  \"include\": [\n    \"src/**/*\"                       // Files to include\n  ],\n  \n  \"exclude\": [\n    \"node_modules\",                  // Files to exclude\n    \"dist\"\n  ]\n}"
+    },
+    {
+      "title": "Strict Mode Options",
+      "code": "{\n  \"compilerOptions\": {\n    // Instead of \"strict\": true, you can enable individually:\n    \n    \"noImplicitAny\": true,\n    // let value; // ✗ Error: Variable has an implicit 'any' type\n    \n    \"strictNullChecks\": true,\n    // let name: string = null; // ✗ Error\n    // Use: let name: string | null = null; // ✓ OK\n    \n    \"strictFunctionTypes\": true,\n    // Ensures function parameter types are checked correctly\n    \n    \"strictBindCallApply\": true,\n    // Strict checking for bind, call, apply methods\n    \n    \"strictPropertyInitialization\": true,\n    // Class properties must be initialized\n    // class User {\n    //   name: string; // ✗ Error: not initialized\n    //   age: number = 0; // ✓ OK\n    // }\n    \n    \"noImplicitThis\": true,\n    // Error when 'this' has implicit 'any' type\n    \n    \"alwaysStrict\": true\n    // Emit \"use strict\" in all files\n  }\n}"
+    },
+    {
+      "title": "Project References",
+      "code": "// For monorepos or multi-package projects\n{\n  \"compilerOptions\": {\n    \"composite\": true,               // Enable project references\n    \"declaration\": true,             // Generate .d.ts files\n    \"declarationMap\": true          // Generate .d.ts.map files\n  },\n  \"references\": [\n    { \"path\": \"../shared\" },        // Reference other projects\n    { \"path\": \"../utils\" }\n  ]\n}"
+    }
+  ],
+  "tip": "Start with \"strict\": true for maximum type safety. It catches bugs early and helps you write better code. Only relax specific options if absolutely necessary."
+}

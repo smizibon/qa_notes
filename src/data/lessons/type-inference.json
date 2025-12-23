@@ -1,0 +1,201 @@
+{
+  "id": "lesson-type-inference",
+  "title": "Type Inference - Let TypeScript Figure It Out",
+  "description": "Understand how TypeScript automatically infers types and when to let it do the work for you",
+  "sections": [
+    {
+      "title": "What is Type Inference?",
+      "content": "Type inference is TypeScript's ability to automatically figure out types without you explicitly writing them. It's like having a smart assistant who knows what you mean even when you don't spell everything out.",
+      "analogy": "Imagine telling a friend 'I'm at the place'. If you're holding coffee, they infer you're at a coffee shop. You didn't say it explicitly, but context makes it obvious. That's type inference - TypeScript uses context to figure out types!",
+      "example": {
+        "withoutInference": "let name: string = 'Alice';  // Explicit type\nlet age: number = 30;         // Explicit type",
+        "withInference": "let name = 'Alice';  // TypeScript infers: string\nlet age = 30;         // TypeScript infers: number",
+        "explanation": "Both do the same thing! TypeScript sees 'Alice' and knows it's a string. Sees 30 and knows it's a number. No need to write the types!"
+      }
+    },
+    {
+      "title": "Why Type Inference Matters",
+      "content": "Type inference makes TypeScript feel more like JavaScript while keeping type safety. You get the best of both worlds!",
+      "benefits": [
+        "Less typing - code is cleaner and faster to write",
+        "Still type-safe - TypeScript checks types even if not explicit",
+        "More readable - less noise from type annotations",
+        "Automatic updates - refactoring updates inferred types automatically",
+        "Natural feel - works like JavaScript but safer"
+      ],
+      "comparison": {
+        "explicit": "let firstName: string = 'Alice';\nlet lastName: string = 'Smith';\nlet age: number = 30;\nlet isActive: boolean = true;\nlet hobbies: string[] = ['reading', 'coding'];\nlet scores: number[] = [95, 87, 92];",
+        "inferred": "let firstName = 'Alice';\nlet lastName = 'Smith';\nlet age = 30;\nlet isActive = true;\nlet hobbies = ['reading', 'coding'];\nlet scores = [95, 87, 92];",
+        "note": "The inferred version is cleaner and just as type-safe! TypeScript knows all the types."
+      }
+    },
+    {
+      "title": "Variable Inference",
+      "content": "When you declare and initialize a variable, TypeScript infers its type from the value.",
+      "examples": [
+        {
+          "code": "let message = 'Hello';  // inferred as string\nmessage = 'Goodbye';    // ✓ OK - still string\nmessage = 42;           // ✗ Error - can't assign number to string!",
+          "explanation": "TypeScript infers 'message' is a string from the initial value. Then enforces that type."
+        },
+        {
+          "code": "let numbers = [1, 2, 3];  // inferred as number[]\nnumbers.push(4);          // ✓ OK - adding number\nnumbers.push('5');        // ✗ Error - can't add string to number[]",
+          "explanation": "TypeScript sees an array of numbers and infers number[]. Prevents wrong types from being added!"
+        },
+        {
+          "code": "let mixed = [1, 'two', 3];  // inferred as (string | number)[]\nmixed.push(4);              // ✓ OK - number allowed\nmixed.push('five');         // ✓ OK - string allowed\nmixed.push(true);           // ✗ Error - boolean not in union!",
+          "explanation": "Mixed array? TypeScript infers a union type: (string | number)[]. Allows both types!"
+        },
+        {
+          "code": "const user = {\n  name: 'Alice',\n  age: 30,\n  email: 'alice@example.com'\n};\n// Inferred type:\n// {\n//   name: string;\n//   age: number;\n//   email: string;\n// }",
+          "explanation": "TypeScript infers the structure of objects too. Each property gets its type from its value."
+        }
+      ]
+    },
+    {
+      "title": "const vs let - Different Inference",
+      "content": "const and let are inferred differently because const values can't be reassigned.",
+      "examples": [
+        {
+          "title": "let - infers broader type",
+          "code": "let status = 'active';  // inferred as string\nstatus = 'inactive';    // ✓ OK - any string allowed\nstatus = 'pending';     // ✓ OK",
+          "explanation": "let variables can be reassigned, so TypeScript infers the general type (string) allowing any value of that type."
+        },
+        {
+          "title": "const - infers literal type",
+          "code": "const status = 'active';  // inferred as 'active' (literal)\nstatus = 'inactive';      // ✗ Error - can't reassign const!",
+          "explanation": "const can't be reassigned, so TypeScript infers the exact literal value ('active'), not just string."
+        },
+        {
+          "title": "const with objects - still mutable",
+          "code": "const user = { name: 'Alice', age: 30 };\n// Inferred: { name: string; age: number }\n\nuser.name = 'Bob';   // ✓ OK - object properties are mutable\nuser.age = 31;       // ✓ OK\nuser = { name: 'Charlie', age: 25 };  // ✗ Error - can't reassign const",
+          "explanation": "const prevents reassignment of the variable, but object properties are still mutable. TypeScript infers regular types for properties."
+        },
+        {
+          "title": "as const - deeply immutable inference",
+          "code": "const user = {\n  name: 'Alice',\n  age: 30\n} as const;\n// Inferred: { readonly name: 'Alice'; readonly age: 30 }\n\nuser.name = 'Bob';  // ✗ Error - readonly!\nuser.age = 31;      // ✗ Error - readonly!",
+          "explanation": "'as const' makes TypeScript infer literal types for all values and make them readonly. Deeply immutable!"
+        }
+      ]
+    },
+    {
+      "title": "Function Return Type Inference",
+      "content": "TypeScript infers function return types from what the function returns. Usually you don't need to specify return types explicitly.",
+      "examples": [
+        {
+          "code": "function add(a: number, b: number) {\n  return a + b;  // Return type inferred as number\n}\n\nconst result = add(2, 3);  // result inferred as number",
+          "explanation": "TypeScript sees you're adding two numbers, infers the return type is number. Smart!"
+        },
+        {
+          "code": "function greet(name: string) {\n  return `Hello, ${name}!`;  // Return type inferred as string\n}\n\nconst message = greet('Alice');  // message inferred as string",
+          "explanation": "Template literal with strings? Return type is string. TypeScript figures it out!"
+        },
+        {
+          "code": "function getUser(id: number) {\n  if (id === 1) {\n    return { name: 'Alice', age: 30 };\n  }\n  return null;\n}\n// Return type inferred as { name: string; age: number } | null",
+          "explanation": "Multiple return paths? TypeScript infers a union of all possible return types!"
+        },
+        {
+          "code": "function processData(input: string) {\n  if (input.length === 0) {\n    return;  // returns undefined\n  }\n  return input.toUpperCase();  // returns string\n}\n// Return type inferred as string | undefined",
+          "explanation": "Some paths return nothing (undefined), others return string. TypeScript catches both!"
+        }
+      ],
+      "whenToBeExplicit": [
+        "Public API functions - document what they return",
+        "Complex functions - make intent clear",
+        "When inference gives unexpected results",
+        "Exported functions from libraries"
+      ]
+    },
+    {
+      "title": "Contextual Typing",
+      "content": "Sometimes TypeScript infers types based on where a value is used. This is called 'contextual typing' - the context provides type information.",
+      "examples": [
+        {
+          "title": "Array methods",
+          "code": "const numbers = [1, 2, 3, 4, 5];\n\n// TypeScript knows callback receives numbers\nconst doubled = numbers.map(n => n * 2);\n// n inferred as number, doubled inferred as number[]",
+          "explanation": "numbers is number[], so TypeScript knows map's callback receives numbers. No need to type 'n'!"
+        },
+        {
+          "title": "Event handlers",
+          "code": "button.addEventListener('click', (e) => {\n  // e inferred as MouseEvent\n  console.log(e.clientX, e.clientY);\n});\n\nbutton.addEventListener('keypress', (e) => {\n  // e inferred as KeyboardEvent\n  console.log(e.key);\n});",
+          "explanation": "Context tells TypeScript what event type to expect. 'click' = MouseEvent, 'keypress' = KeyboardEvent!"
+        },
+        {
+          "title": "Object literals in function calls",
+          "code": "interface User {\n  name: string;\n  age: number;\n}\n\nfunction createUser(user: User) {\n  return user;\n}\n\n// Object literal is contextually typed as User\ncreateUser({\n  name: 'Alice',\n  age: 30\n  // TypeScript knows what properties are expected!\n});",
+          "explanation": "Function expects User, so object literal is contextually typed. TypeScript checks it matches!"
+        }
+      ]
+    },
+    {
+      "title": "Best Type Parameter Inference",
+      "content": "When calling generic functions, TypeScript infers type parameters from arguments.",
+      "examples": [
+        {
+          "code": "function identity<T>(value: T): T {\n  return value;\n}\n\n// TypeScript infers T from argument\nconst num = identity(42);        // T inferred as number\nconst str = identity('hello');   // T inferred as string\nconst arr = identity([1, 2, 3]); // T inferred as number[]",
+          "explanation": "You pass a value, TypeScript infers T from it. Usually no need to specify <type>!"
+        },
+        {
+          "code": "function map<T, U>(arr: T[], fn: (item: T) => U): U[] {\n  return arr.map(fn);\n}\n\nconst numbers = [1, 2, 3];\nconst strings = map(numbers, n => n.toString());\n// T inferred as number (from numbers array)\n// U inferred as string (from n.toString() return type)\n// strings inferred as string[]",
+          "explanation": "Multiple type parameters? TypeScript infers each from context. T from array, U from function return!"
+        }
+      ]
+    },
+    {
+      "title": "When Inference Falls Short",
+      "content": "Sometimes TypeScript needs help. Here's when to add explicit types:",
+      "cases": [
+        {
+          "case": "Empty arrays",
+          "problem": "const items = [];  // inferred as any[]",
+          "solution": "const items: string[] = [];  // explicit type",
+          "why": "No values to infer from, TypeScript defaults to any[]"
+        },
+        {
+          "case": "Null/undefined initialization",
+          "problem": "let user = null;  // inferred as null (can't reassign!)",
+          "solution": "let user: User | null = null;  // explicit union type",
+          "why": "TypeScript infers the literal type 'null', not 'could be user or null'"
+        },
+        {
+          "case": "Function parameters",
+          "problem": "function greet(name) {  // ✗ Error - needs type!",
+          "solution": "function greet(name: string) {  // ✓ OK",
+          "why": "Parameters can't be inferred - no way to know what types are valid"
+        },
+        {
+          "case": "Complex union types",
+          "problem": "let status = 'active';  // inferred as string (too broad)",
+          "solution": "let status: 'active' | 'inactive' = 'active';  // precise",
+          "why": "Inference gives general type. Explicit type is more specific."
+        }
+      ]
+    },
+    {
+      "title": "Best Practices",
+      "content": "Guidelines for balancing inference and explicit types:",
+      "practices": [
+        {
+          "practice": "Let TypeScript infer when it's obvious",
+          "good": "const name = 'Alice';  // Clear from value\nconst count = 0;       // Clear from value",
+          "avoid": "const name: string = 'Alice';  // Redundant\nconst count: number = 0;       // Redundant",
+          "why": "Don't add noise when inference works perfectly"
+        },
+        {
+          "practice": "Be explicit for function parameters and return types of public APIs",
+          "code": "// Public API - be explicit\nexport function calculateTotal(\n  items: CartItem[],\n  taxRate: number\n): number {\n  // ...\n}",
+          "why": "Serves as documentation and prevents accidental changes"
+        },
+        {
+          "practice": "Use explicit types for complex structures",
+          "code": "interface Config {\n  api: { url: string; key: string };\n  timeout: number;\n  retries: number;\n}\n\nconst config: Config = {\n  api: { url: '...', key: '...' },\n  timeout: 5000,\n  retries: 3\n};",
+          "why": "Complex types are clearer with explicit interface. Catches typos!"
+        },
+        {
+          "practice": "Trust inference for local variables",
+          "code": "function processData(users: User[]) {\n  const active = users.filter(u => u.isActive);  // Infer!\n  const count = active.length;                    // Infer!\n  const names = active.map(u => u.name);         // Infer!\n  // All types are obvious from context\n}",
+          "why": "Local variables with obvious types don't need annotations"
+        }
+      ]
+    }
+  ]
+}

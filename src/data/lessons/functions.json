@@ -1,0 +1,251 @@
+{
+  "id": "lesson-functions",
+  "title": "Mastering Functions in TypeScript",
+  "description": "Learn how to write type-safe functions that are predictable, self-documenting, and error-free",
+  "sections": [
+    {
+      "title": "Why Type Functions?",
+      "content": "Functions are the building blocks of any program. They take inputs, do something, and often return outputs. In JavaScript, you never know what types a function expects or returns just by looking at it. TypeScript changes that by letting you specify exactly what goes in and what comes out.",
+      "problemWithoutTypes": {
+        "description": "Consider this JavaScript function:",
+        "code": "function calculateTotal(price, taxRate) {\n  return price + (price * taxRate);\n}",
+        "issues": [
+          "What if someone passes strings instead of numbers?",
+          "What if they pass only one argument?",
+          "What if taxRate is a percentage (0.08) vs decimal (8)?",
+          "What does this function return?",
+          "All these questions lead to bugs!"
+        ]
+      },
+      "solutionWithTypes": {
+        "code": "function calculateTotal(price: number, taxRate: number): number {\n  return price + (price * taxRate);\n}",
+        "benefits": [
+          "TypeScript enforces that both parameters are numbers",
+          "Your editor shows you what parameters are needed",
+          "You know the return type is a number",
+          "Calling it wrong shows an immediate error",
+          "The function signature is self-documenting"
+        ]
+      }
+    },
+    {
+      "title": "Basic Function Syntax",
+      "content": "Let's break down the anatomy of a typed function. Every piece has a purpose and helps make your code safer.",
+      "anatomy": {
+        "code": "function functionName(param1: type1, param2: type2): returnType {\n  // function body\n  return value;\n}",
+        "parts": [
+          "functionName: The name you'll use to call the function",
+          "param1: type1: Parameter name and its type (what goes in)",
+          "param2: type2: More parameters if needed",
+          ": returnType: What type of value the function returns",
+          "return value: The actual value returned (must match returnType)"
+        ]
+      },
+      "examples": [
+        {
+          "code": "function add(a: number, b: number): number {\n  return a + b;\n}",
+          "explanation": "Takes two numbers, returns their sum (also a number)",
+          "usage": "const result = add(5, 3); // result is 8"
+        },
+        {
+          "code": "function greet(name: string): string {\n  return `Hello, ${name}!`;\n}",
+          "explanation": "Takes a string (name), returns a greeting string",
+          "usage": "const message = greet('Alice'); // 'Hello, Alice!'"
+        },
+        {
+          "code": "function isAdult(age: number): boolean {\n  return age >= 18;\n}",
+          "explanation": "Takes a number (age), returns true or false",
+          "usage": "const canVote = isAdult(21); // true"
+        },
+        {
+          "code": "function logMessage(message: string): void {\n  console.log(message);\n}",
+          "explanation": "Takes a string, returns nothing (void means no return value)",
+          "usage": "logMessage('Hello!'); // Just prints, no return value"
+        }
+      ]
+    },
+    {
+      "title": "Optional Parameters",
+      "content": "Sometimes you want parameters that aren't always required. TypeScript lets you mark parameters as optional using a question mark (?). Optional parameters can be omitted when calling the function.",
+      "explanation": "Think of optional parameters like optional fields on a form. You can fill them in, but you don't have to. If you skip them, they'll be 'undefined'.",
+      "syntax": "function name(required: type, optional?: type) { }",
+      "examples": [
+        {
+          "code": "function greet(name: string, greeting?: string): string {\n  if (greeting) {\n    return `${greeting}, ${name}!`;\n  }\n  return `Hello, ${name}!`;\n}",
+          "explanation": "greeting is optional. If provided, use it. Otherwise, default to 'Hello'",
+          "usage": "greet('Alice'); // 'Hello, Alice!'\ngreet('Bob', 'Hi'); // 'Hi, Bob!'"
+        },
+        {
+          "code": "function createUser(name: string, age?: number, email?: string) {\n  const user = { name };\n  if (age !== undefined) user.age = age;\n  if (email) user.email = email;\n  return user;\n}",
+          "explanation": "age and email are optional. Create user with only the info provided",
+          "usage": "createUser('Alice'); // { name: 'Alice' }\ncreateUser('Bob', 25); // { name: 'Bob', age: 25 }\ncreateUser('Charlie', 30, 'c@email.com'); // all fields"
+        }
+      ],
+      "importantRule": "Optional parameters must come after required parameters. You can't have a required parameter after an optional one!",
+      "rightWrong": {
+        "wrong": "function wrong(optional?: string, required: number) { } // ERROR!",
+        "right": "function right(required: number, optional?: string) { } // Correct!"
+      }
+    },
+    {
+      "title": "Default Parameters",
+      "content": "Default parameters are like optional parameters, but instead of being 'undefined' when omitted, they have a specified default value. This is often cleaner than optional parameters with if-checks.",
+      "explanation": "Think of default parameters as form fields that come pre-filled. If you don't change them, the default value is used.",
+      "syntax": "function name(param: type = defaultValue) { }",
+      "examples": [
+        {
+          "code": "function greet(name: string, greeting: string = 'Hello'): string {\n  return `${greeting}, ${name}!`;\n}",
+          "explanation": "If greeting isn't provided, it defaults to 'Hello'",
+          "usage": "greet('Alice'); // 'Hello, Alice!' (uses default)\ngreet('Bob', 'Hi'); // 'Hi, Bob!' (uses provided value)"
+        },
+        {
+          "code": "function multiply(a: number, b: number = 1): number {\n  return a * b;\n}",
+          "explanation": "If b isn't provided, multiply by 1 (effectively returns a)",
+          "usage": "multiply(5); // 5 (5 * 1)\nmultiply(5, 3); // 15 (5 * 3)"
+        },
+        {
+          "code": "function createConnection(host: string, port: number = 8080, secure: boolean = false) {\n  return { host, port, secure };\n}",
+          "explanation": "Multiple defaults - port defaults to 8080, secure to false",
+          "usage": "createConnection('localhost'); // port=8080, secure=false\ncreateConnection('api.com', 443, true); // all custom"
+        }
+      ],
+      "typeInference": "TypeScript automatically infers the parameter type from the default value, so you can omit the type annotation:\nfunction greet(name: string, greeting = 'Hello') { } // greeting is string"
+    },
+    {
+      "title": "Rest Parameters",
+      "content": "Rest parameters let you pass any number of arguments to a function. They're collected into an array. This is perfect when you don't know how many arguments you'll receive.",
+      "explanation": "Think of rest parameters like a catch-all bucket. No matter how many items someone throws at you, they all go into the bucket (array).",
+      "syntax": "function name(...rest: type[]) { }",
+      "examples": [
+        {
+          "code": "function sum(...numbers: number[]): number {\n  return numbers.reduce((total, n) => total + n, 0);\n}",
+          "explanation": "Takes any number of arguments, all collected into 'numbers' array",
+          "usage": "sum(1, 2, 3); // 6\nsum(10, 20, 30, 40); // 100\nsum(5); // 5"
+        },
+        {
+          "code": "function introduce(firstName: string, lastName: string, ...hobbies: string[]) {\n  return `${firstName} ${lastName} likes: ${hobbies.join(', ')}`;\n}",
+          "explanation": "First two params are regular, rest are collected into hobbies array",
+          "usage": "introduce('John', 'Doe', 'coding', 'reading', 'gaming');\n// 'John Doe likes: coding, reading, gaming'"
+        },
+        {
+          "code": "function logAll(...messages: string[]): void {\n  messages.forEach(msg => console.log(msg));\n}",
+          "explanation": "Log any number of messages",
+          "usage": "logAll('Error!', 'Warning!', 'Info'); // logs all three"
+        }
+      ],
+      "importantRule": "Rest parameter must be the last parameter. You can't have parameters after a rest parameter!"
+    },
+    {
+      "title": "Arrow Functions",
+      "content": "Arrow functions are a shorter syntax for writing functions. They're especially useful for short functions and callbacks. The typing works the same as regular functions.",
+      "explanation": "Arrow functions are like shorthand notation. They're more concise and often more readable for simple operations.",
+      "syntax": "const name = (param: type): returnType => expression;",
+      "examples": [
+        {
+          "code": "const add = (a: number, b: number): number => a + b;",
+          "explanation": "Single expression, no need for 'return' keyword",
+          "usage": "add(5, 3); // 8"
+        },
+        {
+          "code": "const greet = (name: string): string => `Hello, ${name}!`;",
+          "explanation": "Another single-line arrow function",
+          "usage": "greet('Alice'); // 'Hello, Alice!'"
+        },
+        {
+          "code": "const multiply = (a: number, b: number): number => {\n  const result = a * b;\n  console.log(`${a} * ${b} = ${result}`);\n  return result;\n};",
+          "explanation": "Multiple statements need curly braces and explicit 'return'",
+          "usage": "multiply(4, 5); // logs and returns 20"
+        },
+        {
+          "code": "const numbers = [1, 2, 3, 4, 5];\nconst doubled = numbers.map((n: number): number => n * 2);",
+          "explanation": "Arrow functions are perfect for array methods",
+          "usage": "doubled is [2, 4, 6, 8, 10]"
+        }
+      ],
+      "shorthandTips": [
+        "Single parameter doesn't need parentheses: n => n * 2",
+        "No parameters needs empty parentheses: () => console.log('Hi')",
+        "Single expression doesn't need braces or return",
+        "Multiple statements need braces { } and explicit return"
+      ]
+    },
+    {
+      "title": "Function Type Expressions",
+      "content": "Sometimes you need to describe the type of a function itself (not call it, just describe its shape). This is useful for callbacks, parameters that are functions, or variables that hold functions.",
+      "explanation": "Think of this as a blueprint for a function. You're describing what parameters it takes and what it returns, without implementing the actual function.",
+      "syntax": "(param1: type1, param2: type2) => returnType",
+      "examples": [
+        {
+          "code": "type MathOperation = (a: number, b: number) => number;\n\nconst add: MathOperation = (a, b) => a + b;\nconst subtract: MathOperation = (a, b) => a - b;",
+          "explanation": "MathOperation is a type describing functions that take two numbers and return a number",
+          "usage": "Both add and subtract match this type, so they can be used interchangeably"
+        },
+        {
+          "code": "function executeOperation(\n  operation: (a: number, b: number) => number,\n  x: number,\n  y: number\n): number {\n  return operation(x, y);\n}",
+          "explanation": "This function takes another function as a parameter",
+          "usage": "executeOperation(add, 5, 3); // 8\nexecuteOperation(subtract, 10, 4); // 6"
+        },
+        {
+          "code": "type Logger = (message: string) => void;\n\nconst consoleLogger: Logger = (msg) => console.log(msg);\nconst alertLogger: Logger = (msg) => alert(msg);",
+          "explanation": "Logger describes functions that log messages but return nothing",
+          "usage": "Different implementations of the same function type"
+        }
+      ]
+    },
+    {
+      "title": "Function Overloads",
+      "content": "Function overloads let you define multiple function signatures for the same function. This is useful when a function can be called in different ways with different types.",
+      "explanation": "Think of overloads like a restaurant menu with combo meals. Order A gets you a burger, Order B gets you pizza, but it's all from the same kitchen (same function).",
+      "whenToUse": "Use overloads when a function's return type or behavior depends on the types of its parameters.",
+      "examples": [
+        {
+          "code": "function format(value: string): string;\nfunction format(value: number): string;\nfunction format(value: boolean): string;\nfunction format(value: string | number | boolean): string {\n  return String(value);\n}",
+          "explanation": "Three overload signatures, one implementation. Can pass string, number, or boolean",
+          "usage": "format('hello'); // works\nformat(42); // works\nformat(true); // works"
+        },
+        {
+          "code": "function makeDate(timestamp: number): Date;\nfunction makeDate(year: number, month: number, day: number): Date;\nfunction makeDate(yearOrTimestamp: number, month?: number, day?: number): Date {\n  if (month !== undefined && day !== undefined) {\n    return new Date(yearOrTimestamp, month, day);\n  }\n  return new Date(yearOrTimestamp);\n}",
+          "explanation": "Either pass a timestamp OR year, month, day - different ways to create a date",
+          "usage": "makeDate(1234567890); // from timestamp\nmakeDate(2024, 11, 25); // from date parts"
+        }
+      ],
+      "importantNotes": [
+        "Overload signatures define how to call the function",
+        "The implementation signature must be compatible with all overloads",
+        "The implementation signature is not directly callable",
+        "TypeScript picks the first matching overload when you call the function"
+      ]
+    },
+    {
+      "title": "Best Practices for Typed Functions",
+      "content": "Here are professional tips for writing great typed functions:",
+      "practices": [
+        {
+          "practice": "Always type your function parameters",
+          "why": "TypeScript can't infer parameter types. Explicitly typing them prevents errors and makes your function self-documenting.",
+          "example": "// Good\nfunction greet(name: string) { }\n// Bad\nfunction greet(name) { } // Implicit 'any'"
+        },
+        {
+          "practice": "Let TypeScript infer return types when obvious",
+          "why": "If the return type is clear from the function body, you don't need to specify it.",
+          "example": "// This is fine - obviously returns a number\nfunction add(a: number, b: number) {\n  return a + b;\n}\n// But explicit is fine too\nfunction add(a: number, b: number): number {\n  return a + b;\n}"
+        },
+        {
+          "practice": "Use type aliases for complex function types",
+          "why": "Makes code more readable and reusable",
+          "example": "// Instead of repeating this:\nfunction execute(fn: (x: number, y: number) => number) { }\n// Create a type:\ntype MathFn = (x: number, y: number) => number;\nfunction execute(fn: MathFn) { }"
+        },
+        {
+          "practice": "Prefer specific types over generic ones",
+          "why": "More specific types catch more errors",
+          "example": "// Good\nfunction setStatus(status: 'active' | 'inactive') { }\n// Less good\nfunction setStatus(status: string) { }"
+        },
+        {
+          "practice": "Use void for functions with no return value",
+          "why": "Makes it clear the function is called for its side effects, not its return value",
+          "example": "function logError(message: string): void {\n  console.error(message);\n}"
+        }
+      ]
+    }
+  ]
+}

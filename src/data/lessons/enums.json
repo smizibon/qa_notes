@@ -1,0 +1,233 @@
+{
+  "id": "lesson-enums",
+  "title": "Enums - Named Constants and String Literals",
+  "description": "Master TypeScript enums for creating sets of named constants with better type safety than plain objects",
+  "sections": [
+    {
+      "title": "What Are Enums?",
+      "content": "Enums (enumerations) are a way to define a set of named constants. They give friendly names to numeric or string values, making code more readable and less error-prone than using magic numbers or strings.",
+      "analogy": "Think of enums like a restaurant menu. Instead of saying 'I want item #3', you say 'I want the Caesar Salad'. The kitchen knows #3 is Caesar Salad, but customers use the friendly name. That's what enums do - give meaningful names to underlying values!",
+      "problem": {
+        "description": "Without enums, you might use raw values:",
+        "code": "function setStatus(status: number) {\n  if (status === 0) { /* pending */ }\n  if (status === 1) { /* approved */ }\n  if (status === 2) { /* rejected */ }\n}\n\nsetStatus(0);  // What does 0 mean? Have to check the function!\nsetStatus(99); // ✗ Invalid but TypeScript allows it!",
+        "issue": "Magic numbers are hard to understand and easy to misuse"
+      },
+      "solution": {
+        "description": "With enums, code becomes self-documenting:",
+        "code": "enum Status {\n  Pending = 0,\n  Approved = 1,\n  Rejected = 2\n}\n\nfunction setStatus(status: Status) {\n  if (status === Status.Pending) { /* pending */ }\n  if (status === Status.Approved) { /* approved */ }\n  if (status === Status.Rejected) { /* rejected */ }\n}\n\nsetStatus(Status.Pending);   // ✓ Clear and explicit\nsetStatus(99);               // ✗ Type error!",
+        "benefit": "Readable, type-safe, and prevents invalid values!"
+      }
+    },
+    {
+      "title": "Numeric Enums",
+      "content": "Numeric enums are the default. Values are auto-incremented starting from 0, or you can set them explicitly.",
+      "examples": [
+        {
+          "title": "Auto-incremented Enums",
+          "code": "enum Direction {\n  Up,      // 0\n  Down,    // 1\n  Left,    // 2\n  Right    // 3\n}\n\nlet direction: Direction = Direction.Up;\nconsole.log(direction);              // 0\nconsole.log(Direction.Right);        // 3\nconsole.log(Direction[2]);           // 'Left' - reverse mapping!",
+          "explanation": "By default, enums start at 0 and increment. You can also reverse-lookup the name from the value!"
+        },
+        {
+          "title": "Custom Starting Value",
+          "code": "enum StatusCode {\n  Success = 200,\n  NotFound = 404,\n  ServerError = 500\n}\n\nfunction handleResponse(code: StatusCode) {\n  switch (code) {\n    case StatusCode.Success:\n      return 'OK';\n    case StatusCode.NotFound:\n      return 'Not Found';\n    case StatusCode.ServerError:\n      return 'Server Error';\n  }\n}",
+          "explanation": "Set explicit values to match real-world constants like HTTP status codes"
+        },
+        {
+          "title": "Mixed Auto and Manual Values",
+          "code": "enum Priority {\n  Low = 1,\n  Medium,     // 2 (auto-incremented)\n  High,       // 3\n  Critical = 10,\n  Emergency   // 11\n}\n\nconsole.log(Priority.Medium);    // 2\nconsole.log(Priority.Emergency); // 11",
+          "explanation": "Auto-increment continues from the last explicit value"
+        }
+      ],
+      "reverseMappings": {
+        "description": "Numeric enums have reverse mappings - you can get the name from the value:",
+        "code": "enum Color {\n  Red,\n  Green,\n  Blue\n}\n\nconsole.log(Color.Red);    // 0\nconsole.log(Color[0]);     // 'Red'\nconsole.log(Color[1]);     // 'Green'\n\n// The compiled JavaScript looks like:\n// Color[Color['Red'] = 0] = 'Red';\n// Color[Color['Green'] = 1] = 'Green';",
+        "useCase": "Useful for debugging and displaying user-friendly names from stored numeric values"
+      }
+    },
+    {
+      "title": "String Enums",
+      "content": "String enums use string values instead of numbers. More readable in logs and debuggers, but don't have reverse mappings.",
+      "examples": [
+        {
+          "code": "enum Status {\n  Pending = 'PENDING',\n  Approved = 'APPROVED',\n  Rejected = 'REJECTED'\n}\n\nconst orderStatus: Status = Status.Pending;\nconsole.log(orderStatus);  // 'PENDING'\n\n// In logs and databases, you see 'PENDING' not 0\n// Much easier to debug!",
+          "explanation": "String enums are more readable and self-documenting. Great for APIs and databases!"
+        },
+        {
+          "code": "enum LogLevel {\n  Debug = 'DEBUG',\n  Info = 'INFO',\n  Warning = 'WARNING',\n  Error = 'ERROR'\n}\n\nfunction log(level: LogLevel, message: string) {\n  console.log(`[${level}] ${message}`);\n}\n\nlog(LogLevel.Error, 'Something went wrong');\n// Output: [ERROR] Something went wrong",
+          "explanation": "Perfect for logging systems where string values are more meaningful than numbers"
+        },
+        {
+          "code": "enum HttpMethod {\n  GET = 'GET',\n  POST = 'POST',\n  PUT = 'PUT',\n  DELETE = 'DELETE',\n  PATCH = 'PATCH'\n}\n\nfunction makeRequest(method: HttpMethod, url: string) {\n  return fetch(url, { method });\n}\n\nmakeRequest(HttpMethod.GET, '/api/users');",
+          "explanation": "String enums match real-world string constants perfectly"
+        }
+      ],
+      "advantages": [
+        "More readable in runtime logs and debuggers",
+        "Serialization to JSON is more meaningful",
+        "Better for API contracts and database values",
+        "Self-documenting in error messages"
+      ],
+      "disadvantages": [
+        "No reverse mapping (can't get name from value)",
+        "Must explicitly set every value",
+        "Slightly larger JavaScript output"
+      ]
+    },
+    {
+      "title": "Const Enums",
+      "content": "Const enums are completely erased at compile time and inlined at usage sites. Results in zero runtime overhead!",
+      "syntax": "const enum Name { }",
+      "examples": [
+        {
+          "title": "Regular Enum",
+          "code": "enum Direction {\n  Up,\n  Down\n}\n\nlet dir = Direction.Up;\n\n// Compiles to:\n// var Direction;\n// (function (Direction) {\n//     Direction[Direction['Up'] = 0] = 'Up';\n//     Direction[Direction['Down'] = 1] = 'Down';\n// })(Direction || (Direction = {}));\n// var dir = Direction.Up;",
+          "note": "Creates an object in JavaScript"
+        },
+        {
+          "title": "Const Enum",
+          "code": "const enum Direction {\n  Up,\n  Down\n}\n\nlet dir = Direction.Up;\n\n// Compiles to:\n// var dir = 0 /* Up */;\n\n// The enum is completely gone!",
+          "note": "Values are inlined, enum object doesn't exist at runtime"
+        },
+        {
+          "code": "const enum Color {\n  Red = '#FF0000',\n  Green = '#00FF00',\n  Blue = '#0000FF'\n}\n\nconst background = Color.Blue;\n\n// Compiles to:\n// const background = '#0000FF' /* Blue */;",
+          "explanation": "String values also get inlined. Zero runtime cost!"
+        }
+      ],
+      "whenToUse": {
+        "constEnum": [
+          "When you want zero runtime overhead",
+          "Internal library code",
+          "Performance-critical code",
+          "When you don't need reverse mappings"
+        ],
+        "regularEnum": [
+          "When you need reverse mappings",
+          "When you need the enum object at runtime",
+          "Public APIs that consumers might iterate over",
+          "When debugging and want to see enum names"
+        ]
+      },
+      "warning": "Const enums can't be used across module boundaries unless you compile with --preserveConstEnums or use isolatedModules mode"
+    },
+    {
+      "title": "Enums vs Union Types",
+      "content": "TypeScript also supports union types of literal values. When should you use enums vs unions?",
+      "comparison": [
+        {
+          "feature": "Definition",
+          "enum": "enum Status { Pending, Approved, Rejected }",
+          "union": "type Status = 'pending' | 'approved' | 'rejected';"
+        },
+        {
+          "feature": "Usage",
+          "enum": "let status = Status.Pending;  // Status.Pending\nlet status: Status = 0;  // Valid",
+          "union": "let status: Status = 'pending';  // Just the string\nlet status: Status = 0;  // ✗ Error"
+        },
+        {
+          "feature": "Runtime Value",
+          "enum": "Number (0, 1, 2) or string if specified",
+          "union": "Actual string value ('pending', 'approved', etc.)"
+        },
+        {
+          "feature": "JavaScript Output",
+          "enum": "Creates object (or inlined with const enum)",
+          "union": "No runtime code - type only"
+        },
+        {
+          "feature": "Auto-complete",
+          "enum": "✓ Status. triggers autocomplete",
+          "union": "✓ Shows all possible string values"
+        },
+        {
+          "feature": "Refactoring",
+          "enum": "Easy - change enum value, all usages update",
+          "union": "Harder - need to find/replace strings"
+        }
+      ],
+      "guidelines": {
+        "useEnums": [
+          "When you need a runtime object with all values",
+          "When values need to be numeric",
+          "When you want namespaced constants (Status.Pending)",
+          "For sets of related constants used throughout codebase",
+          "When interoperating with JavaScript libraries expecting numbers"
+        ],
+        "useUnions": [
+          "For string literals used in APIs",
+          "When you want the actual string value, not a number",
+          "For simpler, lighter-weight type definitions",
+          "When you don't need reverse mappings",
+          "Modern TypeScript code prefers unions for strings"
+        ]
+      },
+      "modernApproach": {
+        "description": "Many TypeScript developers now prefer union types + const objects:",
+        "code": "// Union type for type safety\ntype Status = 'pending' | 'approved' | 'rejected';\n\n// Const object for autocomplete and refactoring\nconst Status = {\n  Pending: 'pending',\n  Approved: 'approved',\n  Rejected: 'rejected'\n} as const;\n\nlet status: Status = Status.Pending;  // 'pending'\n// Type-safe, autocomplete works, no runtime enum object!",
+        "benefits": "Gets benefits of both! Type safety, autocomplete, actual string values, minimal runtime code."
+      }
+    },
+    {
+      "title": "Enum Member Types",
+      "content": "Each enum member can be used as a type, creating very specific types.",
+      "examples": [
+        {
+          "code": "enum Status {\n  Pending = 'PENDING',\n  Approved = 'APPROVED',\n  Rejected = 'REJECTED'\n}\n\n// Use specific enum member as type\nfunction processApproved(status: Status.Approved) {\n  console.log('Processing approved status');\n}\n\nprocessApproved(Status.Approved);  // ✓ OK\nprocessApproved(Status.Pending);   // ✗ Error - must be Approved!",
+          "explanation": "Enum members can be types themselves, allowing very precise function signatures"
+        },
+        {
+          "code": "enum FileType {\n  Image,\n  Video,\n  Document\n}\n\ntype ImageFile = {\n  type: FileType.Image;\n  width: number;\n  height: number;\n};\n\ntype VideoFile = {\n  type: FileType.Video;\n  duration: number;\n};\n\ntype File = ImageFile | VideoFile;\n\nfunction handleFile(file: File) {\n  if (file.type === FileType.Image) {\n    // TypeScript knows file is ImageFile here\n    console.log(`Image: ${file.width}x${file.height}`);\n  } else {\n    // TypeScript knows file is VideoFile here\n    console.log(`Video: ${file.duration}s`);\n  }\n}",
+          "explanation": "Discriminated unions with enum members create powerful type narrowing!"
+        }
+      ]
+    },
+    {
+      "title": "Ambient Enums",
+      "content": "Ambient enums describe the shape of enums that already exist (from JavaScript libraries or global scope).",
+      "syntax": "declare enum Name { }",
+      "example": {
+        "code": "// Describing an enum from a JavaScript library\ndeclare enum ThirdPartyStatus {\n  Active,\n  Inactive,\n  Pending\n}\n\n// Now you can use it with type safety\nlet status: ThirdPartyStatus = ThirdPartyStatus.Active;",
+        "explanation": "Ambient enums don't generate JavaScript code - they just add type information for existing values"
+      },
+      "useCase": "Mainly for .d.ts declaration files when typing JavaScript libraries"
+    },
+    {
+      "title": "Best Practices",
+      "content": "Expert tips for using enums effectively:",
+      "practices": [
+        {
+          "practice": "Use PascalCase for enum names and members",
+          "good": "enum HttpStatus {\n  Ok = 200,\n  NotFound = 404\n}",
+          "bad": "enum http_status {\n  ok = 200,\n  not_found = 404\n}",
+          "why": "Follows TypeScript conventions and makes enums distinguishable from variables"
+        },
+        {
+          "practice": "Prefer string enums for external values",
+          "code": "// Good - string enum for API responses\nenum ApiStatus {\n  Success = 'success',\n  Error = 'error',\n  Pending = 'pending'\n}\n\n// Matches JSON from server exactly",
+          "why": "String enums are more debuggable and match external contracts better"
+        },
+        {
+          "practice": "Use const enums for internal constants",
+          "code": "// Internal performance-critical code\nconst enum CacheKey {\n  User = 'user',\n  Posts = 'posts',\n  Settings = 'settings'\n}\n\nconst cached = cache.get(CacheKey.User);  // Inlined to 'user'",
+          "why": "Zero runtime cost for internal-only constants"
+        },
+        {
+          "practice": "Consider union types for simple string constants",
+          "modern": "type Status = 'pending' | 'approved' | 'rejected';\nconst Status = {\n  Pending: 'pending',\n  Approved: 'approved',\n  Rejected: 'rejected'\n} as const;",
+          "traditional": "enum Status {\n  Pending = 'pending',\n  Approved = 'approved',\n  Rejected = 'rejected'\n}",
+          "why": "Modern approach is lighter weight and more idiomatic"
+        },
+        {
+          "practice": "Don't mix string and numeric values",
+          "bad": "enum Mixed {\n  A = 0,\n  B = 'string',  // Confusing!\n  C = 1\n}",
+          "good": "enum Numeric { A, B, C }\nenum String { A = 'a', B = 'b', C = 'c' }",
+          "why": "Heterogeneous enums are confusing and error-prone"
+        },
+        {
+          "practice": "Use enums for exhaustive switch checks",
+          "code": "enum Status { Pending, Approved, Rejected }\n\nfunction handleStatus(status: Status): string {\n  switch (status) {\n    case Status.Pending:\n      return 'Waiting';\n    case Status.Approved:\n      return 'Done';\n    case Status.Rejected:\n      return 'Failed';\n    default:\n      // This ensures we handle all cases\n      const _exhaustive: never = status;\n      throw new Error(`Unhandled status: ${_exhaustive}`);\n  }\n}",
+          "why": "TypeScript will error if you add a new enum member and forget to handle it in the switch"
+        }
+      ]
+    }
+  ]
+}

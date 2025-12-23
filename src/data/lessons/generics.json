@@ -1,0 +1,207 @@
+{
+  "id": "lesson-generics",
+  "title": "Mastering Generics - Write Reusable Type-Safe Code",
+  "description": "Learn how to write flexible, reusable code that works with multiple types while maintaining full type safety",
+  "sections": [
+    {
+      "title": "What Are Generics?",
+      "content": "Generics allow you to write code that works with multiple types while remaining type-safe. Instead of writing the same function for strings, then numbers, then objects, you write ONE function that works with ANY type.",
+      "analogy": "Think of generics like a container with a label placeholder. You have a storage box labeled 'Contents: ____'. When you use it, you fill in the blank: 'Contents: Books' or 'Contents: Toys'. The box works the same way regardless of contents, but the label tells you what's inside. That's generics - flexible containers that remember their type!",
+      "problem": {
+        "description": "Without generics, you'd need multiple versions of the same function:",
+        "code": "function getFirstString(arr: string[]): string {\n  return arr[0];\n}\n\nfunction getFirstNumber(arr: number[]): number {\n  return arr[0];\n}\n\nfunction getFirstBoolean(arr: boolean[]): boolean {\n  return arr[0];\n}\n\n// Repetitive and tedious!",
+        "issue": "Lots of duplication. And you'd need a new function for every type!"
+      },
+      "solution": {
+        "description": "With generics, ONE function works for ALL types:",
+        "code": "function getFirst<T>(arr: T[]): T {\n  return arr[0];\n}\n\nconst first1 = getFirst<string>(['a', 'b', 'c']);  // string\nconst first2 = getFirst<number>([1, 2, 3]);        // number\nconst first3 = getFirst<boolean>([true, false]);   // boolean\n\n// TypeScript can often infer the type:\nconst first4 = getFirst(['x', 'y']);  // string (inferred)",
+        "benefit": "One function, infinite types. And it's type-safe!"
+      }
+    },
+    {
+      "title": "Generic Syntax - The Angle Brackets",
+      "content": "The <T> syntax is how you declare generics. T is a 'type parameter' - a placeholder for a type that will be specified later.",
+      "syntax": {
+        "function": "function name<T>(param: T): T { }",
+        "explanation": "<T> declares a type parameter. You can then use T anywhere in the function like any other type."
+      },
+      "conventionsForTypeParameters": [
+        "T - Most common, stands for 'Type'",
+        "K - Usually means 'Key'",
+        "V - Usually means 'Value'",
+        "E - Usually means 'Element'",
+        "U, S - Additional type parameters"
+      ],
+      "examples": [
+        {
+          "code": "// Single type parameter\nfunction identity<T>(value: T): T {\n  return value;\n}\n\nconst num = identity<number>(42);  // number\nconst str = identity<string>('hi');  // string",
+          "explanation": "T is a placeholder. When you call identity<number>, T becomes number everywhere in the function."
+        },
+        {
+          "code": "// Multiple type parameters\nfunction pair<K, V>(key: K, value: V): { key: K; value: V } {\n  return { key, value };\n}\n\nconst p1 = pair<string, number>('age', 25);\n// { key: string; value: number }\n\nconst p2 = pair('name', 'Alice');  // Inferred!\n// { key: string; value: string }",
+          "explanation": "You can have multiple type parameters. K and V are independent placeholders."
+        },
+        {
+          "code": "// Array as generic type\nfunction reverseArray<T>(arr: T[]): T[] {\n  return arr.reverse();\n}\n\nconst reversed1 = reverseArray([1, 2, 3]);  // number[]\nconst reversed2 = reverseArray(['a', 'b']);  // string[]",
+          "explanation": "T[] means 'array of T'. If T is number, T[] is number[]. Works for any type!"
+        }
+      ]
+    },
+    {
+      "title": "Generic Constraints",
+      "content": "Sometimes you need generics to have certain properties or capabilities. Constraints limit what types can be used as type arguments, ensuring they have what you need.",
+      "syntax": "function name<T extends SomeType>(param: T): T { }",
+      "analogy": "Think of constraints like job requirements. A generic function is like saying 'We hire anyone', but with constraints: 'We hire anyone who has a college degree'. The constraint ensures candidates have what you need.",
+      "examples": [
+        {
+          "title": "Constraining to have a property",
+          "code": "// Without constraint - ERROR\nfunction getLength<T>(item: T): number {\n  return item.length;  // ✗ Error - T might not have .length!\n}\n\n// With constraint - works!\nfunction getLength<T extends { length: number }>(item: T): number {\n  return item.length;  // ✓ OK - T must have .length\n}\n\ngetLength('hello');     // ✓ OK - strings have .length\ngetLength([1, 2, 3]);   // ✓ OK - arrays have .length\ngetLength(42);          // ✗ Error - numbers don't have .length",
+          "explanation": "The constraint 'extends { length: number }' ensures T has a length property. Now accessing .length is safe!"
+        },
+        {
+          "title": "Constraining to specific types",
+          "code": "function logValue<T extends string | number>(value: T): void {\n  console.log(`Value: ${value}`);\n}\n\nlogValue('hello');  // ✓ OK - string\nlogValue(42);       // ✓ OK - number\nlogValue(true);     // ✗ Error - boolean not allowed",
+          "explanation": "T can only be string or number. This constraint limits what types can be passed."
+        },
+        {
+          "title": "Constraining to class instances",
+          "code": "class Animal {\n  name: string;\n  constructor(name: string) {\n    this.name = name;\n  }\n}\n\nclass Dog extends Animal {\n  bark() { console.log('Woof!'); }\n}\n\nfunction getName<T extends Animal>(animal: T): string {\n  return animal.name;  // ✓ Safe - all Animals have .name\n}\n\nconst dog = new Dog('Rex');\ngetName(dog);  // ✓ OK - Dog extends Animal",
+          "explanation": "T must be Animal or a subclass of Animal. This ensures T has all Animal properties."
+        },
+        {
+          "title": "Using keyof constraint",
+          "code": "function getProperty<T, K extends keyof T>(obj: T, key: K): T[K] {\n  return obj[key];\n}\n\nconst person = { name: 'Alice', age: 30, email: 'alice@example.com' };\n\nconst name = getProperty(person, 'name');    // ✓ OK - 'name' exists\nconst age = getProperty(person, 'age');      // ✓ OK - 'age' exists\nconst invalid = getProperty(person, 'city'); // ✗ Error - 'city' doesn't exist",
+          "explanation": "'K extends keyof T' means K must be a key that exists in T. Prevents accessing non-existent properties!"
+        }
+      ]
+    },
+    {
+      "title": "Generic Interfaces",
+      "content": "Interfaces can be generic too! This lets you define reusable structures that work with multiple types.",
+      "examples": [
+        {
+          "code": "interface Box<T> {\n  value: T;\n  isEmpty(): boolean;\n}\n\nconst numberBox: Box<number> = {\n  value: 42,\n  isEmpty() {\n    return this.value === null;\n  }\n};\n\nconst stringBox: Box<string> = {\n  value: 'hello',\n  isEmpty() {\n    return this.value === '';\n  }\n};",
+          "explanation": "Box<T> is a generic interface. Box<number> has value: number, Box<string> has value: string."
+        },
+        {
+          "code": "interface Pair<K, V> {\n  key: K;\n  value: V;\n}\n\nconst nameAge: Pair<string, number> = {\n  key: 'Alice',\n  value: 30\n};\n\nconst setting: Pair<string, boolean> = {\n  key: 'darkMode',\n  value: true\n};",
+          "explanation": "Pair works with two different types. Perfect for key-value structures!"
+        },
+        {
+          "code": "interface ApiResponse<T> {\n  data: T;\n  status: number;\n  message: string;\n}\n\ninterface User {\n  id: number;\n  name: string;\n}\n\ninterface Product {\n  id: number;\n  title: string;\n  price: number;\n}\n\nconst userResponse: ApiResponse<User> = {\n  data: { id: 1, name: 'Alice' },\n  status: 200,\n  message: 'Success'\n};\n\nconst productResponse: ApiResponse<Product[]> = {\n  data: [\n    { id: 1, title: 'Widget', price: 9.99 },\n    { id: 2, title: 'Gadget', price: 19.99 }\n  ],\n  status: 200,\n  message: 'Success'\n};",
+          "explanation": "Generic ApiResponse wraps any data type. Reusable for all API calls!"
+        }
+      ]
+    },
+    {
+      "title": "Generic Classes",
+      "content": "Classes can be generic, creating flexible data structures that work with any type while maintaining type safety.",
+      "examples": [
+        {
+          "title": "Generic Stack",
+          "code": "class Stack<T> {\n  private items: T[] = [];\n\n  push(item: T): void {\n    this.items.push(item);\n  }\n\n  pop(): T | undefined {\n    return this.items.pop();\n  }\n\n  peek(): T | undefined {\n    return this.items[this.items.length - 1];\n  }\n\n  size(): number {\n    return this.items.length;\n  }\n}\n\nconst numberStack = new Stack<number>();\nnumberStack.push(1);\nnumberStack.push(2);\nnumberStack.push(3);\nconsole.log(numberStack.pop());  // 3 (number)\n\nconst stringStack = new Stack<string>();\nstringStack.push('a');\nstringStack.push('b');\nconsole.log(stringStack.pop());  // 'b' (string)",
+          "explanation": "One Stack class works for any type. numberStack only accepts numbers, stringStack only accepts strings. Type-safe!"
+        },
+        {
+          "title": "Generic Key-Value Store",
+          "code": "class KeyValueStore<K, V> {\n  private store: Map<K, V> = new Map();\n\n  set(key: K, value: V): void {\n    this.store.set(key, value);\n  }\n\n  get(key: K): V | undefined {\n    return this.store.get(key);\n  }\n\n  has(key: K): boolean {\n    return this.store.has(key);\n  }\n\n  delete(key: K): boolean {\n    return this.store.delete(key);\n  }\n}\n\nconst userScores = new KeyValueStore<string, number>();\nuserScores.set('alice', 100);\nuserScores.set('bob', 85);\nconsole.log(userScores.get('alice'));  // 100\n\nconst settings = new KeyValueStore<string, boolean>();\nsettings.set('darkMode', true);\nsettings.set('notifications', false);",
+          "explanation": "Generic class with two type parameters. Creates type-safe key-value stores for any key/value types."
+        }
+      ]
+    },
+    {
+      "title": "Generic Type Aliases",
+      "content": "Type aliases can be generic too, creating reusable type definitions.",
+      "examples": [
+        {
+          "code": "type Result<T, E> = \n  | { success: true; value: T }\n  | { success: false; error: E };\n\nfunction divide(a: number, b: number): Result<number, string> {\n  if (b === 0) {\n    return { success: false, error: 'Division by zero' };\n  }\n  return { success: true, value: a / b };\n}\n\nconst result = divide(10, 2);\nif (result.success) {\n  console.log('Result:', result.value);  // number\n} else {\n  console.log('Error:', result.error);   // string\n}",
+          "explanation": "Result<T, E> is a generic type for operations that can succeed with value T or fail with error E. Reusable for any success/error types!"
+        },
+        {
+          "code": "type Nullable<T> = T | null;\n\nlet name: Nullable<string> = 'Alice';\nname = null;  // ✓ OK\n\nlet age: Nullable<number> = 30;\nage = null;  // ✓ OK",
+          "explanation": "Nullable<T> is shorthand for 'T or null'. Clean and reusable!"
+        },
+        {
+          "code": "type AsyncResult<T> = Promise<Result<T, Error>>;\n\nasync function fetchUser(id: number): AsyncResult<User> {\n  try {\n    const response = await fetch(`/api/users/${id}`);\n    const user = await response.json();\n    return { success: true, value: user };\n  } catch (error) {\n    return { success: false, error: error as Error };\n  }\n}",
+          "explanation": "Combining generic types! AsyncResult wraps Result in a Promise. Powerful composition!"
+        }
+      ]
+    },
+    {
+      "title": "Default Type Parameters",
+      "content": "You can provide default types for generic parameters, making them optional.",
+      "syntax": "interface Name<T = DefaultType> { }",
+      "examples": [
+        {
+          "code": "interface Response<T = any> {\n  data: T;\n  status: number;\n}\n\n// Explicitly set type\nconst userResponse: Response<User> = {\n  data: { id: 1, name: 'Alice' },\n  status: 200\n};\n\n// Use default (any)\nconst genericResponse: Response = {\n  data: 'anything',  // any type\n  status: 200\n};",
+          "explanation": "If you don't specify T, it defaults to 'any'. Makes generic types more flexible!"
+        },
+        {
+          "code": "class Container<T = string> {\n  constructor(public value: T) {}\n}\n\nconst stringContainer = new Container('hello');  // T = string (default)\nconst numberContainer = new Container<number>(42);  // T = number (explicit)",
+          "explanation": "Container defaults to holding strings but can hold any type you specify."
+        }
+      ]
+    },
+    {
+      "title": "Common Generic Patterns",
+      "content": "Here are patterns you'll see frequently in real codebases:",
+      "patterns": [
+        {
+          "name": "Array Operations",
+          "code": "function map<T, U>(arr: T[], fn: (item: T) => U): U[] {\n  return arr.map(fn);\n}\n\nconst numbers = [1, 2, 3];\nconst strings = map(numbers, n => n.toString());\n// numbers: number[], strings: string[]",
+          "explanation": "Transform array of type T to array of type U. Input and output types can differ!"
+        },
+        {
+          "name": "Promise Wrappers",
+          "code": "async function fetchData<T>(url: string): Promise<T> {\n  const response = await fetch(url);\n  return response.json();\n}\n\ninterface User { id: number; name: string; }\nconst user = await fetchData<User>('/api/user/1');\n// user is typed as User",
+          "explanation": "Generic async function. Return type matches what the API returns!"
+        },
+        {
+          "name": "Factory Functions",
+          "code": "function createInstance<T>(ctor: new () => T): T {\n  return new ctor();\n}\n\nclass Dog {\n  bark() { console.log('Woof!'); }\n}\n\nconst dog = createInstance(Dog);  // dog is Dog\ndog.bark();",
+          "explanation": "Create instances of any class. The type parameter ensures correct return type!"
+        },
+        {
+          "name": "Tuple Manipulation",
+          "code": "function zip<T, U>(arr1: T[], arr2: U[]): [T, U][] {\n  const length = Math.min(arr1.length, arr2.length);\n  const result: [T, U][] = [];\n  for (let i = 0; i < length; i++) {\n    result.push([arr1[i], arr2[i]]);\n  }\n  return result;\n}\n\nconst names = ['Alice', 'Bob'];\nconst ages = [30, 25];\nconst pairs = zip(names, ages);\n// [['Alice', 30], ['Bob', 25]]\n// Type: [string, number][]",
+          "explanation": "Combine two arrays into tuples. Each tuple has one element from each array!"
+        }
+      ]
+    },
+    {
+      "title": "Best Practices",
+      "content": "Professional tips for using generics effectively:",
+      "practices": [
+        {
+          "practice": "Use descriptive type parameter names for complex generics",
+          "bad": "function process<T, U, V>(a: T, b: U): V { }",
+          "good": "function transform<Input, Output, Context>(\n  data: Input,\n  context: Context\n): Output { }",
+          "why": "Meaningful names make complex generics easier to understand"
+        },
+        {
+          "practice": "Don't over-genericize - use generics only when needed",
+          "bad": "function greet<T extends string>(name: T): T {\n  return `Hello, ${name}` as T;\n}",
+          "good": "function greet(name: string): string {\n  return `Hello, ${name}`;\n}",
+          "why": "The generic adds no value here. Keep it simple when possible!"
+        },
+        {
+          "practice": "Use constraints to make generics safer",
+          "bad": "function process<T>(item: T): void {\n  console.log(item.length);  // Might error!\n}",
+          "good": "function process<T extends { length: number }>(item: T): void {\n  console.log(item.length);  // Safe!\n}",
+          "why": "Constraints ensure T has what you need"
+        },
+        {
+          "practice": "Let TypeScript infer when possible",
+          "verbose": "const result = map<number, string>([1, 2], n => n.toString());",
+          "better": "const result = map([1, 2], n => n.toString());",
+          "why": "TypeScript can usually infer types. Explicit types add noise."
+        },
+        {
+          "practice": "Combine generics with utility types",
+          "code": "function updatePartial<T>(\n  obj: T,\n  updates: Partial<T>\n): T {\n  return { ...obj, ...updates };\n}\n\ninterface User {\n  name: string;\n  age: number;\n  email: string;\n}\n\nconst user: User = {\n  name: 'Alice',\n  age: 30,\n  email: 'alice@example.com'\n};\n\nconst updated = updatePartial(user, { age: 31 });\n// Can update any subset of properties!",
+          "why": "Generics + utility types = powerful, flexible code"
+        }
+      ]
+    }
+  ]
+}

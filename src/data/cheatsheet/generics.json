@@ -1,0 +1,24 @@
+{
+  "id": "generics",
+  "title": "Generics",
+  "explanation": "Generics allow you to write reusable code that works with multiple types while maintaining type safety.",
+  "codeBlocks": [
+    {
+      "title": "Generic Functions",
+      "code": "// Without generics - separate functions needed\nfunction identityNumber(arg: number): number {\n  return arg;\n}\n\nfunction identityString(arg: string): string {\n  return arg;\n}\n\n// With generics - one function for all types\nfunction identity<T>(arg: T): T {\n  return arg;\n}\n\n// TypeScript infers the type\nlet num = identity(42); // T is number\nlet str = identity(\"hello\"); // T is string\n\n// Explicit type\nlet bool = identity<boolean>(true);\n\n// Generic with arrays\nfunction getFirst<T>(arr: T[]): T | undefined {\n  return arr[0];\n}\n\nconst firstNum = getFirst([1, 2, 3]); // number | undefined\nconst firstName = getFirst([\"Alice\", \"Bob\"]); // string | undefined"
+    },
+    {
+      "title": "Generic Interfaces & Types",
+      "code": "// Generic interface\ninterface Box<T> {\n  value: T;\n  getValue: () => T;\n}\n\nconst numberBox: Box<number> = {\n  value: 42,\n  getValue() {\n    return this.value;\n  }\n};\n\nconst stringBox: Box<string> = {\n  value: \"hello\",\n  getValue() {\n    return this.value;\n  }\n};\n\n// Generic type alias\ntype Pair<T, U> = {\n  first: T;\n  second: U;\n};\n\nconst pair: Pair<string, number> = {\n  first: \"age\",\n  second: 30\n};\n\n// Generic with default type\ntype Container<T = string> = {\n  content: T;\n};\n\nconst defaultContainer: Container = { content: \"hello\" }; // defaults to string\nconst numberContainer: Container<number> = { content: 42 };"
+    },
+    {
+      "title": "Generic Classes",
+      "code": "class DataStore<T> {\n  private data: T[] = [];\n\n  add(item: T): void {\n    this.data.push(item);\n  }\n\n  get(index: number): T | undefined {\n    return this.data[index];\n  }\n\n  getAll(): T[] {\n    return [...this.data];\n  }\n}\n\n// Use with numbers\nconst numberStore = new DataStore<number>();\nnumberStore.add(1);\nnumberStore.add(2);\nconsole.log(numberStore.getAll()); // [1, 2]\n\n// Use with strings\nconst stringStore = new DataStore<string>();\nstringStore.add(\"hello\");\nstringStore.add(\"world\");\nconsole.log(stringStore.getAll()); // [\"hello\", \"world\"]"
+    },
+    {
+      "title": "Generic Constraints",
+      "code": "// Constrain T to types that have a length property\ninterface HasLength {\n  length: number;\n}\n\nfunction logLength<T extends HasLength>(arg: T): void {\n  console.log(arg.length);\n}\n\nlogLength(\"hello\"); // ✓ OK - string has length\nlogLength([1, 2, 3]); // ✓ OK - array has length\n// logLength(42); // ✗ Error - number doesn't have length\n\n// Constrain to object with specific property\nfunction getProperty<T, K extends keyof T>(obj: T, key: K): T[K] {\n  return obj[key];\n}\n\nconst person = { name: \"Alice\", age: 30 };\nconst name = getProperty(person, \"name\"); // ✓ OK - returns string\nconst age = getProperty(person, \"age\"); // ✓ OK - returns number\n// const invalid = getProperty(person, \"email\"); // ✗ Error - 'email' not in person\n\n// Multiple constraints\ninterface Comparable {\n  compareTo(other: Comparable): number;\n}\n\nfunction max<T extends Comparable & HasLength>(a: T, b: T): T {\n  return a.compareTo(b) > 0 ? a : b;\n}"
+    }
+  ],
+  "tip": "Use generics when you want type safety across different types without duplicating code. They're perfect for containers, utilities, and reusable components."
+}
