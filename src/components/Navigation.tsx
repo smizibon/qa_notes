@@ -58,11 +58,10 @@ export default function Navigation({ activeTab, setActiveTab }: NavigationProps)
 
             {/* Topics Mega Menu */}
             <div 
-              className="relative"
-              onMouseEnter={() => setIsTopicsOpen(true)}
-              onMouseLeave={() => setIsTopicsOpen(false)}
+              className="relative group/topics"
             >
               <button
+                onMouseEnter={() => setIsTopicsOpen(true)}
                 onClick={() => setActiveTab('lessons')}
                 className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
                   activeTab === 'lessons'
@@ -76,7 +75,11 @@ export default function Navigation({ activeTab, setActiveTab }: NavigationProps)
 
               {/* Mega Menu Dropdown */}
               {isTopicsOpen && (
-                <div className="absolute left-0 mt-2 w-[600px] bg-slate-800/95 backdrop-blur-xl border border-slate-600/50 rounded-2xl shadow-2xl z-10">
+                <div 
+                  className="absolute left-0 mt-2 w-[600px] bg-slate-800/95 backdrop-blur-xl border border-slate-600/50 rounded-2xl shadow-2xl z-10"
+                  onMouseEnter={() => setIsTopicsOpen(true)}
+                  onMouseLeave={() => setIsTopicsOpen(false)}
+                >
                   <div className="p-6">
                     <div className="mb-4">
                       <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">Learning Topics</h3>
