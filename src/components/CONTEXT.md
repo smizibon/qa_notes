@@ -1,7 +1,44 @@
-# Components Directory
+# Components Directory Context
+
+This directory contains reusable React components used throughout the application.
+
+## 🚨 BEFORE Creating New Components
+
+**LLMs: Follow these steps BEFORE creating any new component:**
+
+1. ✅ **Search for existing components first**
+   ```
+   grep_search: "export default function" in src/components/
+   semantic_search: "component that displays [describe functionality]"
+   ```
+
+2. ✅ **Check if existing component can be extended**
+   - Can you add a prop instead of creating new component?
+   - Can you use composition (children props)?
+   - Can you extract shared logic to a utility function?
+
+3. ✅ **If creating new component:**
+   - Make it generic and reusable (use props for customization)
+   - Add TypeScript interface for props
+   - Include error boundaries if rendering dynamic content
+   - Follow naming convention: PascalCase (e.g., `ErrorDisplay.tsx`)
+   - Export as default function
+
+4. ✅ **Error Handling in Components**
+   - Wrap renders with try-catch if processing external data
+   - Use `<ErrorDisplay />` for error states
+   - Provide fallback UI if content fails to load
 
 ## Purpose
-Reusable UI components that are used across multiple pages. Each component is self-contained and follows React best practices with TypeScript.
+
+Components are self-contained, reusable UI elements that can be imported and used in multiple pages or other components. They follow React best practices and maintain consistent styling with the glassmorphism design system.
+
+## Current Adherence Status
+
+✅ **Good**: All components are reusable with props
+✅ **Good**: ErrorDisplay component used consistently
+✅ **Good**: TypeScript interfaces defined for all props
+⚠️ **Watch**: Ensure new components follow error boundary pattern
 
 ## Key Files
 

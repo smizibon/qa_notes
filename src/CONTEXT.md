@@ -1,6 +1,40 @@
 # Source Code Directory
 
-This directory contains all the React application source code organized by functionality.
+# Source Directory Context
+
+This document provides an overview of the `src/` directory structure and the context documentation system used throughout this project.
+
+## 🚨 CRITICAL: LLM Coding Ground Rules
+
+Before modifying ANY code in this directory, LLMs MUST follow these principles:
+
+1. ✅ **Always try to use reusable code first**
+   - Search for existing functions/components before creating new ones
+   - Use `grep_search` or `semantic_search` to find similar implementations
+   - Check `utils/errorHandler.ts` for error handling utilities
+   - Check `components/` for reusable UI components
+
+2. ✅ **Only create new functions if existing ones can't be reused**
+   - Verify no similar function exists in utils/ or components/
+   - Justify why existing code cannot be adapted
+
+3. ✅ **Function creation must prioritize reusability**
+   - Make functions generic with parameters (no hardcoding)
+   - Use TypeScript generics for type safety
+   - Write pure functions when possible
+   - Document parameters and return types
+
+4. ✅ **Always maintain proper error handling**
+   - Use `loadJsonFile()` for JSON loading (has retry logic)
+   - Use `ErrorHandler.handle()` or `ErrorHandler.handleWithRetry()` for async ops
+   - Wrap component renders with try-catch + `<ErrorDisplay />`
+   - Never let the app crash - provide graceful fallbacks
+
+**See PROJECT_CONTEXT.md for detailed examples and anti-patterns.**
+
+## Purpose
+
+The `src/` directory contains all application source code organized into logical subdirectories. Each major subdirectory has its own `CONTEXT.md` file that provides detailed information about the files and patterns within that directory.
 
 ## 📁 Directory Structure
 

@@ -1,5 +1,31 @@
 # Pages Directory
 
+## 🚨 Code Quality Issues Found
+
+### ❌ Issue #1: Massive Code Duplication in Lessons.tsx
+
+**Problem**: Lines 170-223 contain 48 nearly identical lines creating import maps:
+```typescript
+'getting-started.json': () => loadJsonFile('/src/data/typescript/lessons/getting-started.json'),
+'basic-types.json': () => loadJsonFile('/src/data/typescript/lessons/basic-types.json'),
+// ... 46 more similar lines for lessons, cheatsheet, examples
+```
+
+**Impact**: 
+- Violates "Always try to use reusable code" principle
+- Hard to maintain (3 separate maps)
+- Not scalable for adding new topics
+- Hardcoded topic name ("typescript")
+
+**Solution Needed**: Create utility function in utils/contentLoader.ts
+**Status**: 🔴 **TO BE REFACTORED** - High priority
+
+### ✅ Good Practices Found:
+1. Error handling: All render functions wrapped with try-catch
+2. ErrorDisplay: Consistent error UI
+3. loadJsonFile: Using centralized utility
+4. Type Safety: TypeScript interfaces defined
+
 ## Purpose
 Top-level page components that represent different views/routes in the application. Pages orchestrate data loading, state management, and render child components.
 

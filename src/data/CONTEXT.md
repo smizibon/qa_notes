@@ -1,5 +1,18 @@
 # Data Directory
 
+## 🚨 For LLMs Loading This Content
+
+**Always use centralized utilities - NEVER raw fetch:**
+
+```typescript
+// ✅ CORRECT: loadJsonFile has retry + error handling
+const { data, error } = await loadJsonFile('/src/data/typescript/lessons/lesson.json');
+
+// ❌ WRONG: Raw fetch (no error handling, will crash)
+const response = await fetch('/src/data/...');
+const data = await response.json();
+```
+
 ## Purpose
 Contains all JSON content files for lessons, cheatsheets, examples, and configuration. This is the content layer of the application - pure data with no logic.
 

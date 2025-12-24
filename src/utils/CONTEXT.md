@@ -1,5 +1,24 @@
 # Utils Directory
 
+## 🚨 CRITICAL: Use These Utilities Before Writing New Code!
+
+**LLMs: Before writing ANY async code or error handling, these utilities MUST be checked first:**
+
+### Available Error Handling Utilities:
+
+1. **`loadJsonFile<T>(path, validator?)`** ✅ USE FOR JSON
+   - Automatic retry logic, error handling, validation
+   - Returns `{ data, error }` pattern
+
+2. **`safeFetch(url, options?)`** ✅ USE FOR API CALLS
+   - Auto retries, response.ok check, JSON parsing
+   - Returns `{ data, error }` pattern
+
+3. **`ErrorHandler.handle()` / `handleWithRetry()`** ✅ USE FOR ASYNC OPS
+   - Wraps async functions with error handling & retry
+
+### ❌ DON'T: Manual fetch | ✅ DO: Use safeFetch()
+
 ## Purpose
 Utility functions, helpers, and libraries that provide reusable functionality across the application. Currently focused on centralized error handling.
 
