@@ -2,18 +2,26 @@
 
 ## � Context File Hierarchy
 
-This project uses a hierarchical context system. **Always read from top to bottom for full understanding:**
+This project uses a hierarchical context system for AI editors. **Always read from top to bottom for full understanding:**
 
-1. **PROJECT_CONTEXT.md** (this file) - Architecture, ground rules, high-level vision
-2. **src/CONTEXT.md** - Source directory summary with folder overview
+### Hierarchy (AI Documentation):
+1. **PROJECT_CONTEXT.md** (this file) - Root context: Architecture, ground rules, high-level vision
+2. **src/CONTEXT.md** - Summary of all src subdirectories (components, pages, utils, data)
 3. **src/{folder}/CONTEXT.md** - Detailed documentation for each folder:
-   - `components/CONTEXT.md` - React components, props, patterns
-   - `pages/CONTEXT.md` - Page components, features, recent changes
-   - `data/CONTEXT.md` - JSON structure, content standards
-   - `utils/CONTEXT.md` - Helper functions, error handling
-4. **src/data/{topic}/README.md** - Topic-specific schemas and conventions
+   - `src/components/CONTEXT.md` - React components, props, patterns
+   - `src/pages/CONTEXT.md` - Page components, features, recent changes
+   - `src/data/CONTEXT.md` - JSON structure, content standards
+   - `src/utils/CONTEXT.md` - Helper functions, error handling
+4. **src/data/{topic}/CONTEXT.md** - Topic-specific schemas, field types, conventions (AI-focused)
 
-**Principle**: Details at bottom level (where files are), summaries at top level (architecture).
+### Human Documentation:
+- **README.md** (root) - User-facing project documentation, setup instructions
+- **src/data/{topic}/README.md** - Human-readable topic overview, learning objectives
+
+**Key Principle**: 
+- **CONTEXT.md files** = AI editor documentation (technical, structured, compliance-focused)
+- **README.md files** = Human documentation (user-friendly, setup guides, overviews)
+- **Information flow**: Details at bottom level (where files are), summaries at top level (architecture)
 
 ---
 
@@ -24,9 +32,20 @@ This project uses a hierarchical context system. **Always read from top to botto
 When generating or modifying code in this project, LLMs MUST follow these principles:
 
 1. ✅ **Always Try to Use Reusable Code**
+   
+   **How to Get Context First**:
+   - Read `PROJECT_CONTEXT.md` → Understand architecture and ground rules
+   - Read relevant `src/{folder}/CONTEXT.md` → Understand folder patterns
+   - Use `grep_search` to find existing implementations: `grep_search(query: "functionName", isRegexp: false)`
+   - Use `semantic_search` for concept-based search: `semantic_search(query: "error handling pattern")`
+   - Use `list_code_usages` to see how functions are used: `list_code_usages(symbolName: "ErrorHandler")`
+   - Use `read_file` to examine existing code before creating new functions
+   
+   **After Getting Context**:
    - Search for existing functions/components before creating new ones
-   - Use `grep_search` or `semantic_search` to find similar implementations
+   - Reuse existing utilities from `src/utils/` and components from `src/components/`
    - Prefer composition over duplication
+   - Only create new code if existing solutions cannot be adapted
 
 2. ✅ **Only Create New Functions When Necessary**
    - New functions should only be created if existing ones cannot be reused
@@ -56,6 +75,9 @@ When generating or modifying code in this project, LLMs MUST follow these princi
    - Update compliance scores if code quality improved
    - Mark completed TODO tasks as ✅ COMPLETED with date
    - **When user says "update context files", this includes PROJECT_CONTEXT.md**
+   - **Follow the hierarchy**: Update bottom-level CONTEXT.md first, then parent, then root
+   - **CONTEXT.md = AI documentation** (technical details, schemas, compliance)
+   - **README.md = Human documentation** (user guides, setup, learning objectives)
    - This is MANDATORY - not optional
 
 6. ✅ **Always Add Test IDs (data-testid) to All Components**
@@ -151,16 +173,22 @@ return (
       <div>{section.title}</div>
     ))}
   </div>
-);
-```
-
 ### Context Documentation System
 
 This project uses **hierarchical context documentation** to help LLMs understand the codebase efficiently:
 
-- **`PROJECT_CONTEXT.md`** (this file) - Overall architecture, high-level patterns
-- **`src/CONTEXT.md`** - Source directory overview
-- **`src/components/CONTEXT.md`** - Component patterns and conventions
+**AI Documentation (CONTEXT.md files)**:
+- **`PROJECT_CONTEXT.md`** (this file) - Overall architecture, high-level patterns, ground rules
+- **`src/CONTEXT.md`** - Source directory overview, folder summaries
+- **`src/components/CONTEXT.md`** - Component patterns, props, technical conventions
+- **`src/pages/CONTEXT.md`** - Page architecture, routing, state management
+- **`src/utils/CONTEXT.md`** - Utility functions, error handling, technical details
+- **`src/data/CONTEXT.md`** - JSON schema, field types, content structure
+- **`src/data/{topic}/CONTEXT.md`** - Topic-specific schemas, field definitions (AI-focused)
+
+**Human Documentation (README.md files)**:
+- **`README.md`** (root) - Setup instructions, user guide, project overview
+- **`src/data/{topic}/README.md`** - Learning objectives, topic overview, human-friendly introntions
 - **`src/pages/CONTEXT.md`** - Page architecture and routing
 - **`src/utils/CONTEXT.md`** - Utility functions and error handling
 - **`src/data/CONTEXT.md`** - JSON schema and content guidelines
@@ -447,48 +475,8 @@ const { data, error } = await loadJsonFile('/path/to/file.json', (data) => {
 ## Data Architecture
 
 ### Dynamic Links System
-**Location**: `src/data/links/links.json`
-
-**Purpose**: Centralized external resource links with tooltips
-
-**Structure**:
-```json
-{
-  "links": [
-    {
-      "name": "TypeScript Handbook",
-      "url": "https://www.typescriptlang.org/docs/handbook/",
-      "tooltip": "Official TypeScript documentation and guides"
-    }
-  ]
-}
-```
-
-**Features**:
-- Add links by editing JSON only (no code changes)
-- Tooltips on hover for context
-- Opens in new tab with security attributes
-- Styled dropdown in navigation
-
-### 16 Core Topics
-All content (cheatsheet + lessons) covers these topics in order:
-
-1. **Getting Started** - Installation, setup, first program
-2. **Basic Types** - string, number, boolean, arrays, tuples, any, unknown
-3. **Type Inference** - How TypeScript infers types automatically
-4. **Functions** - Parameters, return types, overloads, rest parameters
-5. **Interfaces** - Object shapes, optional properties, readonly, extension
-6. **Type Aliases** - Creating custom type names, unions, intersections
-7. **Classes** - OOP, access modifiers, inheritance, abstract classes
-8. **Generics** - Type parameters, constraints, generic functions/classes
-9. **Enums** - Numeric and string enums, const enums
-10. **Type Guards** - typeof, instanceof, custom guards, discriminated unions
-11. **Utility Types** - Partial, Required, Pick, Omit, Record, etc.
-12. **Advanced Patterns** - Conditional types, mapped types, template literals, infer
-13. **TSConfig** - Compiler options, strict mode, module resolution
-14. **Common Patterns** - Builder, factory, repository, result types
-15. **Common Errors** - Understanding and fixing TypeScript errors
-16. **Quick Reference** - Fast syntax lookup and cheat sheet
+**Location**: `src/data/links/links.json`  
+**Purpose**: Centralized external resource links categorized by topic (9 categories, 42 links). Tooltips on hover, opens in new tab. Add links by editing JSON only.
 
 ### JSON Data Structure
 
@@ -556,44 +544,10 @@ const [completedLessons, setCompletedLessons] = useState<Set<string>>(new Set())
 ## Educational Approach
 
 ### Pedagogy Principles
-1. **Zero Assumptions**: Assumes no prior TypeScript knowledge
-2. **Analogies First**: Every complex concept explained with real-world comparison
-3. **Why Before How**: Explains motivation before syntax
-4. **Progressive Complexity**: Each lesson builds on previous ones
-5. **Practical Examples**: Every concept with working code
-6. **Common Mistakes**: Highlights what beginners typically get wrong
-7. **Best Practices**: Professional patterns emphasized throughout
+Zero assumptions → Analogies first → Why before how → Progressive complexity → Practical examples → Common mistakes → Best practices
 
 ### Content Structure Pattern
-Each lesson section follows this flow:
-1. **What is it?** - Simple definition
-2. **Why do we need it?** - Real problem it solves
-3. **Analogy** - Real-world comparison
-4. **How it works** - Detailed explanation
-5. **Syntax** - Code examples with explanations
-6. **Common mistakes** - What to avoid
-7. **Best practices** - Professional recommendations
-
-### Example: Type Guards Lesson Structure
-```
-1. What Are Type Guards? 
-   → Runtime checks that help TypeScript narrow types
-   
-2. Analogy
-   → Like showing passport at airport security
-   
-3. Problem without guards
-   → Code example showing the issue
-   
-4. Solution with guards
-   → typeof, instanceof, custom guards
-   
-5. Advanced patterns
-   → Discriminated unions, assertion functions
-   
-6. Best practices
-   → When to use each type of guard
-```
+Each lesson section follows: What is it? → Why needed? → Analogy → How it works → Syntax → Common mistakes → Best practices
 
 ## Development Workflow
 
@@ -612,19 +566,8 @@ npm run preview      # Preview production build
 4. **Data**: Static JSON content only
 
 ### Adding New Content
-
-**To add a new lesson**:
-1. Create `src/data/lessons/new-topic.json` with full structure
-2. Add case to switch statement in `Lessons.tsx`
-3. Add metadata to `lessons` array in `Lessons.tsx`
-4. Create corresponding `src/sections/NewTopicSection.tsx`
-5. Add to `src/data/cheatsheet/new-topic.json`
-6. Import section in `Cheatsheet.tsx`
-
-**To modify existing lesson**:
-1. Edit JSON file directly in `src/data/lessons/`
-2. Changes reflect immediately (hot reload)
-3. No code changes needed
+**New lesson**: Create JSON in `src/data/{topic}/lessons/` → Add to switch in `Lessons.tsx` → Create section component → Add to cheatsheet  
+**Modify lesson**: Edit JSON directly (hot reload, no code changes)
 
 ## Common Patterns
 
@@ -801,44 +744,6 @@ refactor: Simplify lesson loading switch statement
 - Add loading states with skeleton screens
 - Add proper accessibility (ARIA labels, keyboard navigation, screen reader support)
 
-## For LLM Context
-
-### When helping with this project:
-
-**If asked to add content**:
-1. Maintain beginner-friendly tone
-2. Include real-world analogies
-3. Provide code examples with explanations
-4. Follow existing JSON structure
-5. Add to both cheatsheet and lessons if major topic
-
-**If asked to fix bugs**:
-1. Check if it's a VS Code cache issue first
-2. Verify the app actually runs (npm run dev)
-3. Check browser console for real errors
-4. Test on both desktop and mobile viewport
-
-**If asked to improve UI**:
-1. Maintain glassmorphism aesthetic
-2. Keep dark theme consistency
-3. Ensure mobile responsiveness
-4. Use existing color palette
-5. Add smooth transitions
-
-**If asked about architecture**:
-1. Explain current state-based routing
-2. Note Vite import limitations
-3. Clarify JSON data structure
-4. Describe component hierarchy
-
-### Key Files to Know
-- `src/App.tsx` - Main routing logic
-- `src/pages/Lessons.tsx` - Lesson system core
-- `src/components/Navigation.tsx` - Navigation UI
-- `src/data/lessons/*.json` - Lesson content
-- `README.md` - User-facing documentation
-- `PROJECT_CONTEXT.md` - This file (LLM context)
-
 ---
 
 **Project Status**: ✅ Production Ready  
@@ -871,83 +776,6 @@ refactor: Simplify lesson loading switch statement
 - **Links categorization** → See `src/components/CONTEXT.md` (Recent Changes)
 - **About Me features** → See `src/pages/CONTEXT.md` (AboutMe.tsx section)
 - - **Content structure** → See `src/data/CONTEXT.md`
-
----
-
-## 📊 LLM Coding Ground Rules Compliance
-
----
-**User Request**: "I am not liking the image frame design. I want it to be bigger. increase its size and place it in a square frame and place it to the left and the other information to the right"
-
-**Implementation**:
-- Created comprehensive AboutMe.tsx page (408 lines)
-- Integrated actual profile image with smart fallback system
-- Implemented professional left-right layout design
-- Added square frame with gradient borders (320px × 320px)
-- Added dual badges: Active (Zap) and Verified (Award)
-- Integrated 21 Lucide icons throughout the page
-- Created Professional Highlights section with 3 cards
-- Implemented smart icon mapping for specializations
-- Added 8 test IDs for automation testing
-
-**Layout Features**:
-- **Left side**: Large square profile image with gradient border
-- **Right side**: Name, title, tagline, stats - vertically distributed
-- **Responsive**: Stacks vertically on mobile, side-by-side on desktop
-- **Balanced proportions**: items-center alignment for equal heights
-- **Error handling**: Automatic fallback to gradient avatar with initials
-
-**Profile Image System**:
-- Primary: `/images/profile/smizibon.jpg` (actual photo - 61KB)
-- Fallback: Gradient avatar with initials "SMI" (automatic on error)
-- Smart error handling with onError handler
-- Maintains design consistency in both modes
-
-**Data Structure**:
-- Created `/src/data/profile/about.json` with profile information
-- Modified tagline to showcase experience
-- Removed redundant bio content
-- Professional structure for all profile sections
-
-**Technical Details**:
-- 8 interactive elements with test IDs
-- 21 Lucide React icons integrated
-- Professional Highlights cards: Global Experience, Test Automation Expert, Community Leader
-- Smart icon mapping: Shield, Smartphone, Monitor, Heart, Users, TestTube2, Globe
-- Gradient effects and hover animations throughout
-
-**Impact**:
-- New standalone About Me page accessible from navigation
-- Professional profile presentation
-- Enhanced user experience with visual hierarchy
-- Maintains all Ground Rules compliance
-- Zero breaking changes to existing functionality
-
-### ✅ Unified Dropdown Menu Design
-**User Request**: "make it uniform and professional. You can incorporate the feature of both and make a hybrid"
-
-**Implementation**:
-- Created professional hybrid dropdown design for Navigation.tsx
-- Unified Topics and Links dropdowns with consistent styling
-- Standardized container design: `w-80 bg-slate-800/95 backdrop-blur-xl`
-- Added icons to Links dropdown (matching Topics richness)
-- Implemented section headers for both menus
-- Unified hover effects: `hover:pl-4` slide animation
-- Smooth transitions: 300ms duration, color gradients
-- Professional polish: shadows, spacing, accessibility
-
-**Technical Impact**:
-- Navigation.tsx compliance improved: 90% → 95%
-- Components directory compliance: 90% → 92.5%
-- Overall compliance maintained at 92%
-- Zero breaking changes, all functionality preserved
-
-**User Experience**:
-- Consistent visual language across all dropdowns
-- Professional appearance with rich interactions
-- Clear section headers ("Learning Topics" / "External Resources")
-- Icon integration improves visual hierarchy
-- Smooth animations enhance perceived performance
 
 ---
 
