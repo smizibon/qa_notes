@@ -1,24 +1,243 @@
 {
-  "links": [
+  "categories": [
     {
-      "name": "TypeScript Playground",
-      "url": "https://www.typescriptlang.org/play",
-      "tooltip": "Interactive TypeScript compiler and sandbox"
+      "name": "TypeScript",
+      "icon": "FileCode",
+      "links": [
+        {
+          "name": "TypeScript Playground",
+          "url": "https://www.typescriptlang.org/play",
+          "tooltip": "Interactive TypeScript compiler and sandbox"
+        },
+        {
+          "name": "TypeScript Exercises",
+          "url": "https://typescript-exercises.github.io/",
+          "tooltip": "Practice TypeScript with interactive exercises"
+        },
+        {
+          "name": "Type Challenges",
+          "url": "https://github.com/type-challenges/type-challenges",
+          "tooltip": "Collection of TypeScript type challenges"
+        },
+        {
+          "name": "Exercism TypeScript",
+          "url": "https://exercism.org/tracks/typescript",
+          "tooltip": "Learn TypeScript through coding exercises"
+        }
+      ]
     },
     {
-      "name": "TypeScript Exercises",
-      "url": "https://typescript-exercises.github.io/",
-      "tooltip": "Practice TypeScript with interactive exercises"
+      "name": "Testing Frameworks",
+      "icon": "TestTube2",
+      "links": [
+        {
+          "name": "Playwright Documentation",
+          "url": "https://playwright.dev/",
+          "tooltip": "Official Playwright testing framework docs"
+        },
+        {
+          "name": "Playwright Best Practices",
+          "url": "https://playwright.dev/docs/best-practices",
+          "tooltip": "Best practices for writing Playwright tests"
+        },
+        {
+          "name": "Playwright Trace Viewer",
+          "url": "https://trace.playwright.dev/",
+          "tooltip": "View and debug Playwright test traces online"
+        }
+      ]
     },
     {
-      "name": "Type Challenges",
-      "url": "https://github.com/type-challenges/type-challenges",
-      "tooltip": "Collection of TypeScript type challenges"
+      "name": "API Testing",
+      "icon": "Code",
+      "links": [
+        {
+          "name": "Postman Learning Center",
+          "url": "https://learning.postman.com/",
+          "tooltip": "Learn API testing with Postman"
+        },
+        {
+          "name": "REST API Tutorial",
+          "url": "https://restfulapi.net/",
+          "tooltip": "Complete guide to RESTful API design"
+        },
+        {
+          "name": "HTTP Status Codes",
+          "url": "https://httpstatuses.com/",
+          "tooltip": "Quick reference for HTTP status codes"
+        },
+        {
+          "name": "JSONPlaceholder",
+          "url": "https://jsonplaceholder.typicode.com/",
+          "tooltip": "Free fake API for testing and prototyping"
+        }
+      ]
     },
     {
-      "name": "Exercism TypeScript",
-      "url": "https://exercism.org/tracks/typescript",
-      "tooltip": "Learn TypeScript through coding exercises"
+      "name": "DevOps & CI/CD",
+      "icon": "GitBranch",
+      "links": [
+        {
+          "name": "Docker Documentation",
+          "url": "https://docs.docker.com/",
+          "tooltip": "Official Docker documentation"
+        },
+        {
+          "name": "Docker Hub",
+          "url": "https://hub.docker.com/",
+          "tooltip": "Find and share container images"
+        },
+        {
+          "name": "Play with Docker",
+          "url": "https://labs.play-with-docker.com/",
+          "tooltip": "Free browser-based Docker playground"
+        },
+        {
+          "name": "GitHub Actions Docs",
+          "url": "https://docs.github.com/en/actions",
+          "tooltip": "Automate workflows with GitHub Actions"
+        },
+        {
+          "name": "Jenkins Documentation",
+          "url": "https://www.jenkins.io/doc/",
+          "tooltip": "Open source automation server"
+        },
+        {
+          "name": "CircleCI Documentation",
+          "url": "https://circleci.com/docs/",
+          "tooltip": "Continuous integration and delivery platform"
+        }
+      ]
+    },
+    {
+      "name": "Mobile Testing",
+      "icon": "Smartphone",
+      "links": [
+        {
+          "name": "Appium Documentation",
+          "url": "https://appium.io/docs/en/latest/",
+          "tooltip": "Mobile app automation framework"
+        },
+        {
+          "name": "Appium Inspector",
+          "url": "https://github.com/appium/appium-inspector",
+          "tooltip": "Inspect mobile app elements for testing"
+        },
+        {
+          "name": "BrowserStack",
+          "url": "https://www.browserstack.com/",
+          "tooltip": "Cloud-based mobile and web testing platform"
+        }
+      ]
+    },
+    {
+      "name": "QA Resources",
+      "icon": "Award",
+      "links": [
+        {
+          "name": "Ministry of Testing",
+          "url": "https://www.ministryoftesting.com/",
+          "tooltip": "QA community and resources"
+        },
+        {
+          "name": "TestRail",
+          "url": "https://www.gurock.com/testrail/",
+          "tooltip": "Test case management software"
+        },
+        {
+          "name": "Guru99 Testing Tutorials",
+          "url": "https://www.guru99.com/software-testing.html",
+          "tooltip": "Free software testing tutorials"
+        }
+      ]
+    },
+    {
+      "name": "Automation Tools",
+      "icon": "Workflow",
+      "links": [
+        {
+          "name": "N8N Documentation",
+          "url": "https://docs.n8n.io/",
+          "tooltip": "Workflow automation tool documentation"
+        },
+        {
+          "name": "N8N Community",
+          "url": "https://community.n8n.io/",
+          "tooltip": "N8N community forum and discussions"
+        },
+        {
+          "name": "N8N Workflows",
+          "url": "https://n8n.io/workflows/",
+          "tooltip": "Browse and share N8N workflow templates"
+        }
+      ]
+    },
+    {
+      "name": "AI & LLM",
+      "icon": "Brain",
+      "links": [
+        {
+          "name": "OpenAI Platform",
+          "url": "https://platform.openai.com/docs/introduction",
+          "tooltip": "OpenAI API documentation for LLM integration"
+        },
+        {
+          "name": "Anthropic Claude",
+          "url": "https://docs.anthropic.com/",
+          "tooltip": "Claude AI API documentation"
+        },
+        {
+          "name": "Hugging Face",
+          "url": "https://huggingface.co/",
+          "tooltip": "AI model repository and community"
+        },
+        {
+          "name": "LangChain Documentation",
+          "url": "https://python.langchain.com/docs/get_started/introduction",
+          "tooltip": "Framework for building LLM applications"
+        },
+        {
+          "name": "Prompt Engineering Guide",
+          "url": "https://www.promptingguide.ai/",
+          "tooltip": "Comprehensive guide to prompt engineering"
+        }
+      ]
+    },
+    {
+      "name": "Developer Tools",
+      "icon": "Wrench",
+      "links": [
+        {
+          "name": "Stack Overflow",
+          "url": "https://stackoverflow.com/",
+          "tooltip": "Developer community for Q&A"
+        },
+        {
+          "name": "GitHub",
+          "url": "https://github.com/",
+          "tooltip": "Code hosting and collaboration platform"
+        },
+        {
+          "name": "MDN Web Docs",
+          "url": "https://developer.mozilla.org/",
+          "tooltip": "Comprehensive web development documentation"
+        },
+        {
+          "name": "Can I Use",
+          "url": "https://caniuse.com/",
+          "tooltip": "Browser compatibility tables for web technologies"
+        },
+        {
+          "name": "RegExr",
+          "url": "https://regexr.com/",
+          "tooltip": "Learn, build, and test regular expressions"
+        },
+        {
+          "name": "JSON Formatter",
+          "url": "https://jsonformatter.org/",
+          "tooltip": "Validate and format JSON data"
+        }
+      ]
     }
   ]
 }

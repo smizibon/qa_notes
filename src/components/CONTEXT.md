@@ -2,13 +2,87 @@
 
 This directory contains reusable React components used throughout the application.
 
-**Last Updated**: December 24, 2025 (All Ground Rules Compliance Verified)  
-**Status**: ✅ Stable (v2.3.0)  
+**Last Updated**: December 24, 2025 (Links Categorization & About Me Social Links)  
+**Status**: ✅ Stable (v2.4.0)  
 **Compliance**: 100%
 
 ---
 
 ## 🔥 Recent Changes (Dec 24, 2025)
+
+### Links Dropdown with Categorized Submenus
+**User Request**: "the links are going out of screen make categories and place in submenus"
+
+**Changes Made**:
+- Restructured links.json with categorized structure (9 categories, 42 total links)
+- Updated Navigation.tsx to display categories with nested submenus
+- First-level dropdown shows 9 categories with icons and link counts
+- Second-level submenu appears on LEFT (prevents off-screen issues)
+- Added `hoveredCategory` state for submenu control
+- Implemented icon mapping system for dynamic category icons
+
+**Data Structure**:
+```json
+{
+  "categories": [
+    {
+      "name": "TypeScript",
+      "icon": "FileCode",
+      "links": [...]
+    }
+  ]
+}
+```
+
+**Categories**:
+1. TypeScript (4 links) - FileCode icon
+2. Testing Frameworks (3 links) - TestTube2 icon
+3. API Testing (4 links) - Code icon
+4. DevOps & CI/CD (6 links) - GitBranch icon
+5. Mobile Testing (3 links) - Smartphone icon
+6. QA Resources (3 links) - Award icon
+7. Automation Tools (3 links) - Workflow icon
+8. AI & LLM (5 links) - Brain icon
+9. Developer Tools (6 links) - Wrench icon
+
+**Navigation Features**:
+- Submenu positioned with `right-full mr-1` (appears on left)
+- Scrollable submenus: `max-h-96 overflow-y-auto`
+- Arrow indicators on all category items
+- Professional hover animations and transitions
+- Test IDs for all categories and links
+
+**Technical Implementation**:
+- Added icon map: `iconMap: Record<string, any>`
+- Dynamic icon loading: `const IconComponent = iconMap[category.icon]`
+- Proper hover state management with parent div wrapping
+- Prevents off-screen content with left-side positioning
+
+---
+
+### LLM & AI Topic Submenu Arrow Indicator
+**User Request**: "the llm and AI button on topics does not indicate it has a submenu"
+
+**Changes Made**:
+- Added arrow indicator (chevron right) to topics with subtopics
+- Arrow only displays when `hasSubtopics === true`
+- Color transitions: slate-400 → blue-400 on hover
+- Positioned on right side after topic content
+
+**Implementation**:
+```tsx
+{hasSubtopics && (
+  <div className="flex-shrink-0 text-slate-400 group-hover/item:text-blue-400">
+    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+    </svg>
+  </div>
+)}
+```
+
+**Result**: Clear visual indication of expandable topics
+
+---
 
 ### Ground Rules Compliance Verification - All Rules Adhered To ✅
 **Task**: "check the code base changes . and fix them according to ground rules"

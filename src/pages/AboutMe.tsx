@@ -169,6 +169,38 @@ export default function AboutMe() {
                 </div>
               )}
 
+              {/* Social Media Links */}
+              <div className="flex flex-wrap gap-3">
+                <a 
+                  href="https://www.linkedin.com/in/smizibon/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  data-testid="about-hero-linkedin-link"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 border border-blue-400/50 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/20 group"
+                >
+                  <Linkedin className="h-5 w-5 text-blue-400 group-hover:text-blue-300" />
+                  <span className="text-sm font-medium text-slate-200 group-hover:text-white">LinkedIn</span>
+                </a>
+                <a 
+                  href="https://github.com/smizibon" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  data-testid="about-hero-github-link"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-slate-700/50 hover:bg-slate-600/50 border border-slate-600/50 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-slate-500/20 group"
+                >
+                  <Github className="h-5 w-5 text-slate-400 group-hover:text-white" />
+                  <span className="text-sm font-medium text-slate-200 group-hover:text-white">GitHub</span>
+                </a>
+                <a 
+                  href="mailto:zibon@outlook.com"
+                  data-testid="about-hero-email-link"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-400/50 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/20 group"
+                >
+                  <Mail className="h-5 w-5 text-cyan-400 group-hover:text-cyan-300" />
+                  <span className="text-sm font-medium text-slate-200 group-hover:text-white">zibon@outlook.com</span>
+                </a>
+              </div>
+
               {/* Stats */}
               <div className="flex gap-5">
                 <div className="text-left group">

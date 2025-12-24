@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Menu, X, FileCode, ExternalLink, GraduationCap, BookOpen, Code, Smartphone, GitBranch, Container, Workflow, Brain, ClipboardCheck } from 'lucide-react';
+import { Menu, X, FileCode, ExternalLink, GraduationCap, BookOpen, Code, Smartphone, GitBranch, Container, Workflow, Brain, ClipboardCheck, TestTube2, Award, Wrench } from 'lucide-react';
 import { loadJsonFile } from '../utils/errorHandler';
 
 interface NavigationProps {
@@ -14,25 +14,47 @@ interface Link {
   tooltip: string;
 }
 
+interface LinkCategory {
+  name: string;
+  icon: string;
+  links: Link[];
+}
 
+// Icon mapping
+const iconMap: Record<string, any> = {
+  FileCode,
+  TestTube2,
+  Code,
+  GitBranch,
+  Smartphone,
+  Award,
+  Workflow,
+  Brain,
+  Wrench
+};
 
 export default function Navigation({ activeTab, setActiveTab, setSelectedTopic }: NavigationProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isTopicsOpen, setIsTopicsOpen] = useState(false);
   const [hoveredTopic, setHoveredTopic] = useState<string | null>(null);
-  const [links, setLinks] = useState<Link[]>([]);
+  const [categories, setCategories] = useState<LinkCategory[]>([]);
+  const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
 
   // Load links from JSON with error handling
   useEffect(() => {
     const loadLinks = async () => {
-      const { data, error } = await loadJsonFile<{ links: Link[] }>('/src/data/links/links.json');
-      if (data && data.links) {
-        setLinks(data.links);
+      const { data, error } = await loadJsonFile<{ categories: LinkCategory[] }>('/src/data/links/links.json');
+      if (data && data.categories) {
+        setCategories(data.categories);
       } else if (error) {
         console.error('Failed to load links:', error);
-        // Provide fallback links
-        setLinks([
-          { name: 'TypeScript Docs', url: 'https://www.typescriptlang.org/', tooltip: 'Official TypeScript documentation' }
+        // Provide fallback category
+        setCategories([
+          { 
+            name: 'TypeScript', 
+            icon: 'FileCode',
+            links: [{ name: 'TypeScript Docs', url: 'https://www.typescriptlang.org/', tooltip: 'Official TypeScript documentation' }]
+          }
         ]);
       }
     };
@@ -185,6 +207,19 @@ export default function Navigation({ activeTab, setActiveTab, setSelectedTopic }
                               {topic.status === 'complete' ? '16 lessons' : topic.status === 'in-progress' ? 'In Progress' : 'Coming soon'}
                             </p>
                           </div>
+                          
+                          {/* Arrow indicator for items with subtopics */}
+                          {hasSubtopics && (
+                            <div className={`flex-shrink-0 transition-colors ${
+                              isActive 
+                                ? 'text-slate-400 group-hover/item:text-blue-400' 
+                                : 'text-slate-600'
+                            }`}>
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                              </svg>
+                            </div>
+                          )}
                         </button>
                         
                         {/* Subtopics Submenu */}
@@ -242,50 +277,108 @@ export default function Navigation({ activeTab, setActiveTab, setSelectedTopic }
               data-testid="links-dropdown-container"
               className="relative group/links"
               onMouseEnter={() => {}}
-              onMouseLeave={() => {}}
+              onMouseLeave={() => setHoveredCategory(null)}
             >
               <button data-testid="nav-links-button" className="px-4 py-2 rounded-xl text-sm font-medium text-gray-300 hover:bg-blue-500/20 hover:text-blue-300 transition-all duration-300 flex items-center gap-2 hover:scale-105">
                 <ExternalLink className="h-4 w-4" />
                 Links
               </button>
               
-              {/* Unified Links Dropdown */}
-              <div data-testid="links-dropdown-menu" className="absolute right-0 mt-2 w-80 bg-slate-800/95 backdrop-blur-xl border border-slate-600/50 rounded-2xl shadow-2xl shadow-black/20 opacity-0 invisible group-hover/links:opacity-100 group-hover/links:visible transition-all duration-300 transform group-hover/links:translate-y-0 -translate-y-2 z-10">
+              {/* Categories Dropdown */}
+              <div data-testid="links-dropdown-menu" className="absolute right-0 mt-2 w-72 bg-slate-800/95 backdrop-blur-xl border border-slate-600/50 rounded-2xl shadow-2xl shadow-black/20 opacity-0 invisible group-hover/links:opacity-100 group-hover/links:visible transition-all duration-300 transform group-hover/links:translate-y-0 -translate-y-2 z-10">
                 <div className="p-3">
                   {/* Section Header */}
                   <div className="mb-2 px-3 py-2">
                     <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">External Resources</h3>
                   </div>
                   
-                  {/* Links List */}
+                  {/* Categories List */}
                   <div className="space-y-1">
-                    {links.map((link) => (
-                      <a
-                        key={link.name}
-                        data-testid={`external-link-${link.name.toLowerCase().replace(/\s+/g, '-')}`}
-                        href={link.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="block p-3 rounded-xl hover:bg-slate-700/50 transition-all duration-200 hover:pl-4 group/item"
-                      >
-                        <div className="flex items-start gap-3">
-                          {/* Icon */}
-                          <div className="p-2 rounded-lg bg-slate-700/50 group-hover/item:bg-blue-500/20 flex-shrink-0 transition-all duration-200">
-                            <ExternalLink className="h-4 w-4 text-slate-400 group-hover/item:text-blue-400 transition-colors" />
-                          </div>
-                          
-                          {/* Content */}
-                          <div className="flex-1 min-w-0">
-                            <div className="font-medium text-slate-200 group-hover/item:text-white transition-colors text-sm">
-                              {link.name}
+                    {categories.map((category) => {
+                      const IconComponent = iconMap[category.icon] || ExternalLink;
+                      const isHovered = hoveredCategory === category.name;
+                      
+                      return (
+                        <div
+                          key={category.name}
+                          className="relative"
+                          onMouseEnter={() => setHoveredCategory(category.name)}
+                          onMouseLeave={() => {}}
+                        >
+                          <div
+                            data-testid={`link-category-${category.name.toLowerCase().replace(/\s+/g, '-')}`}
+                            className="block p-3 rounded-xl hover:bg-slate-700/50 transition-all duration-200 hover:pl-4 group/item cursor-pointer"
+                          >
+                            <div className="flex items-center justify-between gap-3">
+                              {/* Icon */}
+                              <div className="p-2 rounded-lg bg-slate-700/50 group-hover/item:bg-blue-500/20 flex-shrink-0 transition-all duration-200">
+                                <IconComponent className="h-4 w-4 text-slate-400 group-hover/item:text-blue-400 transition-colors" />
+                              </div>
+                              
+                              {/* Content */}
+                              <div className="flex-1 min-w-0">
+                                <div className="font-medium text-slate-200 group-hover/item:text-white transition-colors text-sm">
+                                  {category.name}
+                                </div>
+                                <div className="text-xs text-slate-400 group-hover/item:text-slate-300 transition-colors">
+                                  {category.links.length} links
+                                </div>
+                              </div>
+                              
+                              {/* Arrow indicator */}
+                              <div className="text-slate-400 group-hover/item:text-blue-400">
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                </svg>
+                              </div>
                             </div>
-                            <div className="text-xs text-slate-400 group-hover/item:text-slate-300 mt-0.5 transition-colors">
-                              {link.tooltip}
-                            </div>
                           </div>
+
+                          {/* Submenu for Links */}
+                          {isHovered && (
+                            <div 
+                              data-testid={`submenu-${category.name.toLowerCase().replace(/\s+/g, '-')}`}
+                              className="absolute right-full top-0 mr-1 w-80 bg-slate-800/95 backdrop-blur-xl border border-slate-600/50 rounded-2xl shadow-2xl shadow-black/20 z-20 max-h-96 overflow-y-auto"
+                            >
+                              <div className="p-3">
+                                <div className="mb-2 px-3 py-2">
+                                  <h4 className="text-xs font-semibold text-blue-400 uppercase tracking-wider">{category.name}</h4>
+                                </div>
+                                <div className="space-y-1">
+                                  {category.links.map((link) => (
+                                    <a
+                                      key={link.name}
+                                      data-testid={`external-link-${link.name.toLowerCase().replace(/\s+/g, '-')}`}
+                                      href={link.url}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="block p-3 rounded-xl hover:bg-slate-700/50 transition-all duration-200 hover:pl-4 group/link"
+                                    >
+                                      <div className="flex items-start gap-3">
+                                        {/* Icon */}
+                                        <div className="p-2 rounded-lg bg-slate-700/50 group-hover/link:bg-blue-500/20 flex-shrink-0 transition-all duration-200">
+                                          <ExternalLink className="h-3 w-3 text-slate-400 group-hover/link:text-blue-400 transition-colors" />
+                                        </div>
+                                        
+                                        {/* Content */}
+                                        <div className="flex-1 min-w-0">
+                                          <div className="font-medium text-slate-200 group-hover/link:text-white transition-colors text-sm">
+                                            {link.name}
+                                          </div>
+                                          <div className="text-xs text-slate-400 group-hover/link:text-slate-300 mt-0.5 transition-colors line-clamp-2">
+                                            {link.tooltip}
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </a>
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+                          )}
                         </div>
-                      </a>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               </div>
