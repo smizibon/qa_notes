@@ -165,6 +165,15 @@ const LESSONS: LessonMetadata[] = [
 // Import Maps for Dynamic Loading
 // =============================================================================
 
+// Simple fetch-based loader - no Vite imports needed
+const fetchJsonFile = async (path: string) => {
+  const response = await fetch(path);
+  if (!response.ok) {
+    throw new Error(`Failed to load ${path}: ${response.statusText}`);
+  }
+  return { default: await response.json() };
+};
+
 // Topic-specific import maps
 const TOPIC_IMPORTS: Record<string, {
   lessons: Record<string, () => Promise<any>>;
@@ -178,62 +187,62 @@ const TOPIC_IMPORTS: Record<string, {
   }
 };
 
-// TypeScript Lesson Imports
+// TypeScript Lesson Imports - using direct fetch
 const LESSON_IMPORTS: Record<string, () => Promise<any>> = {
-  'getting-started.json': () => import('../data/typescript/lessons/getting-started.json').then(m => m),
-  'basic-types.json': () => import('../data/typescript/lessons/basic-types.json').then(m => m),
-  'type-inference.json': () => import('../data/typescript/lessons/type-inference.json').then(m => m),
-  'functions.json': () => import('../data/typescript/lessons/functions.json').then(m => m),
-  'interfaces.json': () => import('../data/typescript/lessons/interfaces.json').then(m => m),
-  'type-aliases.json': () => import('../data/typescript/lessons/type-aliases.json').then(m => m),
-  'classes.json': () => import('../data/typescript/lessons/classes.json').then(m => m),
-  'generics.json': () => import('../data/typescript/lessons/generics.json').then(m => m),
-  'enums.json': () => import('../data/typescript/lessons/enums.json').then(m => m),
-  'type-guards.json': () => import('../data/typescript/lessons/type-guards.json').then(m => m),
-  'utility-types.json': () => import('../data/typescript/lessons/utility-types.json').then(m => m),
-  'advanced-patterns.json': () => import('../data/typescript/lessons/advanced-patterns.json').then(m => m),
-  'tsconfig-lesson.json': () => import('../data/typescript/lessons/tsconfig-lesson.json').then(m => m),
-  'common-patterns.json': () => import('../data/typescript/lessons/common-patterns.json').then(m => m),
-  'common-errors.json': () => import('../data/typescript/lessons/common-errors.json').then(m => m),
-  'quick-reference.json': () => import('../data/typescript/lessons/quick-reference.json').then(m => m),
+  'getting-started.json': () => fetchJsonFile('/src/data/typescript/lessons/getting-started.json'),
+  'basic-types.json': () => fetchJsonFile('/src/data/typescript/lessons/basic-types.json'),
+  'type-inference.json': () => fetchJsonFile('/src/data/typescript/lessons/type-inference.json'),
+  'functions.json': () => fetchJsonFile('/src/data/typescript/lessons/functions.json'),
+  'interfaces.json': () => fetchJsonFile('/src/data/typescript/lessons/interfaces.json'),
+  'type-aliases.json': () => fetchJsonFile('/src/data/typescript/lessons/type-aliases.json'),
+  'classes.json': () => fetchJsonFile('/src/data/typescript/lessons/classes.json'),
+  'generics.json': () => fetchJsonFile('/src/data/typescript/lessons/generics.json'),
+  'enums.json': () => fetchJsonFile('/src/data/typescript/lessons/enums.json'),
+  'type-guards.json': () => fetchJsonFile('/src/data/typescript/lessons/type-guards.json'),
+  'utility-types.json': () => fetchJsonFile('/src/data/typescript/lessons/utility-types.json'),
+  'advanced-patterns.json': () => fetchJsonFile('/src/data/typescript/lessons/advanced-patterns.json'),
+  'tsconfig-lesson.json': () => fetchJsonFile('/src/data/typescript/lessons/tsconfig-lesson.json'),
+  'common-patterns.json': () => fetchJsonFile('/src/data/typescript/lessons/common-patterns.json'),
+  'common-errors.json': () => fetchJsonFile('/src/data/typescript/lessons/common-errors.json'),
+  'quick-reference.json': () => fetchJsonFile('/src/data/typescript/lessons/quick-reference.json'),
 };
 
 const CHEATSHEET_IMPORTS: Record<string, () => Promise<any>> = {
-  'getting-started.json': () => import('../data/typescript/cheatsheet/getting-started.json').then(m => m),
-  'basic-types.json': () => import('../data/typescript/cheatsheet/basic-types.json').then(m => m),
-  'type-inference.json': () => import('../data/typescript/cheatsheet/type-inference.json').then(m => m),
-  'functions.json': () => import('../data/typescript/cheatsheet/functions.json').then(m => m),
-  'interfaces.json': () => import('../data/typescript/cheatsheet/interfaces.json').then(m => m),
-  'type-aliases.json': () => import('../data/typescript/cheatsheet/type-aliases.json').then(m => m),
-  'classes.json': () => import('../data/typescript/cheatsheet/classes.json').then(m => m),
-  'generics.json': () => import('../data/typescript/cheatsheet/generics.json').then(m => m),
-  'enums.json': () => import('../data/typescript/cheatsheet/enums.json').then(m => m),
-  'type-guards.json': () => import('../data/typescript/cheatsheet/type-guards.json').then(m => m),
-  'utility-types.json': () => import('../data/typescript/cheatsheet/utility-types.json').then(m => m),
-  'advanced-patterns.json': () => import('../data/typescript/cheatsheet/advanced-patterns.json').then(m => m),
-  'tsconfig-section.json': () => import('../data/typescript/cheatsheet/tsconfig-section.json').then(m => m),
-  'common-patterns.json': () => import('../data/typescript/cheatsheet/common-patterns.json').then(m => m),
-  'common-errors.json': () => import('../data/typescript/cheatsheet/common-errors.json').then(m => m),
-  'quick-reference.json': () => import('../data/typescript/cheatsheet/quick-reference.json').then(m => m),
+  'getting-started.json': () => fetchJsonFile('/src/data/typescript/cheatsheet/getting-started.json'),
+  'basic-types.json': () => fetchJsonFile('/src/data/typescript/cheatsheet/basic-types.json'),
+  'type-inference.json': () => fetchJsonFile('/src/data/typescript/cheatsheet/type-inference.json'),
+  'functions.json': () => fetchJsonFile('/src/data/typescript/cheatsheet/functions.json'),
+  'interfaces.json': () => fetchJsonFile('/src/data/typescript/cheatsheet/interfaces.json'),
+  'type-aliases.json': () => fetchJsonFile('/src/data/typescript/cheatsheet/type-aliases.json'),
+  'classes.json': () => fetchJsonFile('/src/data/typescript/cheatsheet/classes.json'),
+  'generics.json': () => fetchJsonFile('/src/data/typescript/cheatsheet/generics.json'),
+  'enums.json': () => fetchJsonFile('/src/data/typescript/cheatsheet/enums.json'),
+  'type-guards.json': () => fetchJsonFile('/src/data/typescript/cheatsheet/type-guards.json'),
+  'utility-types.json': () => fetchJsonFile('/src/data/typescript/cheatsheet/utility-types.json'),
+  'advanced-patterns.json': () => fetchJsonFile('/src/data/typescript/cheatsheet/advanced-patterns.json'),
+  'tsconfig-section.json': () => fetchJsonFile('/src/data/typescript/cheatsheet/tsconfig-section.json'),
+  'common-patterns.json': () => fetchJsonFile('/src/data/typescript/cheatsheet/common-patterns.json'),
+  'common-errors.json': () => fetchJsonFile('/src/data/typescript/cheatsheet/common-errors.json'),
+  'quick-reference.json': () => fetchJsonFile('/src/data/typescript/cheatsheet/quick-reference.json'),
 };
 
 const EXAMPLES_IMPORTS: Record<string, () => Promise<any>> = {
-  'getting-started.json': () => import('../data/typescript/examples/getting-started.json').then(m => m),
-  'basic-types.json': () => import('../data/typescript/examples/basic-types.json').then(m => m),
-  'type-inference.json': () => import('../data/typescript/examples/type-inference.json').then(m => m),
-  'functions.json': () => import('../data/typescript/examples/functions.json').then(m => m),
-  'interfaces.json': () => import('../data/typescript/examples/interfaces.json').then(m => m),
-  'type-aliases.json': () => import('../data/typescript/examples/type-aliases.json').then(m => m),
-  'classes.json': () => import('../data/typescript/examples/classes.json').then(m => m),
-  'generics.json': () => import('../data/typescript/examples/generics.json').then(m => m),
-  'enums.json': () => import('../data/typescript/examples/enums.json').then(m => m),
-  'type-guards.json': () => import('../data/typescript/examples/type-guards.json').then(m => m),
-  'utility-types.json': () => import('../data/typescript/examples/utility-types.json').then(m => m),
-  'advanced-patterns.json': () => import('../data/typescript/examples/advanced-patterns.json').then(m => m),
-  'tsconfig-example.json': () => import('../data/typescript/examples/tsconfig-example.json').then(m => m),
-  'common-patterns.json': () => import('../data/typescript/examples/common-patterns.json').then(m => m),
-  'common-errors.json': () => import('../data/typescript/examples/common-errors.json').then(m => m),
-  'quick-reference.json': () => import('../data/typescript/examples/quick-reference.json').then(m => m),
+  'getting-started.json': () => fetchJsonFile('/src/data/typescript/examples/getting-started.json'),
+  'basic-types.json': () => fetchJsonFile('/src/data/typescript/examples/basic-types.json'),
+  'type-inference.json': () => fetchJsonFile('/src/data/typescript/examples/type-inference.json'),
+  'functions.json': () => fetchJsonFile('/src/data/typescript/examples/functions.json'),
+  'interfaces.json': () => fetchJsonFile('/src/data/typescript/examples/interfaces.json'),
+  'type-aliases.json': () => fetchJsonFile('/src/data/typescript/examples/type-aliases.json'),
+  'classes.json': () => fetchJsonFile('/src/data/typescript/examples/classes.json'),
+  'generics.json': () => fetchJsonFile('/src/data/typescript/examples/generics.json'),
+  'enums.json': () => fetchJsonFile('/src/data/typescript/examples/enums.json'),
+  'type-guards.json': () => fetchJsonFile('/src/data/typescript/examples/type-guards.json'),
+  'utility-types.json': () => fetchJsonFile('/src/data/typescript/examples/utility-types.json'),
+  'advanced-patterns.json': () => fetchJsonFile('/src/data/typescript/examples/advanced-patterns.json'),
+  'tsconfig-example.json': () => fetchJsonFile('/src/data/typescript/examples/tsconfig-example.json'),
+  'common-patterns.json': () => fetchJsonFile('/src/data/typescript/examples/common-patterns.json'),
+  'common-errors.json': () => fetchJsonFile('/src/data/typescript/examples/common-errors.json'),
+  'quick-reference.json': () => fetchJsonFile('/src/data/typescript/examples/quick-reference.json'),
 };// Populate the topic imports map for TypeScript
 TOPIC_IMPORTS.typescript.lessons = LESSON_IMPORTS;
 TOPIC_IMPORTS.typescript.cheatsheet = CHEATSHEET_IMPORTS;
@@ -286,12 +295,19 @@ const Lessons: React.FC<LessonsProps> = ({ selectedTopic }) => {
         topicImports.examples[lesson.examplesFile]()
       ]);
 
+      console.log('[Lessons] Loaded modules for:', lesson.id, {
+        lesson: lessonMod,
+        cheatsheet: cheatsheetMod,
+        examples: examplesMod
+      });
+
       setLessonContent(lessonMod.default);
       setCheatsheetContent(cheatsheetMod.default);
       setExamplesContent(examplesMod.default);
       console.log('[Lessons] Successfully loaded all content for:', lesson.id);
     } catch (err: any) {
       console.error('[Lessons] ERROR loading content:', err);
+      console.error('[Lessons] Error stack:', err.stack);
       setError(err.message || 'Failed to load content');
     } finally {
       setIsLoading(false);
@@ -308,16 +324,17 @@ const Lessons: React.FC<LessonsProps> = ({ selectedTopic }) => {
   const renderLessonContent = () => {
     if (!lessonContent?.sections) return <p className="text-slate-400">No lesson content available.</p>;
     
-    return (
-      <div className="space-y-6">
-        {/* Description at top if available */}
-        {lessonContent.description && (
-          <div className="bg-blue-500/10 rounded-2xl p-6 border border-blue-500/20">
-            <p className="text-slate-300">{lessonContent.description}</p>
-          </div>
-        )}
-        
-        {lessonContent.sections.map((section: any, idx: number) => (
+    try {
+      return (
+        <div className="space-y-6">
+          {/* Description at top if available */}
+          {lessonContent.description && (
+            <div className="bg-blue-500/10 rounded-2xl p-6 border border-blue-500/20">
+              <p className="text-slate-300">{lessonContent.description}</p>
+            </div>
+          )}
+          
+          {lessonContent.sections.map((section: any, idx: number) => (
           <div key={idx} className="bg-slate-800/70 rounded-2xl p-6 border border-slate-700/50">
             <h3 className="text-xl font-bold text-white mb-3 flex items-center gap-3">
               <span className="w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center text-sm font-bold">
@@ -328,6 +345,22 @@ const Lessons: React.FC<LessonsProps> = ({ selectedTopic }) => {
             
             {/* Main content */}
             {section.content && <p className="text-slate-300 mb-4">{section.content}</p>}
+            
+            {/* Quick Reference - for quick-reference.json */}
+            {section.quick_ref && Array.isArray(section.quick_ref) && section.quick_ref.length > 0 && (
+              <div className="bg-slate-900/50 rounded-xl p-4 mb-4 border border-slate-700/50">
+                <div className="space-y-3">
+                  {section.quick_ref.map((ref: any, i: number) => (
+                    <div key={i} className="flex flex-col gap-1">
+                      <code className="text-cyan-400 text-sm bg-slate-800/50 px-2 py-1 rounded font-mono">
+                        {ref.syntax}
+                      </code>
+                      <p className="text-slate-400 text-sm pl-2">→ {ref.desc}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
             
             {/* Explanation (separate from content) */}
             {section.explanation && (
@@ -374,7 +407,7 @@ const Lessons: React.FC<LessonsProps> = ({ selectedTopic }) => {
                 <h4 className="text-cyan-400 font-semibold mb-2">🎯 When to Use</h4>
                 {typeof section.whenToUse === 'string' ? (
                   <p className="text-slate-300">{section.whenToUse}</p>
-                ) : (
+                ) : Array.isArray(section.whenToUse) ? (
                   <ul className="space-y-1">
                     {section.whenToUse.map((item: string, i: number) => (
                       <li key={i} className="flex items-start gap-2 text-slate-300 text-sm">
@@ -382,7 +415,7 @@ const Lessons: React.FC<LessonsProps> = ({ selectedTopic }) => {
                       </li>
                     ))}
                   </ul>
-                )}
+                ) : null}
               </div>
             )}
             
@@ -685,6 +718,21 @@ const Lessons: React.FC<LessonsProps> = ({ selectedTopic }) => {
               </div>
             )}
             
+            {/* Tips */}
+            {section.tips && Array.isArray(section.tips) && (
+              <div className="bg-amber-500/10 rounded-xl p-4 mb-4 border border-amber-500/20">
+                <h4 className="text-amber-400 font-semibold mb-3">💡 Quick Tips</h4>
+                <ul className="space-y-2">
+                  {section.tips.map((tipItem: any, i: number) => (
+                    <li key={i} className="flex items-start gap-2 text-slate-300 text-sm">
+                      <span className="text-amber-400">→</span>
+                      <span>{tipItem.tip || tipItem}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            
             {/* Mistakes */}
             {section.mistakes && (
               <div className="space-y-3 mb-4">
@@ -692,10 +740,10 @@ const Lessons: React.FC<LessonsProps> = ({ selectedTopic }) => {
                 {section.mistakes.map((mistakeItem: any, i: number) => (
                   <div key={i} className="bg-red-500/10 rounded-xl p-4 border border-red-500/20">
                     <p className="text-red-300 font-semibold mb-2">❌ {mistakeItem.mistake}</p>
-                    {mistakeItem.solution && (
+                    {(mistakeItem.fix || mistakeItem.solution) && (
                       <div className="bg-green-500/10 rounded-lg p-3 border-l-4 border-green-400 mt-2">
-                        <span className="text-green-400 font-semibold text-sm">✓ Solution: </span>
-                        <span className="text-slate-300 text-sm">{mistakeItem.solution}</span>
+                        <span className="text-green-400 font-semibold text-sm">✓ Fix: </span>
+                        <span className="text-slate-300 text-sm">{mistakeItem.fix || mistakeItem.solution}</span>
                       </div>
                     )}
                   </div>
@@ -703,15 +751,73 @@ const Lessons: React.FC<LessonsProps> = ({ selectedTopic }) => {
               </div>
             )}
             
-            {/* Resources */}
-            {section.resources && (
+            {/* Shortcuts */}
+            {section.shortcuts && Array.isArray(section.shortcuts) && (
+              <div className="bg-purple-500/10 rounded-xl p-4 mb-4 border border-purple-500/20">
+                <h4 className="text-purple-400 font-semibold mb-3">⌨️ Keyboard Shortcuts</h4>
+                <div className="space-y-2">
+                  {section.shortcuts.map((shortcut: any, i: number) => (
+                    <div key={i} className="flex items-start justify-between gap-4 text-sm">
+                      <span className="text-slate-300">{shortcut.action}</span>
+                      <div className="flex gap-2">
+                        {shortcut.mac && (
+                          <code className="bg-slate-800/50 px-2 py-1 rounded text-purple-300 text-xs">Mac: {shortcut.mac}</code>
+                        )}
+                        {shortcut.win && (
+                          <code className="bg-slate-800/50 px-2 py-1 rounded text-purple-300 text-xs">Win: {shortcut.win}</code>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            {/* Commands */}
+            {section.commands && Array.isArray(section.commands) && (
+              <div className="bg-cyan-500/10 rounded-xl p-4 mb-4 border border-cyan-500/20">
+                <h4 className="text-cyan-400 font-semibold mb-3">⚡ CLI Commands</h4>
+                <div className="space-y-3">
+                  {section.commands.map((cmd: any, i: number) => (
+                    <div key={i} className="flex flex-col gap-1">
+                      <code className="text-cyan-300 text-sm bg-slate-800/50 px-2 py-1 rounded font-mono">
+                        {cmd.command}
+                      </code>
+                      {cmd.desc && <p className="text-slate-400 text-sm pl-2">→ {cmd.desc}</p>}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            {/* Note (single note for decorator section) */}
+            {section.note && (
+              <div className="bg-yellow-500/10 border-l-4 border-yellow-400 rounded-r-xl p-4 mb-4">
+                <span className="text-yellow-400 font-semibold">📝 Note: </span>
+                <span className="text-slate-300">{section.note}</span>
+              </div>
+            )}
+            
+            {/* Resources (array of objects with name and url) */}
+            {section.resources && Array.isArray(section.resources) && (
               <div className="bg-blue-500/10 rounded-xl p-4 mb-4 border border-blue-500/20">
-                <h4 className="text-blue-400 font-semibold mb-2">📚 Resources</h4>
+                <h4 className="text-blue-400 font-semibold mb-3">📚 Useful Resources</h4>
                 <ul className="space-y-2">
-                  {section.resources.map((resource: string, i: number) => (
-                    <li key={i} className="flex items-start gap-2 text-slate-300 text-sm">
+                  {section.resources.map((resource: any, i: number) => (
+                    <li key={i} className="flex items-start gap-2 text-sm">
                       <span className="text-blue-400">📖</span>
-                      <span>{resource}</span>
+                      {resource.url ? (
+                        <a 
+                          href={resource.url} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="text-blue-300 hover:text-blue-200 underline"
+                        >
+                          {resource.name || resource}
+                        </a>
+                      ) : (
+                        <span className="text-slate-300">{resource.name || resource}</span>
+                      )}
                     </li>
                   ))}
                 </ul>
@@ -721,14 +827,24 @@ const Lessons: React.FC<LessonsProps> = ({ selectedTopic }) => {
         ))}
       </div>
     );
+    } catch (err) {
+      console.error('[Lessons] Error rendering lesson content:', err);
+      return (
+        <div className="bg-red-500/10 border border-red-500/50 rounded-2xl p-6">
+          <p className="text-red-400 font-semibold mb-2">Error rendering lesson content</p>
+          <p className="text-slate-300 text-sm">{String(err)}</p>
+        </div>
+      );
+    }
   };
 
   // Render cheatsheet content
   const renderCheatsheetContent = () => {
     if (!cheatsheetContent) return <p className="text-slate-400">No cheatsheet content available.</p>;
     
-    return (
-      <div className="space-y-6">
+    try {
+      return (
+        <div className="space-y-6">
         {/* Title */}
         {cheatsheetContent.title && (
           <h2 className="text-2xl font-bold text-cyan-400">{cheatsheetContent.title}</h2>
@@ -767,16 +883,26 @@ const Lessons: React.FC<LessonsProps> = ({ selectedTopic }) => {
             <span className="text-slate-300">{cheatsheetContent.tip}</span>
           </div>
         )}
-      </div>
-    );
+        </div>
+      );
+    } catch (err) {
+      console.error('[Lessons] Error rendering cheatsheet content:', err);
+      return (
+        <div className="bg-red-500/10 border border-red-500/50 rounded-2xl p-6">
+          <p className="text-red-400 font-semibold mb-2">Error rendering cheatsheet content</p>
+          <p className="text-slate-300 text-sm">{String(err)}</p>
+        </div>
+      );
+    }
   };
 
   // Render examples content
   const renderExamplesContent = () => {
     if (!examplesContent?.examples) return <p className="text-slate-400">No examples available.</p>;
     
-    return (
-      <div className="space-y-6">
+    try {
+      return (
+        <div className="space-y-6">
         {/* Title */}
         {examplesContent.title && (
           <h2 className="text-2xl font-bold text-green-400">{examplesContent.title}</h2>
@@ -816,8 +942,17 @@ const Lessons: React.FC<LessonsProps> = ({ selectedTopic }) => {
             )}
           </div>
         ))}
-      </div>
-    );
+        </div>
+      );
+    } catch (err) {
+      console.error('[Lessons] Error rendering examples content:', err);
+      return (
+        <div className="bg-red-500/10 border border-red-500/50 rounded-2xl p-6">
+          <p className="text-red-400 font-semibold mb-2">Error rendering examples content</p>
+          <p className="text-slate-300 text-sm">{String(err)}</p>
+        </div>
+      );
+    }
   };
 
   return (
