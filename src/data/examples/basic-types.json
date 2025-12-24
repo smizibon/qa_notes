@@ -1,0 +1,55 @@
+{
+  "id": "examples-basic-types",
+  "title": "Basic Types Examples",
+  "description": "Practical examples demonstrating TypeScript's fundamental types",
+  "examples": [
+    {
+      "title": "User Profile with Basic Types",
+      "description": "Using strings, numbers, and booleans for a user profile",
+      "code": "// User profile using basic types\nconst username: string = 'john_doe';\nconst displayName: string = 'John Doe';\nconst email: string = 'john@example.com';\nconst age: number = 28;\nconst accountBalance: number = 1250.75;\nconst isVerified: boolean = true;\nconst isPremium: boolean = false;\n\n// Template literal for output\nconsole.log(`User: ${displayName}`);\nconsole.log(`Email: ${email}`);\nconsole.log(`Age: ${age}`);\nconsole.log(`Balance: $${accountBalance.toFixed(2)}`);\nconsole.log(`Verified: ${isVerified ? 'Yes' : 'No'}`);",
+      "explanation": "This example shows how to use the three most common types together to represent real data."
+    },
+    {
+      "title": "Shopping Cart with Arrays",
+      "description": "Managing a list of items with typed arrays",
+      "code": "// Array of product IDs (numbers)\nconst cartItems: number[] = [101, 205, 307, 412];\n\n// Array of product names (strings)\nconst productNames: string[] = ['Laptop', 'Mouse', 'Keyboard', 'Monitor'];\n\n// Array of prices (numbers)\nconst prices: number[] = [999.99, 29.99, 79.99, 299.99];\n\n// Add item to cart\ncartItems.push(505);\nproductNames.push('Headphones');\nprices.push(149.99);\n\n// Calculate total\nconst total: number = prices.reduce((sum, price) => sum + price, 0);\nconsole.log(`Cart total: $${total.toFixed(2)}`); // $1559.95\n\n// Find expensive items\nconst expensiveItems = prices.filter(price => price > 100);\nconsole.log(`Expensive items: ${expensiveItems.length}`);",
+      "explanation": "Demonstrates typed arrays for managing collections of similar data."
+    },
+    {
+      "title": "Coordinate System with Tuples",
+      "description": "Using tuples for fixed-length data structures",
+      "code": "// 2D coordinates as tuples\nconst origin: [number, number] = [0, 0];\nconst playerPosition: [number, number] = [10, 25];\nconst targetPosition: [number, number] = [50, 75];\n\n// Calculate distance between two points\nfunction distance(p1: [number, number], p2: [number, number]): number {\n  const [x1, y1] = p1; // Destructuring\n  const [x2, y2] = p2;\n  return Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);\n}\n\nconsole.log(`Distance: ${distance(playerPosition, targetPosition).toFixed(2)}`);\n\n// RGB color as tuple\nconst red: [number, number, number] = [255, 0, 0];\nconst green: [number, number, number] = [0, 255, 0];\nconst blue: [number, number, number] = [0, 0, 255];\n\n// Named tuple for clarity (user with ID and name)\nconst user: [id: number, name: string, active: boolean] = [1, 'Alice', true];",
+      "explanation": "Tuples are perfect when you have a fixed number of elements with specific types in each position."
+    },
+    {
+      "title": "API Response Handling with Unknown",
+      "description": "Safely handling data of unknown type from an API",
+      "code": "// Simulating API response (unknown data)\nfunction fetchData(): unknown {\n  // Could return anything from API\n  return { name: 'Alice', age: 30 };\n}\n\nconst response: unknown = fetchData();\n\n// ❌ WRONG - Can't use unknown directly\n// console.log(response.name); // Error!\n\n// ✅ CORRECT - Check type first\nif (typeof response === 'object' && response !== null) {\n  // Now TypeScript knows it's an object\n  if ('name' in response && typeof response.name === 'string') {\n    console.log(`Name: ${response.name}`);\n  }\n}\n\n// Better approach: Type guard function\nfunction isUser(data: unknown): data is { name: string; age: number } {\n  return (\n    typeof data === 'object' &&\n    data !== null &&\n    'name' in data &&\n    'age' in data\n  );\n}\n\nif (isUser(response)) {\n  console.log(`${response.name} is ${response.age} years old`);\n}",
+      "explanation": "Use 'unknown' for external data and type guards to safely narrow the type."
+    },
+    {
+      "title": "Void Functions for Side Effects",
+      "description": "Functions that perform actions without returning values",
+      "code": "// Logging function - returns void\nfunction logMessage(message: string): void {\n  const timestamp = new Date().toISOString();\n  console.log(`[${timestamp}] ${message}`);\n}\n\n// Event handler - returns void\nfunction handleClick(buttonId: string): void {\n  console.log(`Button ${buttonId} was clicked`);\n  // Updates UI, no return needed\n}\n\n// Async void function (for side effects)\nasync function saveToDatabase(data: string): Promise<void> {\n  // Simulating database save\n  console.log(`Saving: ${data}`);\n  // No return statement needed\n}\n\n// Usage\nlogMessage('Application started');\nhandleClick('submit-btn');\nsaveToDatabase('user data');",
+      "explanation": "Void functions perform actions but don't return values. Common for logging, event handlers, and side effects."
+    },
+    {
+      "title": "Nullable Types for Optional Data",
+      "description": "Handling values that might be null or undefined",
+      "code": "// Optional user data\ninterface UserProfile {\n  name: string;\n  email: string;\n  phone: string | null;  // Might not have phone\n  bio: string | undefined; // Might not be set yet\n}\n\nconst user: UserProfile = {\n  name: 'Alice',\n  email: 'alice@example.com',\n  phone: null,  // No phone number\n  bio: undefined // Bio not set\n};\n\n// Safe access with nullish coalescing\nconst phoneDisplay = user.phone ?? 'Not provided';\nconst bioDisplay = user.bio ?? 'No bio yet';\n\nconsole.log(`Phone: ${phoneDisplay}`);\nconsole.log(`Bio: ${bioDisplay}`);\n\n// Optional chaining for nested properties\ntype Settings = {\n  theme?: {\n    color?: string;\n  };\n};\n\nconst settings: Settings = {};\nconst themeColor = settings.theme?.color ?? 'default';\nconsole.log(`Theme: ${themeColor}`);",
+      "explanation": "Use union types with null/undefined for optional data, and nullish coalescing (??) for default values."
+    },
+    {
+      "title": "Mixed Array Types with Unions",
+      "description": "Arrays that can contain multiple types",
+      "code": "// Array of strings or numbers\nconst mixedData: (string | number)[] = [1, 'two', 3, 'four', 5];\n\n// Process each item based on type\nmixedData.forEach(item => {\n  if (typeof item === 'string') {\n    console.log(`String: ${item.toUpperCase()}`);\n  } else {\n    console.log(`Number: ${item * 2}`);\n  }\n});\n\n// Array of different object types\ntype LogEntry = { level: 'info'; message: string } | { level: 'error'; message: string; code: number };\n\nconst logs: LogEntry[] = [\n  { level: 'info', message: 'App started' },\n  { level: 'error', message: 'Connection failed', code: 500 },\n  { level: 'info', message: 'User logged in' }\n];\n\nlogs.forEach(log => {\n  if (log.level === 'error') {\n    console.log(`Error ${log.code}: ${log.message}`);\n  } else {\n    console.log(`Info: ${log.message}`);\n  }\n});",
+      "explanation": "Union types allow arrays to hold multiple types while still being type-safe."
+    },
+    {
+      "title": "Never Type for Exhaustive Checks",
+      "description": "Using never to ensure all cases are handled",
+      "code": "type Status = 'pending' | 'approved' | 'rejected';\n\nfunction handleStatus(status: Status): string {\n  switch (status) {\n    case 'pending':\n      return 'Waiting for review...';\n    case 'approved':\n      return 'Request approved!';\n    case 'rejected':\n      return 'Request denied.';\n    default:\n      // This ensures all cases are handled\n      const _exhaustive: never = status;\n      return _exhaustive;\n  }\n}\n\n// If you add a new status like 'cancelled' to the union,\n// TypeScript will error at the default case until you handle it!\n\nconsole.log(handleStatus('pending'));  // Waiting for review...\nconsole.log(handleStatus('approved')); // Request approved!\n\n// Never for functions that don't return\nfunction fail(message: string): never {\n  throw new Error(message);\n}\n\nfunction infiniteLoop(): never {\n  while (true) {\n    // Runs forever\n  }\n}",
+      "explanation": "The 'never' type is useful for exhaustive type checking and functions that never return normally."
+    }
+  ]
+}

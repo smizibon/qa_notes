@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Menu, X, Home, FileCode, Info, BookOpen, ExternalLink, GraduationCap } from 'lucide-react';
+import { Menu, X, Home, FileCode, Info, ExternalLink, GraduationCap } from 'lucide-react';
 
 interface NavigationProps {
   activeTab: string;
@@ -43,17 +43,6 @@ export default function Navigation({ activeTab, setActiveTab }: NavigationProps)
               Home
             </button>
             <button
-              onClick={() => setActiveTab('cheatsheet')}
-              className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
-                activeTab === 'cheatsheet'
-                  ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg shadow-blue-500/50 scale-105'
-                  : 'text-gray-300 hover:bg-slate-700/50 hover:scale-105'
-              }`}
-            >
-              <FileCode className="h-4 w-4" />
-              Cheatsheet
-            </button>
-            <button
               onClick={() => setActiveTab('lessons')}
               className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
                 activeTab === 'lessons'
@@ -74,17 +63,6 @@ export default function Navigation({ activeTab, setActiveTab }: NavigationProps)
             >
               <Info className="h-4 w-4" />
               Details
-            </button>
-            <button
-              onClick={() => setActiveTab('examples')}
-              className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
-                activeTab === 'examples'
-                  ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg shadow-blue-500/50 scale-105'
-                  : 'text-gray-300 hover:bg-slate-700/50 hover:scale-105'
-              }`}
-            >
-              <BookOpen className="h-4 w-4" />
-              Examples
             </button>
 
             {/* Practice Links Dropdown */}
@@ -142,20 +120,6 @@ export default function Navigation({ activeTab, setActiveTab }: NavigationProps)
               </button>
               <button
                 onClick={() => {
-                  setActiveTab('cheatsheet');
-                  setIsMenuOpen(false);
-                }}
-                className={`px-4 py-2 rounded-md text-sm font-medium text-left flex items-center gap-2 ${
-                  activeTab === 'cheatsheet'
-                    ? 'bg-blue-600 text-white'
-                    : 'text-gray-300 hover:bg-gray-700'
-                }`}
-              >
-                <FileCode className="h-4 w-4" />
-                Cheatsheet
-              </button>
-              <button
-                onClick={() => {
                   setActiveTab('lessons');
                   setIsMenuOpen(false);
                 }}
@@ -181,20 +145,6 @@ export default function Navigation({ activeTab, setActiveTab }: NavigationProps)
               >
                 <Info className="h-4 w-4" />
                 Details
-              </button>
-              <button
-                onClick={() => {
-                  setActiveTab('examples');
-                  setIsMenuOpen(false);
-                }}
-                className={`px-4 py-2 rounded-md text-sm font-medium text-left flex items-center gap-2 ${
-                  activeTab === 'examples'
-                    ? 'bg-blue-600 text-white'
-                    : 'text-gray-300 hover:bg-gray-700'
-                }`}
-              >
-                <BookOpen className="h-4 w-4" />
-                Examples
               </button>
 
               {/* Mobile Practice Links */}

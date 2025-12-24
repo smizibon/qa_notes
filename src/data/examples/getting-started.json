@@ -1,0 +1,49 @@
+{
+  "id": "examples-getting-started",
+  "title": "Getting Started Examples",
+  "description": "Practical examples to help you start your TypeScript journey",
+  "examples": [
+    {
+      "title": "Hello World",
+      "description": "The simplest TypeScript program",
+      "code": "// hello.ts\nconst greeting: string = 'Hello, World!';\nconsole.log(greeting);\n\n// Compile: tsc hello.ts\n// Run: node hello.js\n// Output: Hello, World!",
+      "explanation": "We declare a constant with type 'string'. TypeScript ensures we only assign string values to it."
+    },
+    {
+      "title": "Function with Types",
+      "description": "A function with typed parameters and return value",
+      "code": "// math.ts\nfunction add(a: number, b: number): number {\n  return a + b;\n}\n\nconst result = add(5, 3);\nconsole.log(result); // 8\n\n// This would cause a compile error:\n// add('5', '3'); // Error: Argument of type 'string' is not assignable to parameter of type 'number'",
+      "explanation": "The function explicitly states it takes two numbers and returns a number. TypeScript catches type mismatches at compile time."
+    },
+    {
+      "title": "Object with Interface",
+      "description": "Defining the shape of an object",
+      "code": "// user.ts\ninterface User {\n  name: string;\n  age: number;\n  email: string;\n}\n\nconst user: User = {\n  name: 'Alice',\n  age: 30,\n  email: 'alice@example.com'\n};\n\nconsole.log(`${user.name} is ${user.age} years old`);",
+      "explanation": "An interface defines what properties an object must have. TypeScript ensures all required properties are present with correct types."
+    },
+    {
+      "title": "Array with Type",
+      "description": "Working with typed arrays",
+      "code": "// arrays.ts\nconst numbers: number[] = [1, 2, 3, 4, 5];\nconst names: string[] = ['Alice', 'Bob', 'Charlie'];\n\n// Array methods are type-safe\nconst doubled = numbers.map(n => n * 2);\nconsole.log(doubled); // [2, 4, 6, 8, 10]\n\n// TypeScript infers the callback parameter types\nnames.forEach(name => {\n  console.log(name.toUpperCase()); // 'name' is known to be string\n});",
+      "explanation": "Typed arrays ensure all elements are of the same type. Array methods like map and forEach automatically know the element types."
+    },
+    {
+      "title": "Type Inference in Action",
+      "description": "Let TypeScript figure out the types",
+      "code": "// inference.ts\n// TypeScript infers 'message' is a string\nlet message = 'Hello';\n\n// TypeScript infers 'count' is a number\nlet count = 42;\n\n// TypeScript infers the return type is string\nfunction getGreeting(name: string) {\n  return `Hello, ${name}!`; // Return type inferred as string\n}\n\nconst greeting = getGreeting('World');\nconsole.log(greeting); // Hello, World!",
+      "explanation": "You don't always need to write types explicitly. TypeScript is smart enough to infer types from values and expressions."
+    },
+    {
+      "title": "Minimal tsconfig.json",
+      "description": "A simple configuration to get started",
+      "code": "// tsconfig.json\n{\n  \"compilerOptions\": {\n    \"target\": \"ES2020\",\n    \"module\": \"commonjs\",\n    \"strict\": true,\n    \"outDir\": \"./dist\",\n    \"rootDir\": \"./src\",\n    \"esModuleInterop\": true,\n    \"skipLibCheck\": true,\n    \"forceConsistentCasingInFileNames\": true\n  },\n  \"include\": [\"src/**/*\"],\n  \"exclude\": [\"node_modules\"]\n}",
+      "explanation": "This configuration compiles TypeScript from 'src' folder to 'dist' folder with strict type checking enabled."
+    },
+    {
+      "title": "package.json Scripts",
+      "description": "Common npm scripts for TypeScript projects",
+      "code": "// package.json (scripts section)\n{\n  \"scripts\": {\n    \"build\": \"tsc\",\n    \"start\": \"node dist/index.js\",\n    \"dev\": \"tsc --watch\",\n    \"clean\": \"rm -rf dist\",\n    \"build:start\": \"npm run build && npm start\"\n  }\n}\n\n// Usage:\n// npm run build    - Compile TypeScript\n// npm start        - Run compiled code\n// npm run dev      - Watch mode for development",
+      "explanation": "These scripts automate common tasks. 'build' compiles your code, 'dev' recompiles on file changes, and 'start' runs the output."
+    }
+  ]
+}

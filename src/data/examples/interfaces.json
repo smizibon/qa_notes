@@ -1,0 +1,55 @@
+{
+  "id": "examples-interfaces",
+  "title": "Interfaces Examples",
+  "description": "Practical examples demonstrating TypeScript interfaces for object typing",
+  "examples": [
+    {
+      "title": "User Profile Interface",
+      "description": "Defining a complete user profile structure",
+      "code": "interface UserProfile {\n  id: number;\n  username: string;\n  email: string;\n  displayName: string;\n  bio?: string;                    // Optional\n  avatar?: string;                 // Optional\n  readonly createdAt: Date;        // Can't be modified\n  readonly updatedAt: Date;        // Can't be modified\n}\n\nconst user: UserProfile = {\n  id: 1,\n  username: 'alice_dev',\n  email: 'alice@example.com',\n  displayName: 'Alice Developer',\n  bio: 'Full-stack developer passionate about TypeScript',\n  createdAt: new Date('2023-01-15'),\n  updatedAt: new Date('2024-12-01')\n};\n\n// ✓ Can modify regular properties\nuser.displayName = 'Alice D.';\nuser.bio = 'Updated bio';\n\n// ✗ Cannot modify readonly properties\n// user.createdAt = new Date(); // Error!\n\n// ✓ Can omit optional properties\nconst minimalUser: UserProfile = {\n  id: 2,\n  username: 'bob',\n  email: 'bob@example.com',\n  displayName: 'Bob',\n  createdAt: new Date(),\n  updatedAt: new Date()\n};",
+      "explanation": "Shows required, optional, and readonly properties in a real-world user profile."
+    },
+    {
+      "title": "API Response Interface",
+      "description": "Typing API responses with nested structures",
+      "code": "interface ApiResponse<T> {\n  success: boolean;\n  data: T;\n  error?: {\n    code: number;\n    message: string;\n  };\n  meta: {\n    timestamp: string;\n    requestId: string;\n    pagination?: {\n      page: number;\n      perPage: number;\n      total: number;\n      totalPages: number;\n    };\n  };\n}\n\ninterface Product {\n  id: number;\n  name: string;\n  price: number;\n}\n\n// Success response\nconst successResponse: ApiResponse<Product[]> = {\n  success: true,\n  data: [\n    { id: 1, name: 'Laptop', price: 999 },\n    { id: 2, name: 'Mouse', price: 29 }\n  ],\n  meta: {\n    timestamp: '2024-12-23T10:30:00Z',\n    requestId: 'req_123',\n    pagination: {\n      page: 1,\n      perPage: 10,\n      total: 50,\n      totalPages: 5\n    }\n  }\n};\n\n// Error response\nconst errorResponse: ApiResponse<null> = {\n  success: false,\n  data: null,\n  error: {\n    code: 404,\n    message: 'Products not found'\n  },\n  meta: {\n    timestamp: '2024-12-23T10:30:00Z',\n    requestId: 'req_124'\n  }\n};",
+      "explanation": "Generic interface for consistent API responses with pagination and error handling."
+    },
+    {
+      "title": "Interface Extension",
+      "description": "Building complex types through inheritance",
+      "code": "// Base interfaces\ninterface Entity {\n  id: number;\n  createdAt: Date;\n  updatedAt: Date;\n}\n\ninterface Timestamped {\n  createdAt: Date;\n  updatedAt: Date;\n}\n\ninterface Auditable {\n  createdBy: string;\n  updatedBy: string;\n}\n\n// Extended interfaces\ninterface User extends Entity {\n  email: string;\n  name: string;\n  role: 'admin' | 'user' | 'guest';\n}\n\ninterface Post extends Entity, Auditable {\n  title: string;\n  content: string;\n  published: boolean;\n  authorId: number;\n}\n\n// Using extended interfaces\nconst user: User = {\n  id: 1,\n  createdAt: new Date(),\n  updatedAt: new Date(),\n  email: 'alice@example.com',\n  name: 'Alice',\n  role: 'admin'\n};\n\nconst post: Post = {\n  id: 101,\n  createdAt: new Date(),\n  updatedAt: new Date(),\n  createdBy: 'alice',\n  updatedBy: 'alice',\n  title: 'Getting Started with TypeScript',\n  content: 'TypeScript is awesome...',\n  published: true,\n  authorId: 1\n};\n\nconsole.log(`${user.name} wrote: ${post.title}`);",
+      "explanation": "Multiple interface inheritance creates complex, reusable type structures."
+    },
+    {
+      "title": "Interface with Methods",
+      "description": "Defining behavior alongside data",
+      "code": "interface Repository<T> {\n  findAll(): Promise<T[]>;\n  findById(id: number): Promise<T | null>;\n  create(item: Omit<T, 'id'>): Promise<T>;\n  update(id: number, item: Partial<T>): Promise<T>;\n  delete(id: number): Promise<boolean>;\n}\n\ninterface User {\n  id: number;\n  name: string;\n  email: string;\n}\n\n// Implementation\nclass UserRepository implements Repository<User> {\n  private users: User[] = [];\n\n  async findAll(): Promise<User[]> {\n    return this.users;\n  }\n\n  async findById(id: number): Promise<User | null> {\n    return this.users.find(u => u.id === id) || null;\n  }\n\n  async create(item: Omit<User, 'id'>): Promise<User> {\n    const newUser = { id: Date.now(), ...item };\n    this.users.push(newUser);\n    return newUser;\n  }\n\n  async update(id: number, item: Partial<User>): Promise<User> {\n    const index = this.users.findIndex(u => u.id === id);\n    this.users[index] = { ...this.users[index], ...item };\n    return this.users[index];\n  }\n\n  async delete(id: number): Promise<boolean> {\n    const index = this.users.findIndex(u => u.id === id);\n    if (index > -1) {\n      this.users.splice(index, 1);\n      return true;\n    }\n    return false;\n  }\n}",
+      "explanation": "Generic Repository interface with CRUD methods, implemented by a class."
+    },
+    {
+      "title": "Index Signatures for Dynamic Objects",
+      "description": "Handling objects with unknown keys",
+      "code": "// Translation dictionary\ninterface Translations {\n  [key: string]: string;\n}\n\nconst en: Translations = {\n  greeting: 'Hello',\n  farewell: 'Goodbye',\n  thanks: 'Thank you'\n};\n\nconst es: Translations = {\n  greeting: 'Hola',\n  farewell: 'Adiós',\n  thanks: 'Gracias'\n};\n\nfunction translate(key: string, lang: Translations): string {\n  return lang[key] || key;\n}\n\nconsole.log(translate('greeting', en)); // \"Hello\"\nconsole.log(translate('greeting', es)); // \"Hola\"\n\n// Mixed: known properties + dynamic\ninterface Config {\n  appName: string;           // Required\n  version: string;           // Required\n  [feature: string]: string | boolean;  // Dynamic feature flags\n}\n\nconst config: Config = {\n  appName: 'MyApp',\n  version: '1.0.0',\n  darkMode: true,\n  analytics: false,\n  experimentalUI: true\n};\n\n// Type-safe access to known properties\nconsole.log(config.appName); // string\n\n// Dynamic access for feature flags\nconst isDarkMode = config['darkMode']; // string | boolean",
+      "explanation": "Index signatures allow objects with dynamic keys while maintaining some type safety."
+    },
+    {
+      "title": "Function Interface Types",
+      "description": "Interfaces describing function shapes",
+      "code": "// Comparator function type\ninterface Comparator<T> {\n  (a: T, b: T): number;\n}\n\nconst numberComparator: Comparator<number> = (a, b) => a - b;\nconst stringComparator: Comparator<string> = (a, b) => a.localeCompare(b);\n\nfunction sortArray<T>(arr: T[], compare: Comparator<T>): T[] {\n  return [...arr].sort(compare);\n}\n\nconsole.log(sortArray([3, 1, 4, 1, 5], numberComparator));\n// [1, 1, 3, 4, 5]\n\nconsole.log(sortArray(['banana', 'apple', 'cherry'], stringComparator));\n// ['apple', 'banana', 'cherry']\n\n// Event handler interface\ninterface EventHandler<T> {\n  (event: T): void;\n}\n\ninterface ClickEvent {\n  x: number;\n  y: number;\n  target: string;\n}\n\nconst handleClick: EventHandler<ClickEvent> = (event) => {\n  console.log(`Clicked ${event.target} at (${event.x}, ${event.y})`);\n};\n\nhandleClick({ x: 100, y: 200, target: 'button' });",
+      "explanation": "Interfaces can describe function signatures for callbacks and event handlers."
+    },
+    {
+      "title": "React Component Props Interface",
+      "description": "Real-world React component typing",
+      "code": "interface ButtonProps {\n  label: string;\n  onClick: () => void;\n  variant?: 'primary' | 'secondary' | 'danger';\n  size?: 'small' | 'medium' | 'large';\n  disabled?: boolean;\n  icon?: React.ReactNode;\n  className?: string;\n}\n\ninterface CardProps {\n  title: string;\n  children: React.ReactNode;\n  footer?: React.ReactNode;\n  elevated?: boolean;\n  onClick?: () => void;\n}\n\ninterface FormFieldProps {\n  name: string;\n  label: string;\n  type?: 'text' | 'email' | 'password' | 'number';\n  placeholder?: string;\n  value: string;\n  onChange: (value: string) => void;\n  error?: string;\n  required?: boolean;\n}\n\n// Usage example\nconst MyButton: React.FC<ButtonProps> = ({\n  label,\n  onClick,\n  variant = 'primary',\n  size = 'medium',\n  disabled = false,\n  icon,\n  className\n}) => {\n  return (\n    <button\n      className={`btn btn-${variant} btn-${size} ${className || ''}`}\n      onClick={onClick}\n      disabled={disabled}\n    >\n      {icon && <span className=\"btn-icon\">{icon}</span>}\n      {label}\n    </button>\n  );\n};",
+      "explanation": "Interfaces define component props with optional variants, sizes, and callbacks."
+    },
+    {
+      "title": "Nested Interfaces for Complex Data",
+      "description": "Modeling complex nested data structures",
+      "code": "interface Address {\n  street: string;\n  city: string;\n  state: string;\n  zipCode: string;\n  country: string;\n}\n\ninterface ContactInfo {\n  email: string;\n  phone: string;\n  address: Address;\n}\n\ninterface Company {\n  name: string;\n  industry: string;\n  website: string;\n}\n\ninterface Employee {\n  id: number;\n  firstName: string;\n  lastName: string;\n  position: string;\n  department: string;\n  salary: number;\n  contact: ContactInfo;\n  company: Company;\n  manager?: Employee;  // Self-reference for hierarchy\n  directReports: Employee[];\n}\n\nconst employee: Employee = {\n  id: 1,\n  firstName: 'Alice',\n  lastName: 'Johnson',\n  position: 'Engineering Manager',\n  department: 'Engineering',\n  salary: 150000,\n  contact: {\n    email: 'alice@company.com',\n    phone: '555-1234',\n    address: {\n      street: '123 Tech Street',\n      city: 'San Francisco',\n      state: 'CA',\n      zipCode: '94102',\n      country: 'USA'\n    }\n  },\n  company: {\n    name: 'TechCorp',\n    industry: 'Technology',\n    website: 'https://techcorp.com'\n  },\n  directReports: []\n};\n\n// Type-safe deep access\nconsole.log(employee.contact.address.city); // \"San Francisco\"\nconsole.log(employee.company.name);         // \"TechCorp\"",
+      "explanation": "Complex nested interfaces model real-world business objects with full type safety."
+    }
+  ]
+}

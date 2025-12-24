@@ -5,8 +5,16 @@
   "codeBlocks": [
     {
       "title": "Installation & Setup",
-      "code": "# Install TypeScript globally\nnpm install -g typescript\n\n# Check version\ntsc --version\n\n# Create a TypeScript file\ntouch index.ts\n\n# Compile TypeScript to JavaScript\ntsc index.ts\n\n# Watch mode (auto-compile on save)\ntsc index.ts --watch\n\n# Initialize tsconfig.json\ntsc --init"
+      "code": "# Install TypeScript globally\nnpm install -g typescript\n\n# Check version\ntsc --version\n\n# Initialize a new project with tsconfig.json\ntsc --init\n\n# Compile TypeScript to JavaScript\ntsc index.ts\n\n# Watch mode (auto-compile on save)\ntsc --watch\n\n# Compile entire project (uses tsconfig.json)\ntsc"
+    },
+    {
+      "title": "Your First TypeScript File",
+      "code": "// greeting.ts\nfunction greet(name: string): string {\n  return `Hello, ${name}!`;\n}\n\nconst message: string = greet('TypeScript');\nconsole.log(message); // Hello, TypeScript!\n\n// Compile: tsc greeting.ts\n// Run: node greeting.js"
+    },
+    {
+      "title": "Project Setup with npm",
+      "code": "# Create project folder\nmkdir my-ts-project && cd my-ts-project\n\n# Initialize npm project\nnpm init -y\n\n# Install TypeScript as dev dependency\nnpm install typescript --save-dev\n\n# Create tsconfig.json\nnpx tsc --init\n\n# Add scripts to package.json:\n# \"build\": \"tsc\"\n# \"start\": \"node dist/index.js\""
     }
   ],
-  "tip": "Always use a tsconfig.json for projects. It centralizes compiler options and makes your project more maintainable."
+  "tip": "Always use a tsconfig.json for projects. It centralizes compiler options and makes your project more maintainable. Use 'npx tsc' if TypeScript is installed locally."
 }

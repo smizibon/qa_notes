@@ -1,0 +1,55 @@
+{
+  "id": "examples-type-inference",
+  "title": "Type Inference Examples",
+  "description": "Practical examples showing TypeScript's automatic type inference in action",
+  "examples": [
+    {
+      "title": "Variable Initialization Inference",
+      "description": "TypeScript infers types from initial values",
+      "code": "// TypeScript figures out the types automatically\nlet username = 'alice_123';        // string\nlet followerCount = 1500;           // number\nlet isVerified = true;              // boolean\nlet tags = ['tech', 'coding'];      // string[]\nlet scores = [95, 87, 92];          // number[]\n\n// Mixed arrays infer union types\nlet data = [1, 'two', 3, 'four'];   // (string | number)[]\n\n// Hover over variables in VS Code to see inferred types!\n\n// These work:\nusername = 'bob_456';               // ✓ string to string\nfollowerCount = 2000;               // ✓ number to number\ntags.push('programming');           // ✓ string to string[]\n\n// These error:\n// username = 42;                   // ✗ number to string\n// followerCount = 'many';          // ✗ string to number\n// tags.push(123);                  // ✗ number to string[]",
+      "explanation": "TypeScript infers the type from the first assignment and enforces it afterward."
+    },
+    {
+      "title": "Object Inference",
+      "description": "Objects get their structure inferred automatically",
+      "code": "// TypeScript infers the entire object structure\nconst product = {\n  id: 101,\n  name: 'Laptop',\n  price: 999.99,\n  inStock: true,\n  tags: ['electronics', 'computers']\n};\n\n// Inferred type:\n// {\n//   id: number;\n//   name: string;\n//   price: number;\n//   inStock: boolean;\n//   tags: string[];\n// }\n\n// TypeScript knows all properties and their types\nconsole.log(product.name.toUpperCase());  // ✓ string methods\nconsole.log(product.price.toFixed(2));    // ✓ number methods\nconsole.log(product.tags.join(', '));     // ✓ string[] methods\n\n// Errors on wrong property access\n// product.rating;                // ✗ Property 'rating' doesn't exist\n// product.price.toUpperCase();   // ✗ toUpperCase is not on number",
+      "explanation": "Complex objects get their full structure inferred including nested types."
+    },
+    {
+      "title": "Function Return Inference",
+      "description": "Return types are automatically determined",
+      "code": "// Return type inferred as number\nfunction multiply(a: number, b: number) {\n  return a * b;\n}\nconst result = multiply(5, 3); // result: number\n\n// Return type inferred as string\nfunction formatPrice(cents: number) {\n  return `$${(cents / 100).toFixed(2)}`;\n}\nconst price = formatPrice(1999); // price: string\n\n// Return type inferred as union from multiple paths\nfunction findUser(id: number) {\n  if (id === 1) {\n    return { name: 'Alice', role: 'admin' };\n  }\n  return null;\n}\nconst user = findUser(1); // { name: string; role: string } | null\n\n// Must check for null before using\nif (user) {\n  console.log(user.name); // ✓ TypeScript knows user is not null here\n}",
+      "explanation": "TypeScript analyzes all return paths to infer the most accurate return type."
+    },
+    {
+      "title": "const vs let Inference",
+      "description": "Different inference for mutable vs immutable",
+      "code": "// let: infers broader type (can change)\nlet theme = 'dark';           // type: string\ntheme = 'light';              // ✓ OK\ntheme = 'system';             // ✓ OK - any string works\n\n// const: infers literal type (can't change)\nconst defaultTheme = 'dark';  // type: 'dark' (literal)\n// defaultTheme = 'light';    // ✗ Error - can't reassign const\n\n// const object: properties are still mutable\nconst settings = {\n  theme: 'dark',\n  fontSize: 16\n};\nsettings.theme = 'light';     // ✓ OK - property is mutable\nsettings.fontSize = 18;       // ✓ OK\n// settings = { theme: 'system', fontSize: 14 }; // ✗ Can't reassign\n\n// as const: everything becomes readonly literals\nconst strictSettings = {\n  theme: 'dark',\n  fontSize: 16\n} as const;\n// strictSettings.theme = 'light';   // ✗ Error - readonly\n// strictSettings.fontSize = 18;     // ✗ Error - readonly\n// Type: { readonly theme: 'dark'; readonly fontSize: 16 }",
+      "explanation": "'const' makes the variable immutable, 'as const' makes the entire structure deeply immutable with literal types."
+    },
+    {
+      "title": "Array Method Contextual Typing",
+      "description": "Callback parameters are inferred from array type",
+      "code": "const numbers = [1, 2, 3, 4, 5];\nconst names = ['Alice', 'Bob', 'Charlie'];\n\n// 'n' is automatically inferred as number\nconst doubled = numbers.map(n => n * 2);\n// doubled: number[]\n\n// 'n' inferred as string, includes() exists on strings\nconst withA = names.filter(n => n.includes('A'));\n// withA: string[]\n\n// Complex transformation - types flow through\nconst users = [\n  { name: 'Alice', age: 30 },\n  { name: 'Bob', age: 25 }\n];\n\n// 'user' is automatically { name: string; age: number }\nconst userNames = users.map(user => user.name);\n// userNames: string[]\n\nconst adults = users.filter(user => user.age >= 18);\n// adults: { name: string; age: number }[]\n\nconst totalAge = users.reduce((sum, user) => sum + user.age, 0);\n// totalAge: number",
+      "explanation": "TypeScript knows the array element type and infers callback parameter types automatically."
+    },
+    {
+      "title": "Generic Function Inference",
+      "description": "Type parameters inferred from arguments",
+      "code": "// Generic identity function\nfunction identity<T>(value: T): T {\n  return value;\n}\n\n// T is inferred from the argument type\nconst num = identity(42);           // T = number, num: number\nconst str = identity('hello');      // T = string, str: string\nconst arr = identity([1, 2, 3]);    // T = number[], arr: number[]\n\n// No need to write: identity<number>(42) - TypeScript figures it out!\n\n// Generic array function\nfunction first<T>(arr: T[]): T | undefined {\n  return arr[0];\n}\n\nconst firstNum = first([10, 20, 30]);    // T = number, result: number | undefined\nconst firstStr = first(['a', 'b']);       // T = string, result: string | undefined\n\n// Multiple type parameters\nfunction pair<T, U>(first: T, second: U): [T, U] {\n  return [first, second];\n}\n\nconst result = pair('name', 42);  // T = string, U = number\n// result: [string, number]",
+      "explanation": "Generic functions infer type parameters from the arguments you pass."
+    },
+    {
+      "title": "When Inference Needs Help",
+      "description": "Cases where explicit types are required",
+      "code": "// ❌ Empty array - infers as any[]\nconst items = [];             // any[] - not helpful!\n\n// ✅ Explicit type for empty array\nconst items: string[] = [];   // Now TypeScript knows\n\n// ❌ Null initialization - infers literal null\nlet user = null;              // type: null (too narrow)\n\n// ✅ Union type for nullable values\nlet user: { name: string } | null = null;\nuser = { name: 'Alice' };     // ✓ Works now\n\n// ❌ Function parameters can't be inferred\n// function greet(name) { }   // Error: 'name' implicitly has 'any' type\n\n// ✅ Always type function parameters\nfunction greet(name: string): string {\n  return `Hello, ${name}!`;\n}\n\n// ❌ Too broad inference\nlet status = 'active';        // type: string (allows any string)\n\n// ✅ Literal union for specific values\ntype Status = 'active' | 'inactive' | 'pending';\nlet status: Status = 'active'; // Only these three values allowed",
+      "explanation": "Add explicit types when inference gives you 'any', 'null', or types that are too broad."
+    },
+    {
+      "title": "Real-World Inference Example",
+      "description": "Complete example showing inference in a typical scenario",
+      "code": "// Product catalog with inference\nconst products = [\n  { id: 1, name: 'Laptop', price: 999, category: 'electronics' },\n  { id: 2, name: 'Chair', price: 199, category: 'furniture' },\n  { id: 3, name: 'Headphones', price: 149, category: 'electronics' }\n];\n// Inferred: { id: number; name: string; price: number; category: string }[]\n\n// All these types are inferred automatically:\nconst electronics = products.filter(p => p.category === 'electronics');\nconst productNames = products.map(p => p.name);\nconst totalValue = products.reduce((sum, p) => sum + p.price, 0);\nconst cheapest = products.reduce((min, p) => p.price < min.price ? p : min);\n\n// Function with mostly inferred types\nfunction getProductsByCategory(category: string) {\n  const filtered = products.filter(p => p.category === category);\n  const sorted = filtered.sort((a, b) => a.price - b.price);\n  return sorted;\n}\n\n// Return type inferred as the same type as products array elements\nconst furnitureProducts = getProductsByCategory('furniture');\nconsole.log(furnitureProducts[0]?.name); // ✓ TypeScript knows .name exists",
+      "explanation": "In real code, most types are inferred from data flow. Only add explicit types where needed."
+    }
+  ]
+}

@@ -1,27 +1,20 @@
 import { useState } from 'react';
 import Home from './pages/Home';
-import Cheatsheet from './pages/Cheatsheet';
 import Navigation from './components/Navigation.tsx';
 import Details from './pages/Details';
-import Examples from './pages/Examples';
 import Lessons from './pages/Lessons';
 
 export default function TypeScriptCheatsheet() {
   const [activeTab, setActiveTab] = useState('home');
-  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({});
 
   const renderPage = () => {
     switch (activeTab) {
       case 'home':
         return <Home />;
-      case 'cheatsheet':
-        return <Cheatsheet expandedSections={expandedSections} setExpandedSections={setExpandedSections} />;
       case 'lessons':
         return <Lessons />;
       case 'details':
         return <Details />;
-      case 'examples':
-        return <Examples />;
       default:
         return <Home />;
     }
