@@ -64,7 +64,8 @@ qa_notes/
 - **Status Badges**: ✓ for complete topics, "Soon" for planned
 - **Mobile Responsive**: Accordion menu with all topics listed
 - **Sticky Header**: Navigation stays at top during scroll
-- **3 Main Pages**: Home, Topics (via mega menu), Details
+- **Dynamic Links**: External resource links loaded from JSON with tooltips
+- **3 Main Pages**: Home, Topics (via mega menu), Links
 
 ### 2. Multi-Topic System
 **Location**: `src/pages/Lessons.tsx` + `src/data/[topic]/*.json`
@@ -98,13 +99,21 @@ qa_notes/
       "title": "Section Title",
       "content": "Main explanation text",
       "analogy": "Real-world comparison for clarity",
-      "example": {
-        "code": "TypeScript code example",
-        "explanation": "What the code does"
-      },
-      "examples": [...],  // Multiple examples
-      "keyPoints": [...],  // Bullet points
-      "benefits": [...]   // Why it matters
+      "example": {...},       // Single example object
+      "examples": [...],       // Multiple examples array
+      "keyPoints": [...],      // Bullet points
+      "benefits": [...],       // Why it matters
+      "whenToUse": "...",     // String or array of use cases
+      "problem": {...},        // Problem/solution pattern
+      "solution": {...},       // Solution with benefits
+      "practices": [...],      // Best practices array
+      "mistakes": [...],       // Common mistakes with fixes
+      "quick_ref": [...],      // Quick reference items (syntax + desc)
+      "tips": [...],           // Quick tips array
+      "shortcuts": [...],      // Keyboard shortcuts
+      "commands": [...],       // CLI commands
+      "resources": [...],      // External links
+      "note": "..."           // Important note
     }
   ]
 }
@@ -112,16 +121,83 @@ qa_notes/
 
 **Lesson Loading Pattern**:
 ```typescript
-// Must use explicit switch cases due to Vite limitations
-switch (file) {
-  case 'getting-started.json':
-    content = await import('../data/lessons/getting-started.json');
-    break;
-  // ... 15 more cases
+// Using fetch API to avoid Vite dynamic import issues
+const fetchJsonFile = async (path: string) => {
+  const response = await fetch(path);
+  if (!response.ok) throw new Error(`Failed to load ${path}`);
+  return { default: await response.json() };
+};
+
+// Topic-based imports map
+const LESSON_IMPORTS: Record<string, () => Promise<any>> = {
+  'getting-started.json': () => fetchJsonFile('/src/data/typescript/lessons/getting-started.json'),
+  // ... 15 more entries
+};
+```
+
+### 3. Error Handling System
+**Location**: `src/utils/errorHandler.ts` + `src/components/ErrorDisplay.tsx`
+
+**Centralized Error Management**:
+- **ErrorHandler**: Main error handling class with sync and async support
+- **ErrorLogger**: Consistent logging with context tracking
+- **AppError**: Custom error class with types and metadata
+- **safeFetch**: Wrapped fetch with automatic retries
+- **loadJsonFile**: JSON loader with validation support
+
+**Error Types**:
+- `NETWORK` - Connection and HTTP errors
+- `PARSE` - JSON parsing failures
+- `VALIDATION` - Data validation errors
+- `RENDER` - React component rendering errors
+- `NOT_FOUND` - Missing resources
+- `UNKNOWN` - Unexpected errors
+
+**Features**:
+- Automatic retry logic for network failures (up to 3 attempts)
+- Graceful error display with retry buttons
+- Detailed console logging with stack traces
+- User-friendly error messages with icons
+- Error context tracking for debugging
+- Compact and full error display modes
+
+**Error Boundary Pattern**:
+```typescript
+try {
+  return (<div>...content...</div>);
+} catch (err) {
+  const error = err instanceof AppError ? err : new AppError(
+    err instanceof Error ? err.message : String(err),
+    ErrorType.RENDER,
+    { contentType: 'lesson' }
+  );
+  return <ErrorDisplay error={error} compact />;
 }
 ```
 
-### 3. Cheatsheet System
+**Usage Example**:
+```typescript
+// Async with retry
+const { data, error } = await ErrorHandler.handleWithRetry(
+  () => fetch('/api/data'),
+  'ComponentName',
+  3 // max retries
+);
+
+// JSON loading with validation
+const { data, error } = await loadJsonFile('/path/to/file.json', (data) => {
+  return data.hasOwnProperty('id') && data.hasOwnProperty('title');
+});
+```
+
+**Benefits**:
+- App never crashes - always shows error UI
+- Consistent error experience across all components
+- Easy to add error handling to new features
+- Automatic logging for debugging
+- Retry mechanism improves reliability
+
+### 4. Cheatsheet System
 **Location**: `src/pages/Cheatsheet.tsx` + `src/sections/*.tsx` + `src/data/cheatsheet/*.json`
 
 **Features**:
@@ -137,7 +213,7 @@ switch (file) {
 3. Sections use `ExpandableSection` wrapper for collapse functionality
 4. State managed in App.tsx: `expandedSections` object
 
-### 4. Design System
+### 5. Design System
 
 **Color Palette**:
 - **Backgrounds**: slate-950, slate-900, slate-850, slate-800
@@ -160,12 +236,36 @@ switch (file) {
                 hover:shadow-blue-500/10 transition-all duration-300">
 ```
 
-### 5. Responsive Design
+### 6. Responsive Design
 - **Desktop**: Full navigation, all features visible
 - **Tablet**: Adjusted spacing and layout
 - **Mobile**: Hamburger menu, stacked layout, simplified navigation
 
 ## Data Architecture
+
+### Dynamic Links System
+**Location**: `src/data/links/links.json`
+
+**Purpose**: Centralized external resource links with tooltips
+
+**Structure**:
+```json
+{
+  "links": [
+    {
+      "name": "TypeScript Handbook",
+      "url": "https://www.typescriptlang.org/docs/handbook/",
+      "tooltip": "Official TypeScript documentation and guides"
+    }
+  ]
+}
+```
+
+**Features**:
+- Add links by editing JSON only (no code changes)
+- Tooltips on hover for context
+- Opens in new tab with security attributes
+- Styled dropdown in navigation
 
 ### 16 Core Topics
 All content (cheatsheet + lessons) covers these topics in order:
@@ -428,9 +528,11 @@ Port 5173 is in use, trying another one...
 - Reload window: Cmd+Shift+P → "Developer: Reload Window"
 
 **Lesson not loading**
-- Check filename matches exactly in switch statement
+- Error boundaries will show detailed error message in red box
+- Check browser console for detailed error with stack trace
 - Verify JSON is valid (no trailing commas, proper quotes)
-- Check browser console for detailed error
+- Check that all field types used in JSON are supported by renderer
+- Ensure arrays are actually arrays (use Array.isArray checks)
 
 **Styles not applying**
 - Verify Tailwind CDN link in `index.html`
@@ -490,14 +592,11 @@ refactor: Simplify lesson loading switch statement
 10. **Certificates**: Completion certificates
 
 ### Technical Debt
-- Add proper routing (React Router or TanStack Router)
 - Migrate from CDN Tailwind to PostCSS
-- Add proper testing suite
-- Implement proper state management (Zustand/Context)
-- Add error boundaries
-- Add loading states
-- Implement skeleton screens
-- Add proper accessibility (ARIA labels, keyboard nav)
+- Add proper testing suite (unit tests with Vitest, E2E with Playwright)
+- Implement proper state management (Zustand/Context for global state)
+- Add loading states with skeleton screens
+- Add proper accessibility (ARIA labels, keyboard navigation, screen reader support)
 
 ## For LLM Context
 
@@ -540,6 +639,18 @@ refactor: Simplify lesson loading switch statement
 ---
 
 **Project Status**: ✅ Production Ready  
-**Last Updated**: December 23, 2025  
-**Version**: 1.0.0  
+**Last Updated**: December 24, 2025  
+**Version**: 2.0.0  
 **Maintainer**: Learning Platform Team
+
+**Recent Updates**:
+- ✅ **Centralized Error Handling System** - ErrorHandler library with retry logic
+- ✅ **ErrorDisplay Component** - Reusable error UI with compact and full modes
+- ✅ **Automatic Retry Mechanism** - Network failures retry up to 3 times
+- ✅ **Error Boundaries** - All render functions wrapped with try-catch
+- ✅ **Graceful Degradation** - App continues working when sections fail
+- ✅ **Comprehensive Logging** - Detailed error tracking with context
+- ✅ **User-Friendly Messages** - Categorized errors with helpful icons
+- ✅ **JSON Loading System** - Centralized loadJsonFile with validation
+- ✅ **Navigation Error Handling** - Links load with fallback on failure
+- ✅ **20+ JSON Field Types Support** - quick_ref, tips, shortcuts, commands, etc.

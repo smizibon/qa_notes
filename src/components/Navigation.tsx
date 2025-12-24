@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Menu, X, Home, FileCode, ExternalLink, GraduationCap, BookOpen, Code, Smartphone, GitBranch, Container, Workflow, Brain, ClipboardCheck } from 'lucide-react';
-import linksData from '../data/links/links.json';
+import { loadJsonFile, ErrorHandler } from '../utils/errorHandler';
 
 interface NavigationProps {
   activeTab: string;
@@ -8,9 +8,33 @@ interface NavigationProps {
   setSelectedTopic: (topic: string) => void;
 }
 
+interface Link {
+  name: string;
+  url: string;
+  tooltip: string;
+}
+
 export default function Navigation({ activeTab, setActiveTab, setSelectedTopic }: NavigationProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isTopicsOpen, setIsTopicsOpen] = useState(false);
+  const [links, setLinks] = useState<Link[]>([]);
+
+  // Load links from JSON with error handling
+  useEffect(() => {
+    const loadLinks = async () => {
+      const { data, error } = await loadJsonFile<{ links: Link[] }>('/src/data/links/links.json');
+      if (data && data.links) {
+        setLinks(data.links);
+      } else if (error) {
+        console.error('Failed to load links:', error);
+        // Provide fallback links
+        setLinks([
+          { name: 'TypeScript Docs', url: 'https://www.typescriptlang.org/', tooltip: 'Official TypeScript documentation' }
+        ]);
+      }
+    };
+    loadLinks();
+  }, []);
 
   const topics = [
     { id: 'typescript', name: 'TypeScript', icon: FileCode, status: 'complete', color: 'blue' },
@@ -23,9 +47,6 @@ export default function Navigation({ activeTab, setActiveTab, setSelectedTopic }
     { id: 'n8n', name: 'N8N', icon: Workflow, status: 'planned', color: 'red' },
     { id: 'llm-testing', name: 'LLM Testing', icon: Brain, status: 'planned', color: 'violet' },
   ];
-
-  // Load links from JSON
-  const links = linksData.links;
 
   return (
     <nav className="bg-slate-800/70 backdrop-blur-xl shadow-2xl mb-8 rounded-2xl border border-slate-700/50 sticky top-4 z-50">

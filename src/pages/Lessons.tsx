@@ -5,11 +5,11 @@ import {
   Circle, 
   FileCode, 
   Code2, 
-  GraduationCap,
-  AlertCircle,
-  RefreshCw
+  GraduationCap
 } from 'lucide-react';
 import CodeBlock from '../components/CodeBlock';
+import ErrorDisplay from '../components/ErrorDisplay';
+import { ErrorHandler, ErrorType, AppError, loadJsonFile } from '../utils/errorHandler';
 
 // =============================================================================
 // Types & Configuration
@@ -165,88 +165,63 @@ const LESSONS: LessonMetadata[] = [
 // Import Maps for Dynamic Loading
 // =============================================================================
 
-// Simple fetch-based loader - no Vite imports needed
-const fetchJsonFile = async (path: string) => {
-  const response = await fetch(path);
-  if (!response.ok) {
-    throw new Error(`Failed to load ${path}: ${response.statusText}`);
-  }
-  return { default: await response.json() };
-};
-
-// Topic-specific import maps
-const TOPIC_IMPORTS: Record<string, {
-  lessons: Record<string, () => Promise<any>>;
-  cheatsheet: Record<string, () => Promise<any>>;
-  examples: Record<string, () => Promise<any>>;
-}> = {
-  typescript: {
-    lessons: {},
-    cheatsheet: {},
-    examples: {}
-  }
-};
-
-// TypeScript Lesson Imports - using direct fetch
+// TypeScript Lesson Imports - using centralized error handling
 const LESSON_IMPORTS: Record<string, () => Promise<any>> = {
-  'getting-started.json': () => fetchJsonFile('/src/data/typescript/lessons/getting-started.json'),
-  'basic-types.json': () => fetchJsonFile('/src/data/typescript/lessons/basic-types.json'),
-  'type-inference.json': () => fetchJsonFile('/src/data/typescript/lessons/type-inference.json'),
-  'functions.json': () => fetchJsonFile('/src/data/typescript/lessons/functions.json'),
-  'interfaces.json': () => fetchJsonFile('/src/data/typescript/lessons/interfaces.json'),
-  'type-aliases.json': () => fetchJsonFile('/src/data/typescript/lessons/type-aliases.json'),
-  'classes.json': () => fetchJsonFile('/src/data/typescript/lessons/classes.json'),
-  'generics.json': () => fetchJsonFile('/src/data/typescript/lessons/generics.json'),
-  'enums.json': () => fetchJsonFile('/src/data/typescript/lessons/enums.json'),
-  'type-guards.json': () => fetchJsonFile('/src/data/typescript/lessons/type-guards.json'),
-  'utility-types.json': () => fetchJsonFile('/src/data/typescript/lessons/utility-types.json'),
-  'advanced-patterns.json': () => fetchJsonFile('/src/data/typescript/lessons/advanced-patterns.json'),
-  'tsconfig-lesson.json': () => fetchJsonFile('/src/data/typescript/lessons/tsconfig-lesson.json'),
-  'common-patterns.json': () => fetchJsonFile('/src/data/typescript/lessons/common-patterns.json'),
-  'common-errors.json': () => fetchJsonFile('/src/data/typescript/lessons/common-errors.json'),
-  'quick-reference.json': () => fetchJsonFile('/src/data/typescript/lessons/quick-reference.json'),
+  'getting-started.json': () => loadJsonFile('/src/data/typescript/lessons/getting-started.json'),
+  'basic-types.json': () => loadJsonFile('/src/data/typescript/lessons/basic-types.json'),
+  'type-inference.json': () => loadJsonFile('/src/data/typescript/lessons/type-inference.json'),
+  'functions.json': () => loadJsonFile('/src/data/typescript/lessons/functions.json'),
+  'interfaces.json': () => loadJsonFile('/src/data/typescript/lessons/interfaces.json'),
+  'type-aliases.json': () => loadJsonFile('/src/data/typescript/lessons/type-aliases.json'),
+  'classes.json': () => loadJsonFile('/src/data/typescript/lessons/classes.json'),
+  'generics.json': () => loadJsonFile('/src/data/typescript/lessons/generics.json'),
+  'enums.json': () => loadJsonFile('/src/data/typescript/lessons/enums.json'),
+  'type-guards.json': () => loadJsonFile('/src/data/typescript/lessons/type-guards.json'),
+  'utility-types.json': () => loadJsonFile('/src/data/typescript/lessons/utility-types.json'),
+  'advanced-patterns.json': () => loadJsonFile('/src/data/typescript/lessons/advanced-patterns.json'),
+  'tsconfig-lesson.json': () => loadJsonFile('/src/data/typescript/lessons/tsconfig-lesson.json'),
+  'common-patterns.json': () => loadJsonFile('/src/data/typescript/lessons/common-patterns.json'),
+  'common-errors.json': () => loadJsonFile('/src/data/typescript/lessons/common-errors.json'),
+  'quick-reference.json': () => loadJsonFile('/src/data/typescript/lessons/quick-reference.json'),
 };
 
 const CHEATSHEET_IMPORTS: Record<string, () => Promise<any>> = {
-  'getting-started.json': () => fetchJsonFile('/src/data/typescript/cheatsheet/getting-started.json'),
-  'basic-types.json': () => fetchJsonFile('/src/data/typescript/cheatsheet/basic-types.json'),
-  'type-inference.json': () => fetchJsonFile('/src/data/typescript/cheatsheet/type-inference.json'),
-  'functions.json': () => fetchJsonFile('/src/data/typescript/cheatsheet/functions.json'),
-  'interfaces.json': () => fetchJsonFile('/src/data/typescript/cheatsheet/interfaces.json'),
-  'type-aliases.json': () => fetchJsonFile('/src/data/typescript/cheatsheet/type-aliases.json'),
-  'classes.json': () => fetchJsonFile('/src/data/typescript/cheatsheet/classes.json'),
-  'generics.json': () => fetchJsonFile('/src/data/typescript/cheatsheet/generics.json'),
-  'enums.json': () => fetchJsonFile('/src/data/typescript/cheatsheet/enums.json'),
-  'type-guards.json': () => fetchJsonFile('/src/data/typescript/cheatsheet/type-guards.json'),
-  'utility-types.json': () => fetchJsonFile('/src/data/typescript/cheatsheet/utility-types.json'),
-  'advanced-patterns.json': () => fetchJsonFile('/src/data/typescript/cheatsheet/advanced-patterns.json'),
-  'tsconfig-section.json': () => fetchJsonFile('/src/data/typescript/cheatsheet/tsconfig-section.json'),
-  'common-patterns.json': () => fetchJsonFile('/src/data/typescript/cheatsheet/common-patterns.json'),
-  'common-errors.json': () => fetchJsonFile('/src/data/typescript/cheatsheet/common-errors.json'),
-  'quick-reference.json': () => fetchJsonFile('/src/data/typescript/cheatsheet/quick-reference.json'),
+  'getting-started.json': () => loadJsonFile('/src/data/typescript/cheatsheet/getting-started.json'),
+  'basic-types.json': () => loadJsonFile('/src/data/typescript/cheatsheet/basic-types.json'),
+  'type-inference.json': () => loadJsonFile('/src/data/typescript/cheatsheet/type-inference.json'),
+  'functions.json': () => loadJsonFile('/src/data/typescript/cheatsheet/functions.json'),
+  'interfaces.json': () => loadJsonFile('/src/data/typescript/cheatsheet/interfaces.json'),
+  'type-aliases.json': () => loadJsonFile('/src/data/typescript/cheatsheet/type-aliases.json'),
+  'classes.json': () => loadJsonFile('/src/data/typescript/cheatsheet/classes.json'),
+  'generics.json': () => loadJsonFile('/src/data/typescript/cheatsheet/generics.json'),
+  'enums.json': () => loadJsonFile('/src/data/typescript/cheatsheet/enums.json'),
+  'type-guards.json': () => loadJsonFile('/src/data/typescript/cheatsheet/type-guards.json'),
+  'utility-types.json': () => loadJsonFile('/src/data/typescript/cheatsheet/utility-types.json'),
+  'advanced-patterns.json': () => loadJsonFile('/src/data/typescript/cheatsheet/advanced-patterns.json'),
+  'tsconfig-section.json': () => loadJsonFile('/src/data/typescript/cheatsheet/tsconfig-section.json'),
+  'common-patterns.json': () => loadJsonFile('/src/data/typescript/cheatsheet/common-patterns.json'),
+  'common-errors.json': () => loadJsonFile('/src/data/typescript/cheatsheet/common-errors.json'),
+  'quick-reference.json': () => loadJsonFile('/src/data/typescript/cheatsheet/quick-reference.json'),
 };
 
 const EXAMPLES_IMPORTS: Record<string, () => Promise<any>> = {
-  'getting-started.json': () => fetchJsonFile('/src/data/typescript/examples/getting-started.json'),
-  'basic-types.json': () => fetchJsonFile('/src/data/typescript/examples/basic-types.json'),
-  'type-inference.json': () => fetchJsonFile('/src/data/typescript/examples/type-inference.json'),
-  'functions.json': () => fetchJsonFile('/src/data/typescript/examples/functions.json'),
-  'interfaces.json': () => fetchJsonFile('/src/data/typescript/examples/interfaces.json'),
-  'type-aliases.json': () => fetchJsonFile('/src/data/typescript/examples/type-aliases.json'),
-  'classes.json': () => fetchJsonFile('/src/data/typescript/examples/classes.json'),
-  'generics.json': () => fetchJsonFile('/src/data/typescript/examples/generics.json'),
-  'enums.json': () => fetchJsonFile('/src/data/typescript/examples/enums.json'),
-  'type-guards.json': () => fetchJsonFile('/src/data/typescript/examples/type-guards.json'),
-  'utility-types.json': () => fetchJsonFile('/src/data/typescript/examples/utility-types.json'),
-  'advanced-patterns.json': () => fetchJsonFile('/src/data/typescript/examples/advanced-patterns.json'),
-  'tsconfig-example.json': () => fetchJsonFile('/src/data/typescript/examples/tsconfig-example.json'),
-  'common-patterns.json': () => fetchJsonFile('/src/data/typescript/examples/common-patterns.json'),
-  'common-errors.json': () => fetchJsonFile('/src/data/typescript/examples/common-errors.json'),
-  'quick-reference.json': () => fetchJsonFile('/src/data/typescript/examples/quick-reference.json'),
-};// Populate the topic imports map for TypeScript
-TOPIC_IMPORTS.typescript.lessons = LESSON_IMPORTS;
-TOPIC_IMPORTS.typescript.cheatsheet = CHEATSHEET_IMPORTS;
-TOPIC_IMPORTS.typescript.examples = EXAMPLES_IMPORTS;
+  'getting-started.json': () => loadJsonFile('/src/data/typescript/examples/getting-started.json'),
+  'basic-types.json': () => loadJsonFile('/src/data/typescript/examples/basic-types.json'),
+  'type-inference.json': () => loadJsonFile('/src/data/typescript/examples/type-inference.json'),
+  'functions.json': () => loadJsonFile('/src/data/typescript/examples/functions.json'),
+  'interfaces.json': () => loadJsonFile('/src/data/typescript/examples/interfaces.json'),
+  'type-aliases.json': () => loadJsonFile('/src/data/typescript/examples/type-aliases.json'),
+  'classes.json': () => loadJsonFile('/src/data/typescript/examples/classes.json'),
+  'generics.json': () => loadJsonFile('/src/data/typescript/examples/generics.json'),
+  'enums.json': () => loadJsonFile('/src/data/typescript/examples/enums.json'),
+  'type-guards.json': () => loadJsonFile('/src/data/typescript/examples/type-guards.json'),
+  'utility-types.json': () => loadJsonFile('/src/data/typescript/examples/utility-types.json'),
+  'advanced-patterns.json': () => loadJsonFile('/src/data/typescript/examples/advanced-patterns.json'),
+  'tsconfig-example.json': () => loadJsonFile('/src/data/typescript/examples/tsconfig-example.json'),
+  'common-patterns.json': () => loadJsonFile('/src/data/typescript/examples/common-patterns.json'),
+  'common-errors.json': () => loadJsonFile('/src/data/typescript/examples/common-errors.json'),
+  'quick-reference.json': () => loadJsonFile('/src/data/typescript/examples/quick-reference.json'),
+};
 
 // =============================================================================
 // Main Component
@@ -259,56 +234,64 @@ const Lessons: React.FC<LessonsProps> = ({ selectedTopic }) => {
   const [cheatsheetContent, setCheatsheetContent] = useState<any>(null);
   const [examplesContent, setExamplesContent] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<AppError | null>(null);
   const [completedLessons, setCompletedLessons] = useState<Set<string>>(new Set());
 
   const loadAllContent = async (lesson: LessonMetadata) => {
-    console.log('[Lessons] Loading content for topic:', selectedTopic, 'lesson:', lesson.id);
     setSelectedLesson(lesson);
     setActiveTab('lesson');
     setIsLoading(true);
     setError(null);
 
     try {
-      // Get import maps for the selected topic
-      const topicImports = TOPIC_IMPORTS[selectedTopic];
-      
-      if (!topicImports) {
-        throw new Error(`No content available for topic: ${selectedTopic}`);
-      }
-
       // Validate imports exist
-      if (!topicImports.lessons[lesson.lessonFile]) {
-        throw new Error('Lesson file not found: ' + lesson.lessonFile);
+      if (!LESSON_IMPORTS[lesson.lessonFile]) {
+        throw new AppError(
+          `Lesson file not found: ${lesson.lessonFile}`,
+          ErrorType.NOT_FOUND,
+          { lesson: lesson.id }
+        );
       }
-      if (!topicImports.cheatsheet[lesson.cheatsheetFile]) {
-        throw new Error('Cheatsheet file not found: ' + lesson.cheatsheetFile);
+      if (!CHEATSHEET_IMPORTS[lesson.cheatsheetFile]) {
+        throw new AppError(
+          `Cheatsheet file not found: ${lesson.cheatsheetFile}`,
+          ErrorType.NOT_FOUND,
+          { lesson: lesson.id }
+        );
       }
-      if (!topicImports.examples[lesson.examplesFile]) {
-        throw new Error('Examples file not found: ' + lesson.examplesFile);
+      if (!EXAMPLES_IMPORTS[lesson.examplesFile]) {
+        throw new AppError(
+          `Examples file not found: ${lesson.examplesFile}`,
+          ErrorType.NOT_FOUND,
+          { lesson: lesson.id }
+        );
       }
 
-      // Load all content in parallel
-      const [lessonMod, cheatsheetMod, examplesMod] = await Promise.all([
-        topicImports.lessons[lesson.lessonFile](),
-        topicImports.cheatsheet[lesson.cheatsheetFile](),
-        topicImports.examples[lesson.examplesFile]()
+      // Load all content in parallel with error handling
+      const [lessonResult, cheatsheetResult, examplesResult] = await Promise.all([
+        LESSON_IMPORTS[lesson.lessonFile](),
+        CHEATSHEET_IMPORTS[lesson.cheatsheetFile](),
+        EXAMPLES_IMPORTS[lesson.examplesFile]()
       ]);
 
-      console.log('[Lessons] Loaded modules for:', lesson.id, {
-        lesson: lessonMod,
-        cheatsheet: cheatsheetMod,
-        examples: examplesMod
-      });
+      // Check for errors
+      if (lessonResult.error) throw lessonResult.error;
+      if (cheatsheetResult.error) throw cheatsheetResult.error;
+      if (examplesResult.error) throw examplesResult.error;
 
-      setLessonContent(lessonMod.default);
-      setCheatsheetContent(cheatsheetMod.default);
-      setExamplesContent(examplesMod.default);
-      console.log('[Lessons] Successfully loaded all content for:', lesson.id);
+      setLessonContent(lessonResult.data);
+      setCheatsheetContent(cheatsheetResult.data);
+      setExamplesContent(examplesResult.data);
     } catch (err: any) {
-      console.error('[Lessons] ERROR loading content:', err);
-      console.error('[Lessons] Error stack:', err.stack);
-      setError(err.message || 'Failed to load content');
+      const appError = err instanceof AppError 
+        ? err 
+        : new AppError(
+            err.message || 'Failed to load content',
+            ErrorType.NETWORK,
+            { lesson: lesson.id }
+          );
+      setError(appError);
+      ErrorHandler.handleSync(() => { throw appError; }, 'Lessons.loadAllContent');
     } finally {
       setIsLoading(false);
     }
@@ -828,13 +811,12 @@ const Lessons: React.FC<LessonsProps> = ({ selectedTopic }) => {
       </div>
     );
     } catch (err) {
-      console.error('[Lessons] Error rendering lesson content:', err);
-      return (
-        <div className="bg-red-500/10 border border-red-500/50 rounded-2xl p-6">
-          <p className="text-red-400 font-semibold mb-2">Error rendering lesson content</p>
-          <p className="text-slate-300 text-sm">{String(err)}</p>
-        </div>
+      const error = err instanceof AppError ? err : new AppError(
+        err instanceof Error ? err.message : String(err),
+        ErrorType.RENDER,
+        { contentType: 'lesson' }
       );
+      return <ErrorDisplay error={error} compact />;
     }
   };
 
@@ -886,13 +868,12 @@ const Lessons: React.FC<LessonsProps> = ({ selectedTopic }) => {
         </div>
       );
     } catch (err) {
-      console.error('[Lessons] Error rendering cheatsheet content:', err);
-      return (
-        <div className="bg-red-500/10 border border-red-500/50 rounded-2xl p-6">
-          <p className="text-red-400 font-semibold mb-2">Error rendering cheatsheet content</p>
-          <p className="text-slate-300 text-sm">{String(err)}</p>
-        </div>
+      const error = err instanceof AppError ? err : new AppError(
+        err instanceof Error ? err.message : String(err),
+        ErrorType.RENDER,
+        { contentType: 'cheatsheet' }
       );
+      return <ErrorDisplay error={error} compact />;
     }
   };
 
@@ -945,13 +926,12 @@ const Lessons: React.FC<LessonsProps> = ({ selectedTopic }) => {
         </div>
       );
     } catch (err) {
-      console.error('[Lessons] Error rendering examples content:', err);
-      return (
-        <div className="bg-red-500/10 border border-red-500/50 rounded-2xl p-6">
-          <p className="text-red-400 font-semibold mb-2">Error rendering examples content</p>
-          <p className="text-slate-300 text-sm">{String(err)}</p>
-        </div>
+      const error = err instanceof AppError ? err : new AppError(
+        err instanceof Error ? err.message : String(err),
+        ErrorType.RENDER,
+        { contentType: 'examples' }
       );
+      return <ErrorDisplay error={error} compact />;
     }
   };
 
@@ -1040,17 +1020,10 @@ const Lessons: React.FC<LessonsProps> = ({ selectedTopic }) => {
                 <p className="text-slate-300 mt-4">Loading...</p>
               </div>
             ) : error ? (
-              <div className="bg-red-900/30 rounded-2xl p-8 border border-red-500/50 text-center">
-                <AlertCircle className="w-12 h-12 text-red-400 mx-auto mb-4" />
-                <h2 className="text-xl font-bold text-red-400 mb-2">Error</h2>
-                <p className="text-red-300 mb-4">{error}</p>
-                <button
-                  onClick={() => selectedLesson && loadAllContent(selectedLesson)}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded-xl"
-                >
-                  <RefreshCw className="w-4 h-4" /> Try Again
-                </button>
-              </div>
+              <ErrorDisplay 
+                error={error} 
+                onRetry={() => selectedLesson && loadAllContent(selectedLesson)}
+              />
             ) : (
               <div className="space-y-6">
                 {/* Header with Tabs */}
