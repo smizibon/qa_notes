@@ -1,61 +1,111 @@
-# Data Directory
+# Data Directory (`data/`)
 
-## 🚨 For LLMs Loading This Content
+**Purpose**: JSON content files for all topics - the content layer with no logic.
 
-**Always use centralized utilities - NEVER raw fetch:**
+**Last Updated**: December 24, 2025  
+**Status**: TypeScript complete (48 files), 8 topics planned
 
-```typescript
-// ✅ CORRECT: loadJsonFile has retry + error handling
-const { data, error } = await loadJsonFile('/src/data/typescript/lessons/lesson.json');
-
-// ❌ WRONG: Raw fetch (no error handling, will crash)
-const response = await fetch('/src/data/...');
-const data = await response.json();
-```
-
-## 🔄 Update This File When Adding Content
-
-**When adding new JSON files or topics**:
-1. Add content files to appropriate directory
-2. Test loading in app - confirm stable
-3. Update this CONTEXT.md:
-   - Document new JSON schemas
-   - Add new field types
-   - Update directory structure diagram
-   - Add validation rules
-4. Commit with updated documentation
-
-**Keeps content documentation in sync with actual files!**
-
-## Purpose
-Contains all JSON content files for lessons, cheatsheets, examples, and configuration. This is the content layer of the application - pure data with no logic.
-
-## Directory Structure
+## 📁 Directory Structure
 
 ```
 data/
-├── links/
-│   └── links.json          # External resource links
+├── typescript/          ✅ COMPLETE (48 files)
+│   ├── lessons/        # 16 tutorial files
+│   ├── cheatsheet/     # 16 quick reference files
+│   ├── examples/       # 16 practical examples
+│   └── README.md       # Topic-specific documentation
 │
-└── typescript/             # ✅ COMPLETE (48 files)
-    ├── lessons/            # 16 detailed tutorial files
-    ├── cheatsheet/         # 16 quick reference files
-    └── examples/           # 16 practical example files
+├── llm-ai/             🚧 IN PROGRESS
+│   └── prompt-engineering/
+│
+├── links/              ✅ COMPLETE
+│   └── links.json      # Categorized external links (9 categories, 42 links)
+│
+├── profile/            ✅ COMPLETE
+│   └── about.json      # About Me page content
+│
+└── [8 other topics]/   🚧 PLANNED
+    ├── playwright/
+    ├── api-testing/
+    ├── docker/
+    ├── cicd/
+    ├── appium/
+    ├── test-cases/
+    ├── n8n/
+    └── (each with lessons/, cheatsheet/, examples/, README.md)
 ```
 
-## Planned Topics (🚧 Not Yet Created)
-- `test-cases/` - QA test case writing
-- `api-testing/` - API testing methodologies
-- `playwright/` - E2E testing with Playwright
-- `appium/` - Mobile app testing
-- `cicd/` - CI/CD pipelines
-- `docker/` - Containerization
-- `n8n/` - Workflow automation
-- `llm-testing/` - LLM application testing
+## 🔑 Key Schemas
+
+### Links (`links/links.json`)
+```json
+{
+  "categories": [
+    {
+      "name": "Category Name",
+      "icon": "LucideIconName",
+      "links": [
+        {
+          "name": "Link Name",
+          "url": "https://...",
+          "tooltip": "Description"
+        }
+      ]
+    }
+  ]
+}
+```
+
+### Lessons/Cheatsheet/Examples
+See individual topic `README.md` files for detailed schemas:
+- `typescript/README.md` - Complete TypeScript schema documentation
+- `llm-ai/README.md` - LLM & AI schema documentation
+
+## 📝 Content Standards
+
+**All topics follow 16-lesson structure**:
+1. Getting Started
+2-4. Basics  
+5-9. Intermediate
+10-13. Advanced
+14. Configuration
+15. Common Patterns/Errors
+16. Quick Reference
+
+**File naming**: kebab-case (e.g., `getting-started.json`)  
+**IDs**: Prefix with type (e.g., `lesson-getting-started`)
+
+## 🛠️ For Content Creation
+
+**Adding new topic**:
+1. Create folder structure: `mkdir -p {topic}/{lessons,cheatsheet,examples}`
+2. Create 16 JSON files in each subfolder
+3. Create `{topic}/README.md` with schema docs
+4. Update `contentLoader.ts` with file array
+5. Update `Lessons.tsx` topic support
+
+**Adding new lesson to existing topic**:
+1. Create JSON in `lessons/`, `cheatsheet/`, `examples/`
+2. Add to file array in `contentLoader.ts`
+3. Test in UI
+
+## ⚠️ Critical Rules
+
+1. **Always use `loadJsonFile()`** - Never raw fetch
+2. **Validate JSON before committing** - Use `jq` or `cat file.json | jq .`
+3. **Keep files under 100KB** - Split if larger
+4. **Maintain schema compatibility** - Add fields, don't remove
+5. **Update topic README.md** - When changing schema
+
+## 📖 Detailed Documentation
+
+- **Individual topic README.md files** - Complete schemas, field definitions, examples
+- **`/src/utils/CONTEXT.md`** - How content is loaded (`loadJsonFile`, `contentLoader.ts`)
+- **`/src/pages/CONTEXT.md`** - How content is rendered (Lessons.tsx, Details.tsx)
 
 ---
 
-## JSON Schema Documentation
+**For complete JSON schema documentation, see the topic-specific README.md files.**
 
 ### 1. Links Configuration (`links/links.json`)
 
