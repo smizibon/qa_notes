@@ -10,6 +10,12 @@ import {
 import CodeBlock from '../components/CodeBlock';
 import ErrorDisplay from '../components/ErrorDisplay';
 import { ErrorHandler, ErrorType, AppError, loadJsonFile } from '../utils/errorHandler';
+import { 
+  createContentImports, 
+  TYPESCRIPT_FILES, 
+  TYPESCRIPT_CHEATSHEET_FILES, 
+  TYPESCRIPT_EXAMPLES_FILES 
+} from '../utils/contentLoader';
 
 // =============================================================================
 // Types & Configuration
@@ -165,63 +171,10 @@ const LESSONS: LessonMetadata[] = [
 // Import Maps for Dynamic Loading
 // =============================================================================
 
-// TypeScript Lesson Imports - using centralized error handling
-const LESSON_IMPORTS: Record<string, () => Promise<any>> = {
-  'getting-started.json': () => loadJsonFile('/src/data/typescript/lessons/getting-started.json'),
-  'basic-types.json': () => loadJsonFile('/src/data/typescript/lessons/basic-types.json'),
-  'type-inference.json': () => loadJsonFile('/src/data/typescript/lessons/type-inference.json'),
-  'functions.json': () => loadJsonFile('/src/data/typescript/lessons/functions.json'),
-  'interfaces.json': () => loadJsonFile('/src/data/typescript/lessons/interfaces.json'),
-  'type-aliases.json': () => loadJsonFile('/src/data/typescript/lessons/type-aliases.json'),
-  'classes.json': () => loadJsonFile('/src/data/typescript/lessons/classes.json'),
-  'generics.json': () => loadJsonFile('/src/data/typescript/lessons/generics.json'),
-  'enums.json': () => loadJsonFile('/src/data/typescript/lessons/enums.json'),
-  'type-guards.json': () => loadJsonFile('/src/data/typescript/lessons/type-guards.json'),
-  'utility-types.json': () => loadJsonFile('/src/data/typescript/lessons/utility-types.json'),
-  'advanced-patterns.json': () => loadJsonFile('/src/data/typescript/lessons/advanced-patterns.json'),
-  'tsconfig-lesson.json': () => loadJsonFile('/src/data/typescript/lessons/tsconfig-lesson.json'),
-  'common-patterns.json': () => loadJsonFile('/src/data/typescript/lessons/common-patterns.json'),
-  'common-errors.json': () => loadJsonFile('/src/data/typescript/lessons/common-errors.json'),
-  'quick-reference.json': () => loadJsonFile('/src/data/typescript/lessons/quick-reference.json'),
-};
-
-const CHEATSHEET_IMPORTS: Record<string, () => Promise<any>> = {
-  'getting-started.json': () => loadJsonFile('/src/data/typescript/cheatsheet/getting-started.json'),
-  'basic-types.json': () => loadJsonFile('/src/data/typescript/cheatsheet/basic-types.json'),
-  'type-inference.json': () => loadJsonFile('/src/data/typescript/cheatsheet/type-inference.json'),
-  'functions.json': () => loadJsonFile('/src/data/typescript/cheatsheet/functions.json'),
-  'interfaces.json': () => loadJsonFile('/src/data/typescript/cheatsheet/interfaces.json'),
-  'type-aliases.json': () => loadJsonFile('/src/data/typescript/cheatsheet/type-aliases.json'),
-  'classes.json': () => loadJsonFile('/src/data/typescript/cheatsheet/classes.json'),
-  'generics.json': () => loadJsonFile('/src/data/typescript/cheatsheet/generics.json'),
-  'enums.json': () => loadJsonFile('/src/data/typescript/cheatsheet/enums.json'),
-  'type-guards.json': () => loadJsonFile('/src/data/typescript/cheatsheet/type-guards.json'),
-  'utility-types.json': () => loadJsonFile('/src/data/typescript/cheatsheet/utility-types.json'),
-  'advanced-patterns.json': () => loadJsonFile('/src/data/typescript/cheatsheet/advanced-patterns.json'),
-  'tsconfig-section.json': () => loadJsonFile('/src/data/typescript/cheatsheet/tsconfig-section.json'),
-  'common-patterns.json': () => loadJsonFile('/src/data/typescript/cheatsheet/common-patterns.json'),
-  'common-errors.json': () => loadJsonFile('/src/data/typescript/cheatsheet/common-errors.json'),
-  'quick-reference.json': () => loadJsonFile('/src/data/typescript/cheatsheet/quick-reference.json'),
-};
-
-const EXAMPLES_IMPORTS: Record<string, () => Promise<any>> = {
-  'getting-started.json': () => loadJsonFile('/src/data/typescript/examples/getting-started.json'),
-  'basic-types.json': () => loadJsonFile('/src/data/typescript/examples/basic-types.json'),
-  'type-inference.json': () => loadJsonFile('/src/data/typescript/examples/type-inference.json'),
-  'functions.json': () => loadJsonFile('/src/data/typescript/examples/functions.json'),
-  'interfaces.json': () => loadJsonFile('/src/data/typescript/examples/interfaces.json'),
-  'type-aliases.json': () => loadJsonFile('/src/data/typescript/examples/type-aliases.json'),
-  'classes.json': () => loadJsonFile('/src/data/typescript/examples/classes.json'),
-  'generics.json': () => loadJsonFile('/src/data/typescript/examples/generics.json'),
-  'enums.json': () => loadJsonFile('/src/data/typescript/examples/enums.json'),
-  'type-guards.json': () => loadJsonFile('/src/data/typescript/examples/type-guards.json'),
-  'utility-types.json': () => loadJsonFile('/src/data/typescript/examples/utility-types.json'),
-  'advanced-patterns.json': () => loadJsonFile('/src/data/typescript/examples/advanced-patterns.json'),
-  'tsconfig-example.json': () => loadJsonFile('/src/data/typescript/examples/tsconfig-example.json'),
-  'common-patterns.json': () => loadJsonFile('/src/data/typescript/examples/common-patterns.json'),
-  'common-errors.json': () => loadJsonFile('/src/data/typescript/examples/common-errors.json'),
-  'quick-reference.json': () => loadJsonFile('/src/data/typescript/examples/quick-reference.json'),
-};
+// TypeScript Content Imports - using reusable contentLoader utility
+const LESSON_IMPORTS = createContentImports('typescript', 'lessons', TYPESCRIPT_FILES);
+const CHEATSHEET_IMPORTS = createContentImports('typescript', 'cheatsheet', TYPESCRIPT_CHEATSHEET_FILES);
+const EXAMPLES_IMPORTS = createContentImports('typescript', 'examples', TYPESCRIPT_EXAMPLES_FILES);
 
 // =============================================================================
 // Main Component
