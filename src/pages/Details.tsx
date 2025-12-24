@@ -1,9 +1,10 @@
 import { Info, Settings, Package, Terminal } from 'lucide-react';
+import { GlassCard } from '../components/GlassCard';
 
 export default function Details() {
   return (
     <div className="space-y-6">
-      <div className="bg-gradient-to-br from-slate-800/70 to-slate-900/70 backdrop-blur-xl border border-slate-700/50 rounded-3xl shadow-2xl p-8 hover:shadow-blue-500/20 transition-all duration-500">
+      <GlassCard variant="primary" padding="lg" className="hover:shadow-blue-500/20 transition-all duration-500">
         <h1 className="text-4xl font-bold bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent mb-6 flex items-center gap-3">
           <div className="relative">
             <Info className="h-10 w-10 text-blue-400 relative z-10" />
@@ -126,7 +127,7 @@ export default function Details() {
             </div>
           </div>
         </section>
-      </div>
+      </GlassCard>
     </div>
   );
 }

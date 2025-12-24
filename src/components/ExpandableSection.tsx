@@ -1,4 +1,5 @@
 import { ChevronDown, ChevronUp } from 'lucide-react';
+import { GlassCard } from './GlassCard';
 
 interface ExpandableSectionProps {
   title: string;
@@ -18,7 +19,7 @@ export default function ExpandableSection({
   const isExpanded = expanded[id];
   
   return (
-    <section className="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-2xl shadow-2xl overflow-hidden transition-all duration-500 hover:shadow-blue-500/30 hover:border-blue-500/50 hover:scale-[1.02] group">
+    <GlassCard variant="secondary" className="p-0 overflow-hidden transition-all duration-500 hover:shadow-blue-500/30 hover:border-blue-500/50 hover:scale-[1.02] group">
       <button
         onClick={() => toggle(id)}
         className="w-full px-6 py-5 flex items-center justify-between bg-gradient-to-r from-slate-800/80 to-slate-900/80 hover:from-slate-750/80 hover:to-slate-800/80 transition-all duration-300 relative overflow-hidden"
@@ -40,6 +41,6 @@ export default function ExpandableSection({
           {children}
         </div>
       )}
-    </section>
+    </GlassCard>
   );
 }

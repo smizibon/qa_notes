@@ -59,6 +59,34 @@ const EXAMPLES_IMPORTS = createContentImports('typescript', 'examples', TYPESCRI
 
 **Keeping this file current ensures LLMs understand page architecture!**
 
+## ✅ COMPLETED: Future Enhancements
+
+### ✅ COMPLETED: Examples.tsx Utility Function Extraction Review (Dec 24, 2025)
+**Status**: Reviewed and determined acceptable as-is  
+**Decision**: Keep functions as demonstration code (not extracted)
+
+**Current State**:
+Examples.tsx contains 4 functions:
+1. ✅ `Button` component (line 59) - **EXPORTED** - Reusable component with TypeScript interface ✓
+2. ✅ `validateForm` (line 111) - NOT exported - Form validation example (intentional)
+3. ✅ `reducer` (line 167) - NOT exported - State management pattern example (intentional)
+4. ✅ `groupBy` (line 219) - NOT exported - Generic utility with TypeScript generics (acceptable)
+
+**Analysis Conclusion**:
+- **Purpose**: Examples.tsx is a demonstration/tutorial page showing TypeScript patterns
+- **Current approach**: Functions serve as educational examples (like a textbook)
+- **Reusability**: Functions ARE generic but kept internal by design
+- **Compliance**: 100% - Follows Ground Rule #2 ("Only Create Functions When Necessary")
+
+**Recommendation Implemented**:
+- ✅ **Keep as-is** - These are intentionally demonstration code
+- ✅ **Future action**: Only extract if functions are needed in actual production code elsewhere
+- ✅ **groupBy candidate**: Extract to `src/utils/array.ts` only when second usage location requires it
+
+**Result**: No changes needed - current implementation is correct and follows all ground rules
+
+---
+
 ## Purpose
 Top-level page components that represent different views/routes in the application. Pages orchestrate data loading, state management, and render child components.
 

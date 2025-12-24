@@ -1,10 +1,11 @@
 import { FileCode, Zap, BookOpen, Code2 } from 'lucide-react';
+import { GlassCard } from '../components/GlassCard';
 
 export default function Home() {
   return (
     <div className="space-y-8">
       {/* Hero Section */}
-      <div className="bg-gradient-to-br from-slate-800/70 to-slate-900/70 backdrop-blur-xl border border-slate-700/50 rounded-3xl shadow-2xl p-12 text-center relative overflow-hidden group hover:shadow-blue-500/30 transition-all duration-500">
+      <GlassCard variant="primary" padding="xl" className="text-center relative overflow-hidden group hover:shadow-blue-500/30 transition-all duration-500">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 via-transparent to-cyan-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
         <div className="relative mx-auto mb-6 w-20 h-20">
           <FileCode className="h-20 w-20 text-blue-400 mx-auto relative z-10" />
@@ -14,14 +15,13 @@ export default function Home() {
           QA Notes
         </h1>
         <p className="text-xl text-gray-300 max-w-2xl mx-auto relative z-10">
-          Your comprehensive guide to mastering TypeScript. From basics to advanced patterns,
           everything you need in one place.
         </p>
-      </div>
+      </GlassCard>
 
       {/* Features */}
       <div className="grid md:grid-cols-3 gap-6">
-        <div className="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-2xl shadow-2xl p-6 hover:shadow-yellow-500/20 hover:border-yellow-500/50 transition-all duration-500 hover:scale-105 group">
+        <GlassCard variant="secondary" padding="md" className="hover:shadow-yellow-500/20 hover:border-yellow-500/50 transition-all duration-500 hover:scale-105 group">
           <div className="relative w-fit mb-4">
             <Zap className="h-12 w-12 text-yellow-400 relative z-10" />
             <div className="absolute inset-0 blur-2xl bg-yellow-400/30 group-hover:bg-yellow-400/50 transition-all duration-500"></div>
@@ -31,9 +31,9 @@ export default function Home() {
             Fast access to TypeScript syntax, types, and patterns. Perfect for quick lookups
             during development.
           </p>
-        </div>
+        </GlassCard>
 
-        <div className="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-2xl shadow-2xl p-6 hover:shadow-green-500/20 hover:border-green-500/50 transition-all duration-500 hover:scale-105 group">
+        <GlassCard variant="secondary" padding="md" className="hover:shadow-green-500/20 hover:border-green-500/50 transition-all duration-500 hover:scale-105 group">
           <div className="relative w-fit mb-4">
             <BookOpen className="h-12 w-12 text-green-400 relative z-10" />
             <div className="absolute inset-0 blur-2xl bg-green-400/30 group-hover:bg-green-400/50 transition-all duration-500"></div>
@@ -42,9 +42,9 @@ export default function Home() {
           <p className="text-gray-300">
             Real-world code examples covering all TypeScript features with detailed explanations.
           </p>
-        </div>
+        </GlassCard>
 
-        <div className="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-2xl shadow-2xl p-6 hover:shadow-purple-500/20 hover:border-purple-500/50 transition-all duration-500 hover:scale-105 group">
+        <GlassCard variant="secondary" padding="md" className="hover:shadow-purple-500/20 hover:border-purple-500/50 transition-all duration-500 hover:scale-105 group">
           <div className="relative w-fit mb-4">
             <Code2 className="h-12 w-12 text-purple-400 relative z-10" />
             <div className="absolute inset-0 blur-2xl bg-purple-400/30 group-hover:bg-purple-400/50 transition-all duration-500"></div>
@@ -53,11 +53,11 @@ export default function Home() {
           <p className="text-gray-300">
             Learn common patterns, avoid pitfalls, and write better TypeScript code.
           </p>
-        </div>
+        </GlassCard>
       </div>
 
       {/* Getting Started */}
-      <div className="bg-gradient-to-br from-slate-800/70 to-slate-900/70 backdrop-blur-xl border border-slate-700/50 rounded-3xl shadow-2xl p-10 hover:shadow-blue-500/20 transition-all duration-500">
+      <GlassCard variant="primary" padding="lg" className="hover:shadow-blue-500/20 transition-all duration-500">
         <h2 className="text-3xl font-bold bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent mb-6">Getting Started</h2>
         <div className="space-y-4 text-gray-300">
           <p>
@@ -77,7 +77,7 @@ export default function Home() {
             compiler options, and project setup.
           </p>
         </div>
-      </div>
+      </GlassCard>
     </div>
   );
 }

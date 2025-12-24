@@ -1,9 +1,10 @@
 import CodeBlock from '../components/CodeBlock';
+import { GlassCard } from '../components/GlassCard';
 
 export default function Examples() {
   return (
         <div className="space-y-6">
-      <div className="bg-gradient-to-br from-slate-800/70 to-slate-900/70 backdrop-blur-xl border border-slate-700/50 rounded-3xl shadow-2xl p-8 hover:shadow-blue-500/20 transition-all duration-500">
+      <GlassCard variant="primary" padding="lg" className="hover:shadow-blue-500/20 transition-all duration-500">
         <h1 className="text-4xl font-bold bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent mb-6">Real-World Examples</h1>
         <p className="text-gray-300 mb-8">
           Practical TypeScript examples that you'll use in everyday development.
@@ -252,7 +253,7 @@ const grouped = groupBy(products, 'category');
             </CodeBlock>
           </div>
         </div>
-      </div>
+      </GlassCard>
     </div>
   );
 }

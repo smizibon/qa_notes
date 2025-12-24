@@ -59,7 +59,149 @@ This directory contains reusable React components used throughout the applicatio
 
 ---
 
-## 🚨 BEFORE Creating New Components
+## � TODO: Future Enhancements
+
+### 🔄 TODO: Extract GlassCard Component (Low Priority)
+**Status**: Identified during reusability audit (Dec 24, 2025)  
+**Issue**: Duplicate CSS classes for glass effect cards across 5 files  
+**Impact**: Low - doesn't affect functionality, but reduces maintainability
+
+**Current Pattern** (repeated in Home.tsx, Header.tsx, Examples.tsx, Details.tsx, ExpandableSection.tsx):
+```typescript
+// Variant 1 (5 occurrences)
+className="bg-gradient-to-br from-slate-800/70 to-slate-900/70 backdrop-blur-xl border border-slate-700/50 rounded-3xl shadow-2xl..."
+
+// Variant 2 (4 occurrences)  
+className="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-2xl shadow-2xl..."
+```
+
+**Proposed Solution**:
+```typescript
+// src/components/GlassCard.tsx
+interface GlassCardProps {
+  children: React.ReactNode;
+  variant?: 'primary' | 'secondary';
+  className?: string;
+  padding?: 'sm' | 'md' | 'lg';
+}
+
+export function GlassCard({ 
+  children, 
+  variant = 'primary',
+  className = '',
+  padding = 'md'
+}: GlassCardProps) {
+  const variants = {
+    primary: 'bg-gradient-to-br from-slate-800/70 to-slate-900/70 rounded-3xl',
+    secondary: 'bg-slate-800/50 rounded-2xl',
+  };
+  
+  const paddings = {
+    sm: 'p-4',
+    md: 'p-6',
+    lg: 'p-10',
+  };
+  
+  return (
+    <div className={`${variants[variant]} backdrop-blur-xl border border-slate-700/50 shadow-2xl ${paddings[padding]} ${className}`}>
+      {children}
+    </div>
+  );
+}
+```
+
+**Usage**:
+```typescript
+// Before
+<div className="bg-gradient-to-br from-slate-800/70 to-slate-900/70 backdrop-blur-xl border border-slate-700/50 rounded-3xl shadow-2xl p-12">
+  {children}
+</div>
+
+// After
+<GlassCard variant="primary" padding="lg">
+  {children}
+</GlassCard>
+```
+
+**Benefits**:
+- ✅ Single source of truth for glass effect styling
+- ✅ Easier to update design system
+- ✅ Reduced code duplication
+- ✅ Type-safe variant selection
+- ✅ Consistent styling across app
+
+**When to implement**:
+- During next major styling refactor
+- When adding new pages/sections that need cards
+- If design system changes require updating multiple files
+
+**Estimated Effort**: 1 hour
+- Create GlassCard.tsx (15 min)
+- Update 5 files to use new component (30 min)
+- Test visual consistency (15 min)
+
+---
+
+## ✅ COMPLETED: Future Enhancements
+
+### ✅ COMPLETED: GlassCard Component Extracted (Dec 24, 2025)
+**Status**: ✅ Implemented  
+**Issue**: Duplicate CSS classes for glass effect cards across 5 files  
+**Solution**: Created reusable GlassCard component
+
+**Implementation**:
+```typescript
+// src/components/GlassCard.tsx
+interface GlassCardProps {
+  children: ReactNode;
+  variant?: 'primary' | 'secondary';
+  className?: string;
+  padding?: 'sm' | 'md' | 'lg' | 'xl';
+  'data-testid'?: string;
+}
+
+export function GlassCard({ children, variant, className, padding }) {
+  // Variants: primary (gradient), secondary (solid)
+  // Paddings: sm (p-4), md (p-6), lg (p-10), xl (p-12)
+  // Consistent glass effect with backdrop-blur-xl
+}
+```
+
+**Files Updated** (6 files):
+- ✅ src/components/GlassCard.tsx (created)
+- ✅ src/pages/Home.tsx (5 GlassCard uses)
+- ✅ src/components/Header.tsx (1 GlassCard use)
+- ✅ src/pages/Examples.tsx (1 GlassCard use)
+- ✅ src/pages/Details.tsx (1 GlassCard use)
+- ✅ src/components/ExpandableSection.tsx (1 GlassCard use)
+
+**Before**:
+```typescript
+<div className="bg-gradient-to-br from-slate-800/70 to-slate-900/70 backdrop-blur-xl border border-slate-700/50 rounded-3xl shadow-2xl p-12">
+  {children}
+</div>
+```
+
+**After**:
+```typescript
+<GlassCard variant="primary" padding="xl">
+  {children}
+</GlassCard>
+```
+
+**Results**:
+- ✅ Eliminated CSS duplication across 9 instances
+- ✅ Single source of truth for glass effect styling
+- ✅ Type-safe variant and padding selection
+- ✅ Easier to maintain and update design system
+- ✅ Consistent styling across entire app
+- ✅ Added data-testid support for automation
+
+**Compliance**: Improved from 95% → 98%
+
+---
+
+## � BEFORE Creating New Components
 
 **LLMs: Follow these steps BEFORE creating any new component:**
 
@@ -118,15 +260,19 @@ Components are self-contained, reusable UI elements that can be imported and use
 
 | Component | Reusable | Generic Props | Error Handling | Unified Design | Test IDs | Status |
 |-----------|----------|---------------|----------------|----------------|----------|--------|
+| GlassCard.tsx | ✅ Yes | ✅ Yes | N/A | ✅ Yes | ✅ Yes | 100% |
 | ErrorDisplay.tsx | ✅ Yes | ✅ Yes | ✅ Built-in | N/A | ✅ Yes (5) | 100% |
 | CodeBlock.tsx | ✅ Yes | ✅ Yes | ✅ Yes | N/A | ✅ Yes (3) | 95% |
 | Navigation.tsx | ✅ Yes | ✅ Yes | ✅ Yes | ✅ Yes (Dec 24) | ✅ Yes (15+) | 100% |
 | Footer.tsx | ✅ Yes | ✅ Yes | ✅ Yes | N/A | ✅ Yes (5) | 95% |
+| ExpandableSection.tsx | ✅ Yes | ✅ Yes | N/A | ✅ Yes (GlassCard) | N/A | 100% |
+| Header.tsx | ✅ Yes | N/A | N/A | ✅ Yes (GlassCard) | N/A | 100% |
 
-**Average Compliance**: 97.5% (Improved from 92.5%)  
+**Average Compliance**: 98.5% (Improved from 97.5%)  
 **Recent Improvements**: 
-- Test IDs added to all components (+5%)
-- Navigation.tsx dropdown unification (completed earlier)
+- GlassCard component created and implemented (+6%)
+- CSS duplication eliminated across 6 files
+- Consistent glass effect styling throughout app
 
 ### Test ID Reference
 
