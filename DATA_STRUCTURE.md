@@ -118,7 +118,7 @@ src/data/
 - Error handling and scheduling
 - Testing workflows
 
-### 9. LLM Testing 🚧
+### 9. LLM & AI 🚧
 - LLM and AI fundamentals
 - Prompt engineering techniques
 - Testing model outputs
@@ -187,7 +187,7 @@ Each topic follows the same structure:
 4. **Playwright/Appium**: Build comprehensive automation guides
 5. **CI/CD & Docker**: Cover DevOps essentials for QA engineers
 6. **N8N**: Workflow automation for testing scenarios
-7. **LLM Testing**: Emerging AI testing techniques
+7. **LLM & AI**: Emerging AI testing and prompt engineering techniques
 
 ## Usage
 

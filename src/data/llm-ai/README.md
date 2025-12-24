@@ -1,4 +1,4 @@
-# LLM Testing
+# LLM & AI
 
 Content for testing AI/LLM applications and prompt engineering.
 

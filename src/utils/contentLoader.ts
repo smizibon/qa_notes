@@ -106,7 +106,7 @@ export const TYPESCRIPT_EXAMPLES_FILES = [
 ];
 
 /**
- * Prompt Engineering files for LLM Testing topic
+ * Prompt Engineering files for LLM & AI topic
  * All three content types use the same file names
  */
 export const PROMPT_ENGINEERING_FILES = [

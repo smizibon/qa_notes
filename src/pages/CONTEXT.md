@@ -322,18 +322,48 @@ All wrapped in try-catch with `ErrorDisplay`:
 - Special: `quick_ref`, `tips`, `shortcuts`, `commands`, `resources`
 - Blocks: `problem`, `solution`, `analogy`, `note`, `warning`
 
-### **`Home.tsx`**
-**Purpose**: Landing page with overview and call-to-action
+### **`Home.tsx`** (350+ lines)
+**Purpose**: Landing page showcasing QA Notes platform vision and features
 
-**Features**:
-- Hero section with gradient title
-- Feature showcase
-- Topic overview cards
-- Getting started guide
+**Features** (December 24, 2025 Redesign):
+- ✅ Enhanced hero section with animated Rocket icon and gradient effects
+- ✅ Stats bar displaying 9 Topics, 16+ Lessons, Interview Focused, Quick Revision
+- ✅ All 9 comprehensive topics grid with custom icons and status badges
+- ✅ 6 feature cards explaining platform benefits
+- ✅ 4-step getting started guide with hover animations
+- ✅ About creator section with profile avatar and skill tags
+- ✅ 23 Lucide icons integrated throughout
+- ✅ Full responsive design with smooth animations
+- ✅ Professional glassmorphism design system
 
-**State**: None (stateless)
+**Topics Displayed**:
+1. TypeScript (✅ Complete with checkmark)
+2. Test Cases (Coming Soon)
+3. API Testing (Coming Soon)
+4. Playwright (Coming Soon)
+5. Appium (Coming Soon)
+6. CI/CD (Coming Soon)
+7. Docker (Coming Soon)
+8. N8N (Coming Soon)
+9. LLM & AI (Coming Soon)
+
+**Lucide Icons Used** (23 total):
+FileCode, Zap, BookOpen, Code2, Target, Rocket, Brain, CheckCircle2, TrendingUp, Sparkles, Globe, Award, Users, TestTube2, Smartphone, Monitor, Container, GitBranch, Workflow, Bot, ArrowRight, Star, Clock
+
+**Design Elements**:
+- Animated 3D gradient icon with Rocket
+- Stats cards with hover effects
+- Topic cards with color-coded glows and hover animations
+- Feature cards with icon backgrounds
+- Step-by-step guide with slide-right hover effects
+- CTA button with arrow animation
+- Creator profile with gradient avatar and verified badge
+
+**State**: None (stateless presentation component)
 
 **Props**: None
+
+**Test IDs**: `data-testid="home-page"`
 
 ---
 
@@ -700,5 +730,5 @@ When modifying pages:
 
 ---
 
-**Last Updated**: December 24, 2025 (Profile Image Integration & Layout Redesign)
+**Last Updated**: December 24, 2025 (Home Page Redesign & LLM Refactoring)
 **Maintainer**: Development Team

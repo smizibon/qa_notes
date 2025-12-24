@@ -1,6 +1,9 @@
 import { Heart, Github, Linkedin } from 'lucide-react';
+import packageJson from '../../package.json';
 
 export default function Footer() {
+  const version = packageJson.version;
+
   return (
     <footer data-testid="footer" className="mt-16 pt-8 border-t border-slate-700/30">
       <div className="max-w-7xl mx-auto px-4">
@@ -87,7 +90,7 @@ export default function Footer() {
           </div>
           
           <div className="flex items-center gap-4 text-slate-500">
-            <span>Version 2.0.0</span>
+            <span>Version {version}</span>
             <span className="hidden md:inline">•</span>
             <span>December 2025</span>
           </div>

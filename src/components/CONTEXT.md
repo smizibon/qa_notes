@@ -601,6 +601,38 @@ interface Topic {
 ```
 - **Error Handling**: Loads links with fallback on failure
 
+### Footer
+- **Purpose**: Application footer with branding, links, and version info
+- **Features**: 
+  - Three-column layout (About, Quick Links, Features)
+  - Social links (LinkedIn, GitHub) with icons
+  - Dynamic version display from package.json
+  - Feature list with status indicators
+  - Responsive design (stacks on mobile)
+- **Props**: None (standalone component)
+- **Version Management** (December 24, 2025):
+  - Imports version from `package.json`: `import packageJson from '../../package.json'`
+  - Displays dynamically: `Version {version}` (currently shows "Version 2.0.0")
+  - Single source of truth for version number
+  - Auto-updates when package.json version changes
+- **Test IDs**: 5 total
+  - `footer` - Footer container
+  - `footer-about` - About section
+  - `footer-linkedin-link` - LinkedIn profile link
+  - `footer-quick-links` - Quick links section
+  - `footer-github-link` - GitHub repository link
+  - `footer-features` - Features list section
+- **Links**:
+  - LinkedIn: https://www.linkedin.com/in/smizibon/
+  - GitHub: https://github.com/smizibon/qa_notes
+  - TypeScript Docs: https://www.typescriptlang.org/docs/
+  - Playwright Docs: https://playwright.dev/
+- **Design**: 
+  - Border top with semi-transparent slate
+  - Lucide icons (Heart, Github, Linkedin)
+  - Glassmorphism aesthetic matching app theme
+  - Bottom bar with version and date
+
 ## How to Add a New Component
 
 ### Step 1: Create the file

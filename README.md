@@ -7,7 +7,7 @@ A comprehensive, interactive learning platform for QA Engineers built with React
 ## ✨ Features
 
 ### 🎓 Multi-Topic Learning System
-- **9 QA Topics**: TypeScript, Test Cases, API Testing, Playwright, Appium, CI/CD, Docker, N8N, LLM Testing
+- **9 QA Topics**: TypeScript, Test Cases, API Testing, Playwright, Appium, CI/CD, Docker, N8N, LLM & AI
 - **3-Part Structure**: Each topic has Lessons, Cheatsheet, and Examples
 - **Mega Menu Navigation**: Easy access to all topics from a single dropdown
 - **Progress Tracking**: Mark lessons as complete and track learning across all topics
@@ -319,7 +319,7 @@ This platform is designed for **QA Engineers** preparing for interviews and skil
 - [ ] CI/CD pipeline tutorials
 - [ ] Docker containerization
 - [ ] N8N workflow automation
-- [ ] LLM Testing and AI QA
+- [ ] LLM & AI QA
 - [ ] Code playground with live execution
 - [ ] Interview question bank per topic
 - [ ] Video tutorials
