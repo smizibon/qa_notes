@@ -5,7 +5,9 @@ import {
   Circle, 
   FileCode, 
   Code2, 
-  GraduationCap
+  GraduationCap,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 import CodeBlock from '../components/CodeBlock';
 import ErrorDisplay from '../components/ErrorDisplay';
@@ -189,12 +191,36 @@ const Lessons: React.FC<LessonsProps> = ({ selectedTopic }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<AppError | null>(null);
   const [completedLessons, setCompletedLessons] = useState<Set<string>>(new Set());
+  const [expandedSections, setExpandedSections] = useState<Set<number>>(new Set([0])); // First section expanded by default
+
+  const toggleSection = (index: number) => {
+    setExpandedSections(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(index)) {
+        newSet.delete(index);
+      } else {
+        newSet.add(index);
+      }
+      return newSet;
+    });
+  };
+
+  const expandAll = () => {
+    if (lessonContent?.sections) {
+      setExpandedSections(new Set(lessonContent.sections.map((_: any, i: number) => i)));
+    }
+  };
+
+  const collapseAll = () => {
+    setExpandedSections(new Set());
+  };
 
   const loadAllContent = async (lesson: LessonMetadata) => {
     setSelectedLesson(lesson);
     setActiveTab('lesson');
     setIsLoading(true);
     setError(null);
+    setExpandedSections(new Set([0])); // Reset to first section expanded
 
     try {
       // Validate imports exist
@@ -262,29 +288,64 @@ const Lessons: React.FC<LessonsProps> = ({ selectedTopic }) => {
     
     try {
       return (
-        <div data-testid="lesson-content" className="space-y-6">
+        <div data-testid="lesson-content" className="space-y-4">
           {/* Description at top if available */}
           {lessonContent.description && (
             <div data-testid="lesson-description-block" className="bg-blue-500/10 rounded-2xl p-6 border border-blue-500/20">
               <p className="text-slate-300">{lessonContent.description}</p>
             </div>
           )}
+
+          {/* Expand/Collapse All Buttons */}
+          <div className="flex gap-2 justify-end">
+            <button
+              onClick={expandAll}
+              data-testid="expand-all-button"
+              className="px-3 py-1 text-sm bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 rounded-lg transition-colors flex items-center gap-1"
+            >
+              <ChevronDown className="w-4 h-4" />
+              Expand All
+            </button>
+            <button
+              onClick={collapseAll}
+              data-testid="collapse-all-button"
+              className="px-3 py-1 text-sm bg-slate-700/50 hover:bg-slate-700 text-slate-300 rounded-lg transition-colors flex items-center gap-1"
+            >
+              <ChevronUp className="w-4 h-4" />
+              Collapse All
+            </button>
+          </div>
           
-          {lessonContent.sections.map((section: any, idx: number) => (
-          <div key={idx} data-testid={`lesson-section-${idx}`} className="bg-slate-800/70 rounded-2xl p-6 border border-slate-700/50">
-            <h3 data-testid={`section-title-${idx}`} className="text-xl font-bold text-white mb-3 flex items-center gap-3">
-              <span className="w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center text-sm font-bold">
-                {idx + 1}
-              </span>
-              {section.title}
-            </h3>
+          {lessonContent.sections.map((section: any, idx: number) => {
+            const isExpanded = expandedSections.has(idx);
+            return (
+          <div key={idx} data-testid={`lesson-section-${idx}`} className="bg-slate-800/70 rounded-2xl border border-slate-700/50 overflow-hidden">
+            <button
+              onClick={() => toggleSection(idx)}
+              data-testid={`section-toggle-${idx}`}
+              className="w-full p-6 text-left hover:bg-slate-700/30 transition-colors"
+            >
+              <h3 data-testid={`section-title-${idx}`} className="text-xl font-bold text-white flex items-center gap-3">
+                <span className="w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center text-sm font-bold flex-shrink-0">
+                  {idx + 1}
+                </span>
+                <span className="flex-1">{section.title}</span>
+                {isExpanded ? (
+                  <ChevronUp className="w-5 h-5 text-blue-400 flex-shrink-0" />
+                ) : (
+                  <ChevronDown className="w-5 h-5 text-slate-400 flex-shrink-0" />
+                )}
+              </h3>
+            </button>
             
+            {isExpanded && (
+            <div className="px-6 pb-6 space-y-4">
             {/* Main content */}
-            {section.content && <p data-testid={`section-content-${idx}`} className="text-slate-300 mb-4">{section.content}</p>}
+            {section.content && <p data-testid={`section-content-${idx}`} className="text-slate-300">{section.content}</p>}
             
             {/* Quick Reference - for quick-reference.json */}
             {section.quick_ref && Array.isArray(section.quick_ref) && section.quick_ref.length > 0 && (
-              <div data-testid={`section-quick-ref-${idx}`} className="bg-slate-900/50 rounded-xl p-4 mb-4 border border-slate-700/50">
+              <div data-testid={`section-quick-ref-${idx}`} className="bg-slate-900/50 rounded-xl p-4 border border-slate-700/50">
                 <div className="space-y-3">
                   {section.quick_ref.map((ref: any, i: number) => (
                     <div key={i} className="flex flex-col gap-1">
@@ -759,8 +820,11 @@ const Lessons: React.FC<LessonsProps> = ({ selectedTopic }) => {
                 </ul>
               </div>
             )}
+            </div>
+            )}
           </div>
-        ))}
+          );
+        })}
       </div>
     );
     } catch (err) {
