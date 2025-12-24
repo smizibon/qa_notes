@@ -1,5 +1,56 @@
 # QA Notes - Project Context for LLMs
 
+## 🚨 CRITICAL: Documentation-First Development
+
+### Context Documentation System
+
+This project uses **hierarchical context documentation** to help LLMs understand the codebase efficiently:
+
+- **`PROJECT_CONTEXT.md`** (this file) - Overall architecture, high-level patterns
+- **`src/CONTEXT.md`** - Source directory overview
+- **`src/components/CONTEXT.md`** - Component patterns and conventions
+- **`src/pages/CONTEXT.md`** - Page architecture and routing
+- **`src/utils/CONTEXT.md`** - Utility functions and error handling
+- **`src/data/CONTEXT.md`** - JSON schema and content guidelines
+
+### **PRIMARY RULE: Always Update Context Docs**
+
+When you modify **stable code** (not experiments or WIP):
+
+1. ✅ **Update the relevant `CONTEXT.md` file** in that folder
+2. ✅ **Update this `PROJECT_CONTEXT.md`** if architecture changes
+3. ✅ **Document new patterns, components, or utilities**
+4. ✅ **Keep examples current with actual code**
+
+**Context update triggers**:
+- ✅ Adding new components/pages/utilities
+- ✅ Changing component APIs or signatures  
+- ✅ Adding new data structures or JSON fields
+- ✅ Implementing new architectural patterns
+- ✅ Fixing major bugs that change behavior
+- ❌ NOT needed for minor typos or style tweaks
+
+### How to Use This System (For LLMs)
+
+**Before coding**:
+1. Read `PROJECT_CONTEXT.md` - Get overall picture
+2. Navigate to relevant folder's `CONTEXT.md` - Understand patterns
+3. Review key files - See implementation details
+
+**After coding**:
+1. Update relevant `CONTEXT.md` - Document changes
+2. Update `PROJECT_CONTEXT.md` if needed - Keep high-level accurate
+3. Keep examples and patterns current
+
+**Benefits**:
+- 📊 Faster context loading (targeted reading)
+- 🎯 Better understanding of patterns
+- 🔄 Consistency across codebase
+- 📝 Self-documenting architecture
+- 🤖 More accurate AI suggestions
+
+---
+
 ## Project Overview
 
 This is a **personal QA revision platform** designed for QA Engineers to prepare for interviews. It covers 9 comprehensive topics: TypeScript, Test Cases, API Testing, Playwright, Appium, CI/CD, Docker, N8N, and LLM Testing.
