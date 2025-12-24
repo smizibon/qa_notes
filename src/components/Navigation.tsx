@@ -5,9 +5,10 @@ import linksData from '../data/links/links.json';
 interface NavigationProps {
   activeTab: string;
   setActiveTab: (tab: string) => void;
+  setSelectedTopic: (topic: string) => void;
 }
 
-export default function Navigation({ activeTab, setActiveTab }: NavigationProps) {
+export default function Navigation({ activeTab, setActiveTab, setSelectedTopic }: NavigationProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isTopicsOpen, setIsTopicsOpen] = useState(false);
 
@@ -73,15 +74,15 @@ export default function Navigation({ activeTab, setActiveTab }: NavigationProps)
               {/* Mega Menu Dropdown */}
               {isTopicsOpen && (
                 <div 
-                  className="absolute left-0 mt-2 w-[600px] bg-slate-800/95 backdrop-blur-xl border border-slate-600/50 rounded-2xl shadow-2xl z-10"
+                  className="absolute left-0 mt-2 w-80 bg-slate-800/95 backdrop-blur-xl border border-slate-600/50 rounded-2xl shadow-2xl z-10"
                   onMouseEnter={() => setIsTopicsOpen(true)}
                   onMouseLeave={() => setIsTopicsOpen(false)}
                 >
-                  <div className="p-6">
-                    <div className="mb-4">
-                      <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">Learning Topics</h3>
+                  <div className="p-3">
+                    <div className="mb-2 px-3 py-2">
+                      <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Learning Topics</h3>
                     </div>
-                    <div className="grid grid-cols-3 gap-3">
+                    <div className="space-y-1">
                       {topics.map((topic) => {
                         const Icon = topic.icon;
                         const isActive = topic.status === 'complete';
@@ -90,43 +91,52 @@ export default function Navigation({ activeTab, setActiveTab }: NavigationProps)
                             key={topic.id}
                             onClick={() => {
                               if (isActive) {
+                                setSelectedTopic(topic.id);
                                 setActiveTab('lessons');
                                 setIsTopicsOpen(false);
                               }
                             }}
                             disabled={!isActive}
-                            className={`p-4 rounded-xl text-left transition-all duration-300 group ${
+                            className={`w-full p-3 rounded-xl text-left transition-all duration-200 flex items-center gap-3 ${
                               isActive
-                                ? `hover:bg-${topic.color}-500/10 hover:border-${topic.color}-500/50 border border-transparent cursor-pointer`
-                                : 'opacity-50 cursor-not-allowed border border-slate-700/50'
+                                ? 'hover:bg-slate-700/50 hover:pl-4 cursor-pointer text-white'
+                                : 'opacity-50 cursor-not-allowed text-gray-500'
                             }`}
                           >
-                            <div className="flex items-start gap-3">
-                              <div className={`p-2 rounded-lg ${isActive ? `bg-${topic.color}-500/20` : 'bg-slate-700/50'}`}>
-                                <Icon className={`h-5 w-5 ${isActive ? `text-${topic.color}-400` : 'text-gray-500'}`} />
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                <div className="flex items-center gap-2">
-                                  <h4 className={`text-sm font-medium ${isActive ? 'text-white' : 'text-gray-500'}`}>
-                                    {topic.name}
-                                  </h4>
-                                  {topic.status === 'complete' && (
-                                    <span className="px-2 py-0.5 text-xs font-medium bg-green-500/20 text-green-400 rounded-full">
-                                      ✓
-                                    </span>
-                                  )}
-                                  {topic.status === 'planned' && (
-                                    <span className="px-2 py-0.5 text-xs font-medium bg-slate-700 text-gray-400 rounded-full">
-                                      Soon
-                                    </span>
-                                  )}
-                                </div>
+                            <div className={`p-2 rounded-lg flex-shrink-0 ${
+                              isActive 
+                                ? 'bg-blue-500/20' 
+                                : 'bg-slate-700/50'
+                            }`}>
+                              <Icon className={`h-4 w-4 ${
+                                isActive 
+                                  ? 'text-blue-400' 
+                                  : 'text-gray-500'
+                              }`} />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2">
+                                <span className={`text-sm font-medium ${
+                                  isActive ? 'text-gray-200' : 'text-gray-500'
+                                }`}>
+                                  {topic.name}
+                                </span>
                                 {topic.status === 'complete' && (
-                                  <p className="text-xs text-gray-400 mt-1 group-hover:text-gray-300">
-                                    16 lessons available
-                                  </p>
+                                  <span className="px-1.5 py-0.5 text-xs font-medium bg-green-500/20 text-green-400 rounded">
+                                    ✓
+                                  </span>
                                 )}
                               </div>
+                              {topic.status === 'complete' && (
+                                <p className="text-xs text-gray-400 mt-0.5">
+                                  16 lessons
+                                </p>
+                              )}
+                              {topic.status === 'planned' && (
+                                <p className="text-xs text-gray-500 mt-0.5">
+                                  Coming soon
+                                </p>
+                              )}
                             </div>
                           </button>
                         );
@@ -207,6 +217,7 @@ export default function Navigation({ activeTab, setActiveTab }: NavigationProps)
                       key={topic.id}
                       onClick={() => {
                         if (isActive) {
+                          setSelectedTopic(topic.id);
                           setActiveTab('lessons');
                           setIsMenuOpen(false);
                         }

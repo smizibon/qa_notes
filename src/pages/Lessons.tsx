@@ -15,6 +15,10 @@ import CodeBlock from '../components/CodeBlock';
 // Types & Configuration
 // =============================================================================
 
+interface LessonsProps {
+  selectedTopic: string;
+}
+
 interface LessonMetadata {
   id: string;
   title: string;
@@ -161,68 +165,85 @@ const LESSONS: LessonMetadata[] = [
 // Import Maps for Dynamic Loading
 // =============================================================================
 
+// Topic-specific import maps
+const TOPIC_IMPORTS: Record<string, {
+  lessons: Record<string, () => Promise<any>>;
+  cheatsheet: Record<string, () => Promise<any>>;
+  examples: Record<string, () => Promise<any>>;
+}> = {
+  typescript: {
+    lessons: {},
+    cheatsheet: {},
+    examples: {}
+  }
+};
+
+// TypeScript Lesson Imports
 const LESSON_IMPORTS: Record<string, () => Promise<any>> = {
-  'getting-started.json': () => import('../data/typescript/lessons/getting-started.json'),
-  'basic-types.json': () => import('../data/typescript/lessons/basic-types.json'),
-  'type-inference.json': () => import('../data/typescript/lessons/type-inference.json'),
-  'functions.json': () => import('../data/typescript/lessons/functions.json'),
-  'interfaces.json': () => import('../data/typescript/lessons/interfaces.json'),
-  'type-aliases.json': () => import('../data/typescript/lessons/type-aliases.json'),
-  'classes.json': () => import('../data/typescript/lessons/classes.json'),
-  'generics.json': () => import('../data/typescript/lessons/generics.json'),
-  'enums.json': () => import('../data/typescript/lessons/enums.json'),
-  'type-guards.json': () => import('../data/typescript/lessons/type-guards.json'),
-  'utility-types.json': () => import('../data/typescript/lessons/utility-types.json'),
-  'advanced-patterns.json': () => import('../data/typescript/lessons/advanced-patterns.json'),
-  'tsconfig-lesson.json': () => import('../data/typescript/lessons/tsconfig-lesson.json'),
-  'common-patterns.json': () => import('../data/typescript/lessons/common-patterns.json'),
-  'common-errors.json': () => import('../data/typescript/lessons/common-errors.json'),
-  'quick-reference.json': () => import('../data/typescript/lessons/quick-reference.json'),
+  'getting-started.json': () => import('../data/typescript/lessons/getting-started.json').then(m => m),
+  'basic-types.json': () => import('../data/typescript/lessons/basic-types.json').then(m => m),
+  'type-inference.json': () => import('../data/typescript/lessons/type-inference.json').then(m => m),
+  'functions.json': () => import('../data/typescript/lessons/functions.json').then(m => m),
+  'interfaces.json': () => import('../data/typescript/lessons/interfaces.json').then(m => m),
+  'type-aliases.json': () => import('../data/typescript/lessons/type-aliases.json').then(m => m),
+  'classes.json': () => import('../data/typescript/lessons/classes.json').then(m => m),
+  'generics.json': () => import('../data/typescript/lessons/generics.json').then(m => m),
+  'enums.json': () => import('../data/typescript/lessons/enums.json').then(m => m),
+  'type-guards.json': () => import('../data/typescript/lessons/type-guards.json').then(m => m),
+  'utility-types.json': () => import('../data/typescript/lessons/utility-types.json').then(m => m),
+  'advanced-patterns.json': () => import('../data/typescript/lessons/advanced-patterns.json').then(m => m),
+  'tsconfig-lesson.json': () => import('../data/typescript/lessons/tsconfig-lesson.json').then(m => m),
+  'common-patterns.json': () => import('../data/typescript/lessons/common-patterns.json').then(m => m),
+  'common-errors.json': () => import('../data/typescript/lessons/common-errors.json').then(m => m),
+  'quick-reference.json': () => import('../data/typescript/lessons/quick-reference.json').then(m => m),
 };
 
 const CHEATSHEET_IMPORTS: Record<string, () => Promise<any>> = {
-  'getting-started.json': () => import('../data/typescript/cheatsheet/getting-started.json'),
-  'basic-types.json': () => import('../data/typescript/cheatsheet/basic-types.json'),
-  'type-inference.json': () => import('../data/typescript/cheatsheet/type-inference.json'),
-  'functions.json': () => import('../data/typescript/cheatsheet/functions.json'),
-  'interfaces.json': () => import('../data/typescript/cheatsheet/interfaces.json'),
-  'type-aliases.json': () => import('../data/typescript/cheatsheet/type-aliases.json'),
-  'classes.json': () => import('../data/typescript/cheatsheet/classes.json'),
-  'generics.json': () => import('../data/typescript/cheatsheet/generics.json'),
-  'enums.json': () => import('../data/typescript/cheatsheet/enums.json'),
-  'type-guards.json': () => import('../data/typescript/cheatsheet/type-guards.json'),
-  'utility-types.json': () => import('../data/typescript/cheatsheet/utility-types.json'),
-  'advanced-patterns.json': () => import('../data/typescript/cheatsheet/advanced-patterns.json'),
-  'tsconfig-section.json': () => import('../data/typescript/cheatsheet/tsconfig-section.json'),
-  'common-patterns.json': () => import('../data/typescript/cheatsheet/common-patterns.json'),
-  'common-errors.json': () => import('../data/typescript/cheatsheet/common-errors.json'),
-  'quick-reference.json': () => import('../data/typescript/cheatsheet/quick-reference.json'),
+  'getting-started.json': () => import('../data/typescript/cheatsheet/getting-started.json').then(m => m),
+  'basic-types.json': () => import('../data/typescript/cheatsheet/basic-types.json').then(m => m),
+  'type-inference.json': () => import('../data/typescript/cheatsheet/type-inference.json').then(m => m),
+  'functions.json': () => import('../data/typescript/cheatsheet/functions.json').then(m => m),
+  'interfaces.json': () => import('../data/typescript/cheatsheet/interfaces.json').then(m => m),
+  'type-aliases.json': () => import('../data/typescript/cheatsheet/type-aliases.json').then(m => m),
+  'classes.json': () => import('../data/typescript/cheatsheet/classes.json').then(m => m),
+  'generics.json': () => import('../data/typescript/cheatsheet/generics.json').then(m => m),
+  'enums.json': () => import('../data/typescript/cheatsheet/enums.json').then(m => m),
+  'type-guards.json': () => import('../data/typescript/cheatsheet/type-guards.json').then(m => m),
+  'utility-types.json': () => import('../data/typescript/cheatsheet/utility-types.json').then(m => m),
+  'advanced-patterns.json': () => import('../data/typescript/cheatsheet/advanced-patterns.json').then(m => m),
+  'tsconfig-section.json': () => import('../data/typescript/cheatsheet/tsconfig-section.json').then(m => m),
+  'common-patterns.json': () => import('../data/typescript/cheatsheet/common-patterns.json').then(m => m),
+  'common-errors.json': () => import('../data/typescript/cheatsheet/common-errors.json').then(m => m),
+  'quick-reference.json': () => import('../data/typescript/cheatsheet/quick-reference.json').then(m => m),
 };
 
 const EXAMPLES_IMPORTS: Record<string, () => Promise<any>> = {
-  'getting-started.json': () => import('../data/typescript/examples/getting-started.json'),
-  'basic-types.json': () => import('../data/typescript/examples/basic-types.json'),
-  'type-inference.json': () => import('../data/typescript/examples/type-inference.json'),
-  'functions.json': () => import('../data/typescript/examples/functions.json'),
-  'interfaces.json': () => import('../data/typescript/examples/interfaces.json'),
-  'type-aliases.json': () => import('../data/typescript/examples/type-aliases.json'),
-  'classes.json': () => import('../data/typescript/examples/classes.json'),
-  'generics.json': () => import('../data/typescript/examples/generics.json'),
-  'enums.json': () => import('../data/typescript/examples/enums.json'),
-  'type-guards.json': () => import('../data/typescript/examples/type-guards.json'),
-  'utility-types.json': () => import('../data/typescript/examples/utility-types.json'),
-  'advanced-patterns.json': () => import('../data/typescript/examples/advanced-patterns.json'),
-  'tsconfig-example.json': () => import('../data/typescript/examples/tsconfig-example.json'),
-  'common-patterns.json': () => import('../data/typescript/examples/common-patterns.json'),
-  'common-errors.json': () => import('../data/typescript/examples/common-errors.json'),
-  'quick-reference.json': () => import('../data/typescript/examples/quick-reference.json'),
-};
+  'getting-started.json': () => import('../data/typescript/examples/getting-started.json').then(m => m),
+  'basic-types.json': () => import('../data/typescript/examples/basic-types.json').then(m => m),
+  'type-inference.json': () => import('../data/typescript/examples/type-inference.json').then(m => m),
+  'functions.json': () => import('../data/typescript/examples/functions.json').then(m => m),
+  'interfaces.json': () => import('../data/typescript/examples/interfaces.json').then(m => m),
+  'type-aliases.json': () => import('../data/typescript/examples/type-aliases.json').then(m => m),
+  'classes.json': () => import('../data/typescript/examples/classes.json').then(m => m),
+  'generics.json': () => import('../data/typescript/examples/generics.json').then(m => m),
+  'enums.json': () => import('../data/typescript/examples/enums.json').then(m => m),
+  'type-guards.json': () => import('../data/typescript/examples/type-guards.json').then(m => m),
+  'utility-types.json': () => import('../data/typescript/examples/utility-types.json').then(m => m),
+  'advanced-patterns.json': () => import('../data/typescript/examples/advanced-patterns.json').then(m => m),
+  'tsconfig-example.json': () => import('../data/typescript/examples/tsconfig-example.json').then(m => m),
+  'common-patterns.json': () => import('../data/typescript/examples/common-patterns.json').then(m => m),
+  'common-errors.json': () => import('../data/typescript/examples/common-errors.json').then(m => m),
+  'quick-reference.json': () => import('../data/typescript/examples/quick-reference.json').then(m => m),
+};// Populate the topic imports map for TypeScript
+TOPIC_IMPORTS.typescript.lessons = LESSON_IMPORTS;
+TOPIC_IMPORTS.typescript.cheatsheet = CHEATSHEET_IMPORTS;
+TOPIC_IMPORTS.typescript.examples = EXAMPLES_IMPORTS;
 
 // =============================================================================
 // Main Component
 // =============================================================================
 
-const Lessons: React.FC = () => {
+const Lessons: React.FC<LessonsProps> = ({ selectedTopic }) => {
   const [selectedLesson, setSelectedLesson] = useState<LessonMetadata | null>(null);
   const [activeTab, setActiveTab] = useState<ContentTab>('lesson');
   const [lessonContent, setLessonContent] = useState<any>(null);
@@ -233,29 +254,36 @@ const Lessons: React.FC = () => {
   const [completedLessons, setCompletedLessons] = useState<Set<string>>(new Set());
 
   const loadAllContent = async (lesson: LessonMetadata) => {
-    console.log('[Lessons] Loading topic:', lesson.id);
+    console.log('[Lessons] Loading content for topic:', selectedTopic, 'lesson:', lesson.id);
     setSelectedLesson(lesson);
     setActiveTab('lesson');
     setIsLoading(true);
     setError(null);
 
     try {
+      // Get import maps for the selected topic
+      const topicImports = TOPIC_IMPORTS[selectedTopic];
+      
+      if (!topicImports) {
+        throw new Error(`No content available for topic: ${selectedTopic}`);
+      }
+
       // Validate imports exist
-      if (!LESSON_IMPORTS[lesson.lessonFile]) {
+      if (!topicImports.lessons[lesson.lessonFile]) {
         throw new Error('Lesson file not found: ' + lesson.lessonFile);
       }
-      if (!CHEATSHEET_IMPORTS[lesson.cheatsheetFile]) {
+      if (!topicImports.cheatsheet[lesson.cheatsheetFile]) {
         throw new Error('Cheatsheet file not found: ' + lesson.cheatsheetFile);
       }
-      if (!EXAMPLES_IMPORTS[lesson.examplesFile]) {
+      if (!topicImports.examples[lesson.examplesFile]) {
         throw new Error('Examples file not found: ' + lesson.examplesFile);
       }
 
       // Load all content in parallel
       const [lessonMod, cheatsheetMod, examplesMod] = await Promise.all([
-        LESSON_IMPORTS[lesson.lessonFile](),
-        CHEATSHEET_IMPORTS[lesson.cheatsheetFile](),
-        EXAMPLES_IMPORTS[lesson.examplesFile]()
+        topicImports.lessons[lesson.lessonFile](),
+        topicImports.cheatsheet[lesson.cheatsheetFile](),
+        topicImports.examples[lesson.examplesFile]()
       ]);
 
       setLessonContent(lessonMod.default);
