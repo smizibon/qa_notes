@@ -30,6 +30,13 @@ Before modifying ANY code in this directory, LLMs MUST follow these principles:
    - Wrap component renders with try-catch + `<ErrorDisplay />`
    - Never let the app crash - provide graceful fallbacks
 
+5. ✅ **Always update CONTEXT.md after confirming stability**
+   - Make changes → Test app → Confirm stable → Update CONTEXT.md
+   - Document new functions, components, patterns
+   - Mark TODO tasks as ✅ COMPLETED with date
+   - Update compliance scores if improved
+   - **This is MANDATORY** - part of the development workflow
+
 **See PROJECT_CONTEXT.md for detailed examples and anti-patterns.**
 
 ## Overall Codebase Compliance: 92% ✅

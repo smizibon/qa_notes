@@ -19,6 +19,20 @@
 
 ### ❌ DON'T: Manual fetch | ✅ DO: Use safeFetch()
 
+## 🔄 Update This File After Adding Utilities
+
+**MANDATORY**: When you create a new utility function:
+1. Test the app to confirm stability
+2. Add documentation here with:
+   - Function name and purpose
+   - Parameters and return type
+   - Usage example
+   - Add to "Available Utilities" section
+3. Update compliance score if applicable
+4. Commit with updated CONTEXT.md
+
+**This ensures LLMs can discover and reuse your utilities!**
+
 ## ✅ Recently Added Utilities
 
 ### `contentLoader.ts` (Added December 24, 2025)

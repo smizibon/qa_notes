@@ -13,6 +13,20 @@ const response = await fetch('/src/data/...');
 const data = await response.json();
 ```
 
+## 🔄 Update This File When Adding Content
+
+**When adding new JSON files or topics**:
+1. Add content files to appropriate directory
+2. Test loading in app - confirm stable
+3. Update this CONTEXT.md:
+   - Document new JSON schemas
+   - Add new field types
+   - Update directory structure diagram
+   - Add validation rules
+4. Commit with updated documentation
+
+**Keeps content documentation in sync with actual files!**
+
 ## Purpose
 Contains all JSON content files for lessons, cheatsheets, examples, and configuration. This is the content layer of the application - pure data with no logic.
 

@@ -29,6 +29,13 @@ This directory contains reusable React components used throughout the applicatio
    - Use `<ErrorDisplay />` for error states
    - Provide fallback UI if content fails to load
 
+5. ✅ **Update This CONTEXT.md After Changes**
+   - After creating/modifying components and confirming app is stable
+   - Document new component patterns and props
+   - Add to components inventory table
+   - Update compliance scores
+   - **MANDATORY** - Always update docs with stable code
+
 ## Purpose
 
 Components are self-contained, reusable UI elements that can be imported and used in multiple pages or other components. They follow React best practices and maintain consistent styling with the glassmorphism design system.

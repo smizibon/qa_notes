@@ -44,6 +44,21 @@ const EXAMPLES_IMPORTS = createContentImports('typescript', 'examples', TYPESCRI
 4. **Type Safety**: TypeScript interfaces for all data structures ✅
 5. **Error Boundaries**: Lines 813, 870, 928 properly implemented ✅
 
+## 🔄 Update This File After Page Changes
+
+**MANDATORY Workflow**:
+1. Modify page code
+2. Test app (npm run dev) - confirm no errors  
+3. ✅ Platform is stable
+4. Update this CONTEXT.md:
+   - Document new features or refactorings
+   - Mark TODO tasks as ✅ COMPLETED
+   - Update compliance scores
+   - Add any new patterns used
+5. Commit with updated documentation
+
+**Keeping this file current ensures LLMs understand page architecture!**
+
 ## Purpose
 Top-level page components that represent different views/routes in the application. Pages orchestrate data loading, state management, and render child components.
 

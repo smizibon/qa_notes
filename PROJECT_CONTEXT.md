@@ -31,6 +31,33 @@ When generating or modifying code in this project, LLMs MUST follow these princi
    - Never let the app crash - always provide graceful fallbacks
    - Log errors with context for debugging
 
+5. ✅ **Always Update CONTEXT.md Files After Confirming Stability**
+   - After making changes and confirming the platform is stable (app runs without errors)
+   - Update the relevant `CONTEXT.md` file in that directory
+   - Update `PROJECT_CONTEXT.md` if architecture changes
+   - Document new functions, components, or patterns added
+   - Update compliance scores if code quality improved
+   - Mark completed TODO tasks as ✅ COMPLETED with date
+   - This is MANDATORY - not optional
+
+**Example Workflow**:
+```
+1. Make code changes
+2. Test app (npm run dev) - confirm no errors
+3. ✅ Platform is stable
+4. Update relevant CONTEXT.md files
+5. Commit changes with updated documentation
+```
+
+**Context Update Triggers**:
+- ✅ New utility functions added
+- ✅ New components created
+- ✅ Major refactoring completed
+- ✅ Bug fixes that change behavior
+- ✅ New patterns or conventions introduced
+- ✅ TODO tasks completed
+- ❌ NOT needed for minor typos or style tweaks
+
 **Example of Good Practice**:
 ```typescript
 // ✅ GOOD: Reusable, error-handled, generic function
