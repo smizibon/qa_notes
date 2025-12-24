@@ -1,8 +1,8 @@
 {
-  "name": "typescript-cheatsheet",
+  "name": "qa_notes",
   "version": "1.0.0",
-  "description": "TypeScript Cheatsheet React Component",
-  "main": "typescript-cheatsheet.tsx",
+  "description": "QA Notes - TypeScript Learning Platform",
+  "main": "index.tsx",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",

@@ -16,7 +16,7 @@ export default function Details() {
         <section className="mb-8">
           <h2 className="text-2xl font-bold bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent mb-4">About This Project</h2>
           <p className="text-gray-300 mb-4">
-            This TypeScript cheatsheet is a comprehensive reference guide built with React and TypeScript.
+            QA Notes is a comprehensive TypeScript learning platform built with React and TypeScript.
             It provides quick access to TypeScript syntax, types, patterns, and best practices.
           </p>
           <p className="text-gray-300">

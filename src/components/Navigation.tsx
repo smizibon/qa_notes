@@ -26,7 +26,7 @@ export default function Navigation({ activeTab, setActiveTab }: NavigationProps)
               <FileCode className="h-8 w-8 text-blue-400" />
               <div className="absolute inset-0 blur-xl bg-blue-400/30"></div>
             </div>
-            <span className="ml-3 text-xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">TS Cheatsheet</span>
+            <span className="ml-3 text-xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">QA Notes</span>
           </div>
 
           {/* Desktop Menu */}
