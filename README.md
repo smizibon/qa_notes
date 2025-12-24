@@ -1,16 +1,19 @@
-# TypeScript Learning Platform
+# QA Notes - Personal QA Revision Platform
 
-A comprehensive, interactive TypeScript learning platform built with React and TypeScript. This project combines a quick-reference cheatsheet with in-depth beginner-friendly lessons, featuring a modern glassmorphism UI and progress tracking.
+A comprehensive, interactive learning platform for QA Engineers built with React and TypeScript. This multi-topic platform covers everything from TypeScript fundamentals to advanced QA automation, testing frameworks, CI/CD, and AI testing.
 
 ## ✨ Features
 
-### 🎓 Complete Learning System
-- **16 Comprehensive Lessons**: Detailed tutorials that explain TypeScript from zero to advanced
-- **Interactive Cheatsheet**: Quick reference for all TypeScript concepts
-- **Progress Tracking**: Mark lessons as complete and track your learning journey
-- **5 Navigation Pages**: Home, Cheatsheet, Lessons, Details, Examples
+### 🎓 Multi-Topic Learning System
+- **9 QA Topics**: TypeScript, Test Cases, API Testing, Playwright, Appium, CI/CD, Docker, N8N, LLM Testing
+- **3-Part Structure**: Each topic has Lessons, Cheatsheet, and Examples
+- **Mega Menu Navigation**: Easy access to all topics from a single dropdown
+- **Progress Tracking**: Mark lessons as complete and track learning across all topics
+- **Modern UI**: Glassmorphism design with smooth animations
 
-### 📚 Lesson Topics
+### 📚 Available Topics
+
+#### ✅ TypeScript (Complete - 16 Lessons)
 1. Getting Started - Setup and first program
 2. Basic Types - Fundamental type system
 3. Type Inference - Automatic type detection
@@ -27,6 +30,16 @@ A comprehensive, interactive TypeScript learning platform built with React and T
 14. Common Patterns - Best practices & design patterns
 15. Common Errors - Understanding and fixing errors
 16. Quick Reference - Fast syntax lookup
+
+#### 🚧 Coming Soon
+- **Test Cases**: Test design techniques, boundary value analysis, test management
+- **API Testing**: REST APIs, authentication, Postman, automation frameworks
+- **Playwright**: Web automation, locators, assertions, CI/CD integration
+- **Appium**: Mobile automation for iOS and Android
+- **CI/CD**: Jenkins, GitHub Actions, pipeline as code
+- **Docker**: Containerization, images, Docker Compose
+- **N8N**: Workflow automation and API integrations
+- **LLM Testing**: AI testing, prompt engineering, hallucination detection
 
 ### 🎨 Design Features
 - **Modern Glassmorphism UI**: Beautiful backdrop-blur effects and gradients
@@ -71,121 +84,108 @@ The application will be available at `http://localhost:5173/`
 ## 📁 Project Structure
 
 ```
-cheat/
+qa_notes/
 ├── src/
-│   ├── components/          # Reusable UI components
-│   │   ├── Navigation.tsx   # Top navigation menu
-│   │   ├── CodeBlock.tsx    # Syntax-highlighted code
-│   │   ├── ExpandableSection.tsx
-│   │   └── ...
-│   ├── pages/              # Main page components
-│   │   ├── Home.tsx        # Landing page
-│   │   ├── Lessons.tsx     # Lesson browser with progress
-│   │   ├── Cheatsheet.tsx  # Quick reference
-│   │   ├── Details.tsx     # Detailed explanations
-│   │   └── Examples.tsx    # Code examples
-│   ├── sections/           # Cheatsheet topic sections (16 files)
-│   ├── data/
-│   │   ├── cheatsheet/     # Quick reference JSON data (16 files)
-│   │   └── lessons/        # Detailed lesson JSON data (16 files)
-│   ├── App.tsx            # Main app with routing
-│   └── main.tsx           # Application entry point
-├── index.html             # HTML template
-├── vite.config.ts         # Vite configuration
-├── tsconfig.json          # TypeScript configuration
-└── package.json           # Dependencies and scripts
+│   ├── components/              # Reusable UI components
+│   │   ├── Navigation.tsx       # Mega menu with all topics
+│   │   └── CodeBlock.tsx        # Syntax-highlighted code
+│   ├── pages/                   # Main page components
+│   │   ├── Home.tsx             # Landing page
+│   │   ├── Lessons.tsx          # Multi-topic lesson browser
+│   │   └── Details.tsx          # About the platform
+│   ├── data/                    # Learning content (JSON)
+│   │   ├── typescript/          # ✅ Complete (48 files)
+│   │   │   ├── lessons/         # 16 detailed lessons
+│   │   │   ├── cheatsheet/      # 16 quick references
+│   │   │   └── examples/        # 16 practical examples
+│   │   ├── test-cases/          # 🚧 Planned
+│   │   ├── api-testing/         # 🚧 Planned
+│   │   ├── playwright/          # 🚧 Planned
+│   │   ├── appium/              # 🚧 Planned
+│   │   ├── cicd/                # 🚧 Planned
+│   │   ├── docker/              # 🚧 Planned
+│   │   ├── n8n/                 # 🚧 Planned
+│   │   └── llm-testing/         # 🚧 Planned
+│   ├── App.tsx                  # Main app with routing
+│   └── main.tsx                 # Application entry point
+├── DATA_STRUCTURE.md            # Detailed folder structure guide
+├── index.html                   # HTML template
+└── package.json                 # Dependencies and scripts
 ```
 
 ## 🎯 Usage
 
 ### Navigation
-- **Home**: Overview and introduction
-- **Cheatsheet**: Quick reference with expandable sections
-- **Lessons**: Interactive tutorials with progress tracking
-- **Details**: In-depth explanations
-- **Examples**: Practical code examples
-- **Practice Sites**: Dropdown with external learning resources
+- **Home**: Platform overview and introduction
+- **Topics Mega Menu**: Hover to see all 9 QA topics
+  - TypeScript ✓ (Complete - clickable)
+  - Other topics (Coming soon - grayed out)
+- **Details**: About the platform and features
+- **Practice Sites**: External learning resources
 
-### Learning Path
-1. Start with **Lessons** for comprehensive learning
-2. Use **Cheatsheet** for quick syntax lookups
-3. Check **Examples** for practical applications
-4. Track your progress as you complete lessons
+### Learning Path (Currently: TypeScript)
+1. Click **Topics** → **TypeScript** to start
+2. Browse 16 lessons in the sidebar
+3. Each lesson has 3 tabs:
+   - **Lesson**: Detailed tutorial with analogies
+   - **Cheatsheet**: Quick reference syntax
+   - **Examples**: Practical code samples
+4. Click **Mark Complete** to track progress
+5. Use practice sites for hands-on coding
 
-### Features
-- Click section headers to expand/collapse content
 ## 🎓 Learning Approach
 
-This platform is designed for **absolute beginners** with zero TypeScript knowledge:
+This platform is designed for **QA Engineers** preparing for interviews and skill development:
 
-1. **Start with Lessons**: Begin with "Getting Started" and progress through each lesson
-2. **Learn with Analogies**: Each concept explained with real-world comparisons
-3. **Understand "Why"**: Focus on understanding before memorizing syntax
-4. **Practice Immediately**: Use provided practice sites to apply what you learn
-5. **Track Progress**: Mark lessons complete as you go
-6. **Reference Cheatsheet**: Use for quick syntax lookups while coding
+1. **Multi-Topic Coverage**: Start with TypeScript, expand to all QA areas
+2. **Structured Learning**: Lessons → Cheatsheet → Examples for each topic
+3. **Real-World Focus**: Practical examples and best practices
+4. **Interview Preparation**: Common patterns, errors, and questions
+5. **Progress Tracking**: Mark topics complete as you master them
 
 ## 💡 Tips for Success
 
-- ✅ Enable `strict: true` in your projects
-- ✅ Read TypeScript error messages carefully - they're helpful!
-- ✅ Use the built-in VS Code TypeScript features (hover, go-to-definition)
-- ✅ Complete lessons in order - each builds on previous concepts
+- ✅ Focus on one topic at a time (currently TypeScript)
+- ✅ Complete all 3 sections: Lesson, Cheatsheet, Examples
 - ✅ Practice with real projects, not just tutorials
-- ✅ Join TypeScript communities for support
+- ✅ Mark lessons complete to track your progress
+- ✅ Use the platform before interviews for quick revision
+- ✅ Bookmark specific lessons for quick reference
 
-## 🚀 Future Enhancements
+## 🚀 Roadmap
 
-- [ ] Code playground with live TypeScript compilation
-- [ ] Interactive exercises with automated testing
-- [ ] Video tutorials for each lesson
-- [ ] Community contributions and lesson discussions
-- [ ] Downloadable PDF cheatsheet
-- [ ] Multi-language support
+### ✅ Completed
+- [x] TypeScript: All 16 lessons with cheatsheets and examples
+- [x] Mega menu navigation for all 9 topics
+- [x] Progress tracking system
+- [x] Modern glassmorphism UI
+- [x] Responsive mobile design
 
-## 🤝 Contributing
+### 🔄 In Progress
+- [ ] Test Cases content (lessons, cheatsheet, examples)
+- [ ] API Testing content
+- [ ] Playwright automation guides
 
-Contributions are welcome! Feel free to:
-- Add more lessons or examples
-- Improve existing content
-- Fix typos or errors
-- Suggest new features
-- Share your learning experience
-
-## 📄 License
-
-This project is open source and available for educational purposes.
-
----
-
-**Made with ❤️ for TypeScript learners**  
-*From zero to TypeScript hero, one lesson at a time*
-- **Explanations**: Clear descriptions of concepts
-- **Code Blocks**: Syntax-highlighted examples
-- **Tips**: Best practices and common pitfalls
+### � Planned
+- [ ] Appium mobile testing
+- [ ] CI/CD pipeline tutorials
+- [ ] Docker containerization
+- [ ] N8N workflow automation
+- [ ] LLM Testing and AI QA
+- [ ] Code playground with live execution
+- [ ] Interview question bank per topic
+- [ ] Video tutorials
+- [ ] Downloadable PDF cheatsheets
 
 ## 🤝 Contributing
 
-Feel free to fork this project and add your own TypeScript tips and examples!
+This is a personal revision platform. Feel free to fork and customize for your own learning needs!
 
-## 📝 License
+## � License
 
-This project is open source and available for educational purposes.
-
-## 🔗 Resources
-
-- [TypeScript Official Documentation](https://typescriptlang.org/docs)
-- [TypeScript Playground](https://typescriptlang.org/play)
-- [DefinitelyTyped](https://github.com/DefinitelyTyped)
-
-## 💡 Tips for Learning TypeScript
-
-1. Start with strict mode enabled
-2. Use TypeScript with your next project
-3. Read error messages carefully - they're helpful!
-4. Explore type definitions of libraries you use
-5. Practice, practice, practice!
+Open source for educational purposes.
 
 ---
 
-Made with ❤️ for TypeScript learners
+**Made with ❤️ for QA Engineers**  
+*Your personal revision companion before interviews*

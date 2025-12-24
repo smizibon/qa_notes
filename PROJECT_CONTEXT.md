@@ -1,15 +1,15 @@
-# TypeScript Learning Platform - Project Context for LLMs
+# QA Notes - Project Context for LLMs
 
 ## Project Overview
 
-This is a comprehensive **TypeScript learning platform** designed for absolute beginners. It combines quick-reference materials (cheatsheet) with in-depth educational content (lessons) in a modern, interactive web application.
+This is a **personal QA revision platform** designed for QA Engineers to prepare for interviews. It covers 9 comprehensive topics: TypeScript, Test Cases, API Testing, Playwright, Appium, CI/CD, Docker, N8N, and LLM Testing.
 
 ### Core Purpose
-Transform complete beginners into confident TypeScript developers through:
-- Beginner-friendly explanations with real-world analogies
-- Progressive difficulty from basics to advanced concepts
-- Interactive UI with progress tracking
-- Quick reference materials for syntax lookup
+- **Interview Preparation**: Quick revision before QA interviews
+- **Multi-Topic Coverage**: All essential QA engineering skills in one place
+- **Structured Learning**: Lessons → Cheatsheet → Examples for each topic
+- **Progress Tracking**: Mark completed topics and track learning
+- **Modern UI**: Glassmorphism design with mega menu navigation
 
 ## Architecture
 
@@ -23,77 +23,69 @@ Transform complete beginners into confident TypeScript developers through:
 ### Project Structure
 
 ```
-cheat/
+qa_notes/
 ├── src/
-│   ├── App.tsx                 # Main app component with tab-based routing
-│   ├── main.tsx               # Entry point, renders App
+│   ├── App.tsx                 # Main app with state-based routing
+│   ├── main.tsx               # Entry point
 │   │
-│   ├── components/            # Reusable UI components (7 files)
-│   │   ├── Navigation.tsx     # Top nav with desktop/mobile support
-│   │   ├── CodeBlock.tsx      # Syntax-highlighted code display
-│   │   ├── ExpandableSection.tsx  # Collapsible content sections
-│   │   ├── Explanation.tsx    # Styled explanation boxes
-│   │   ├── TipBox.tsx         # Highlighted tip callouts
-│   │   ├── Header.tsx         # Page headers with icons
-│   │   └── Resources.tsx      # External resource links
+│   ├── components/            # Reusable UI components
+│   │   ├── Navigation.tsx     # Mega menu with 9 topics
+│   │   └── CodeBlock.tsx      # Syntax highlighting
 │   │
-│   ├── pages/                 # Main page components (5 files)
-│   │   ├── Home.tsx           # Landing page with overview
-│   │   ├── Lessons.tsx        # Lesson browser with progress tracking
-│   │   ├── Cheatsheet.tsx     # Quick reference with all 16 topics
-│   │   ├── Details.tsx        # Detailed explanations page
-│   │   └── Examples.tsx       # Practical code examples
+│   ├── pages/                 # Main pages
+│   │   ├── Home.tsx           # Landing page
+│   │   ├── Lessons.tsx        # Multi-topic lesson browser
+│   │   └── Details.tsx        # About page
 │   │
-│   ├── sections/              # Cheatsheet section components (16 files)
-│   │   ├── GettingStartedSection.tsx
-│   │   ├── BasicTypesSection.tsx
-│   │   ├── TypeInferenceSection.tsx
-│   │   ├── FunctionsSection.tsx
-│   │   ├── InterfacesSection.tsx
-│   │   ├── TypeAliasesSection.tsx
-│   │   ├── ClassesSection.tsx
-│   │   ├── GenericsSection.tsx
-│   │   ├── EnumsSection.tsx
-│   │   ├── TypeGuardsSection.tsx
-│   │   ├── UtilityTypesSection.tsx
-│   │   ├── AdvancedPatternsSection.tsx
-│   │   ├── TsConfigSection.tsx
-│   │   ├── CommonPatternsSection.tsx
-│   │   ├── CommonErrorsSection.tsx
-│   │   └── QuickReferenceSection.tsx
-│   │
-│   └── data/
-│       ├── cheatsheet/        # Quick reference JSON (16 files)
-│       │   └── [topic].json   # Brief syntax, code blocks, tips
-│       │
-│       └── lessons/           # Detailed lesson JSON (16 files)
-│           └── [topic].json   # Comprehensive tutorials
+│   └── data/                  # Learning content (JSON)
+│       ├── typescript/        # ✅ Complete (48 files)
+│       │   ├── lessons/       # 16 detailed lessons
+│       │   ├── cheatsheet/    # 16 quick references
+│       │   └── examples/      # 16 practical examples
+│       ├── test-cases/        # 🚧 Planned
+│       ├── api-testing/       # 🚧 Planned
+│       ├── playwright/        # 🚧 Planned
+│       ├── appium/            # 🚧 Planned
+│       ├── cicd/              # 🚧 Planned
+│       ├── docker/            # 🚧 Planned
+│       ├── n8n/               # 🚧 Planned
+│       └── llm-testing/       # 🚧 Planned
 │
-├── index.html                 # HTML template with Tailwind CDN
-├── vite.config.ts            # Vite configuration
-├── tsconfig.json             # TypeScript strict mode config
-└── package.json              # Dependencies and scripts
+├── DATA_STRUCTURE.md          # Detailed folder structure
+├── index.html                 # HTML with Tailwind CDN
+└── package.json              # Dependencies
 ```
 
 ## Key Features
 
 ### 1. Navigation System
-- **Tab-based routing**: Uses React state (`activeTab`) to switch pages
-- **5 main pages**: Home, Cheatsheet, Lessons, Details, Examples
-- **Practice dropdown**: Links to external TypeScript learning resources
-- **Mobile responsive**: Hamburger menu for small screens
-- **Sticky header**: Navigation stays at top during scroll
+- **Mega Menu**: Hover-enabled dropdown showing all 9 QA topics
+- **Topic Icons**: Each topic has custom Lucide icon and color
+- **Status Badges**: ✓ for complete topics, "Soon" for planned
+- **Mobile Responsive**: Accordion menu with all topics listed
+- **Sticky Header**: Navigation stays at top during scroll
+- **3 Main Pages**: Home, Topics (via mega menu), Details
 
-### 2. Lessons System
-**Location**: `src/pages/Lessons.tsx` + `src/data/lessons/*.json`
+### 2. Multi-Topic System
+**Location**: `src/pages/Lessons.tsx` + `src/data/[topic]/*.json`
+
+**Current Topics**:
+1. **TypeScript** ✅ - Complete (16 lessons, 16 cheatsheets, 16 examples)
+2. **Test Cases** 🚧 - Planned
+3. **API Testing** 🚧 - Planned
+4. **Playwright** 🚧 - Planned
+5. **Appium** 🚧 - Planned
+6. **CI/CD** 🚧 - Planned
+7. **Docker** 🚧 - Planned
+8. **N8N** 🚧 - Planned
+9. **LLM Testing** 🚧 - Planned
 
 **Features**:
-- 16 comprehensive lessons matching cheatsheet topics
-- Progress tracking with `completedLessons` Set
+- 3-tab structure per topic: Lesson | Cheatsheet | Examples
+- Progress tracking per topic
 - Sidebar curriculum with lesson numbers
-- Progress bar showing completion percentage
 - Mark-as-complete functionality
-- Dynamic lesson loading via switch statement (not template literals due to Vite)
+- Dynamic content loading via switch statement
 
 **Lesson Structure** (JSON format):
 ```json
