@@ -38,6 +38,7 @@ When generating or modifying code in this project, LLMs MUST follow these princi
    - Document new functions, components, or patterns added
    - Update compliance scores if code quality improved
    - Mark completed TODO tasks as ✅ COMPLETED with date
+   - **When user says "update context files", this includes PROJECT_CONTEXT.md**
    - This is MANDATORY - not optional
 
 6. ✅ **Always Add Test IDs (data-testid) to All Components**
@@ -824,11 +825,58 @@ refactor: Simplify lesson loading switch statement
 ---
 
 **Project Status**: ✅ Production Ready  
-**Last Updated**: December 24, 2025 (Dropdown Unification)  
+**Last Updated**: December 24, 2025 (Profile Image Integration & Layout Redesign)  
 **Version**: 2.0.0  
 **Maintainer**: Syed Monowarul Islam
 
 ## 🎉 Recent Achievements (Dec 24, 2025)
+
+### ✅ About Me Page with Profile Image Integration
+**User Request**: "I am not liking the image frame design. I want it to be bigger. increase its size and place it in a square frame and place it to the left and the other information to the right"
+
+**Implementation**:
+- Created comprehensive AboutMe.tsx page (408 lines)
+- Integrated actual profile image with smart fallback system
+- Implemented professional left-right layout design
+- Added square frame with gradient borders (320px × 320px)
+- Added dual badges: Active (Zap) and Verified (Award)
+- Integrated 21 Lucide icons throughout the page
+- Created Professional Highlights section with 3 cards
+- Implemented smart icon mapping for specializations
+- Added 8 test IDs for automation testing
+
+**Layout Features**:
+- **Left side**: Large square profile image with gradient border
+- **Right side**: Name, title, tagline, stats - vertically distributed
+- **Responsive**: Stacks vertically on mobile, side-by-side on desktop
+- **Balanced proportions**: items-center alignment for equal heights
+- **Error handling**: Automatic fallback to gradient avatar with initials
+
+**Profile Image System**:
+- Primary: `/images/profile/smizibon.jpg` (actual photo - 61KB)
+- Fallback: Gradient avatar with initials "SMI" (automatic on error)
+- Smart error handling with onError handler
+- Maintains design consistency in both modes
+
+**Data Structure**:
+- Created `/src/data/profile/about.json` with profile information
+- Modified tagline to showcase experience
+- Removed redundant bio content
+- Professional structure for all profile sections
+
+**Technical Details**:
+- 8 interactive elements with test IDs
+- 21 Lucide React icons integrated
+- Professional Highlights cards: Global Experience, Test Automation Expert, Community Leader
+- Smart icon mapping: Shield, Smartphone, Monitor, Heart, Users, TestTube2, Globe
+- Gradient effects and hover animations throughout
+
+**Impact**:
+- New standalone About Me page accessible from navigation
+- Professional profile presentation
+- Enhanced user experience with visual hierarchy
+- Maintains all Ground Rules compliance
+- Zero breaking changes to existing functionality
 
 ### ✅ Unified Dropdown Menu Design
 **User Request**: "make it uniform and professional. You can incorporate the feature of both and make a hybrid"
