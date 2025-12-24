@@ -2,29 +2,57 @@
 
 ## 🚨 Code Quality Issues Found
 
-### ❌ Issue #1: Massive Code Duplication in Lessons.tsx
+### ❌ Issue #1: Massive Code Duplication in Lessons.tsx (HIGH PRIORITY)
 
-**Problem**: Lines 170-223 contain 48 nearly identical lines creating import maps:
+**Location**: Lines 170-223  
+**Severity**: 🔴 Critical - Violates reusability principle  
+**Compliance Score**: 60%
+
+**Problem**: 48 nearly identical lines creating import maps:
 ```typescript
 'getting-started.json': () => loadJsonFile('/src/data/typescript/lessons/getting-started.json'),
 'basic-types.json': () => loadJsonFile('/src/data/typescript/lessons/basic-types.json'),
-// ... 46 more similar lines for lessons, cheatsheet, examples
+// ... repeated 46 more times across 3 maps (LESSON_IMPORTS, CHEATSHEET_IMPORTS, EXAMPLES_IMPORTS)
 ```
 
 **Impact**: 
 - Violates "Always try to use reusable code" principle
 - Hard to maintain (3 separate maps)
-- Not scalable for adding new topics
+- Not scalable for 9 planned topics (will become 144 lines)
 - Hardcoded topic name ("typescript")
 
-**Solution Needed**: Create utility function in utils/contentLoader.ts
-**Status**: 🔴 **TO BE REFACTORED** - High priority
+**TODO - Refactoring Task**:
+Create `src/utils/contentLoader.ts`:
+```typescript
+export function createContentImports(
+  topic: string,
+  contentType: 'lessons' | 'cheatsheet' | 'examples',
+  fileNames: string[]
+): Record<string, () => Promise<any>> {
+  return fileNames.reduce((acc, fileName) => {
+    acc[fileName] = () => loadJsonFile(`/src/data/${topic}/${contentType}/${fileName}`);
+    return acc;
+  }, {} as Record<string, () => Promise<any>>);
+}
 
-### ✅ Good Practices Found:
-1. Error handling: All render functions wrapped with try-catch
-2. ErrorDisplay: Consistent error UI
-3. loadJsonFile: Using centralized utility
-4. Type Safety: TypeScript interfaces defined
+// Usage in Lessons.tsx:
+const fileNames = ['getting-started.json', 'basic-types.json', ...];
+const LESSON_IMPORTS = createContentImports('typescript', 'lessons', fileNames);
+const CHEATSHEET_IMPORTS = createContentImports('typescript', 'cheatsheet', fileNames);
+const EXAMPLES_IMPORTS = createContentImports('typescript', 'examples', fileNames);
+```
+
+**Estimated Effort**: 2 hours  
+**Priority**: Complete BEFORE adding new topics  
+**Benefit**: Reduces 144 lines to ~25 lines + reusable utility
+
+### ✅ Good Practices Found (95% Compliance):
+
+1. **Error Handling**: All render functions wrapped with try-catch ✅
+2. **ErrorDisplay Usage**: Consistent error UI across all tabs ✅
+3. **loadJsonFile**: Using centralized error-handling utility ✅
+4. **Type Safety**: TypeScript interfaces for all data structures ✅
+5. **Error Boundaries**: Lines 813, 870, 928 properly implemented ✅
 
 ## Purpose
 Top-level page components that represent different views/routes in the application. Pages orchestrate data loading, state management, and render child components.

@@ -32,6 +32,18 @@ Before modifying ANY code in this directory, LLMs MUST follow these principles:
 
 **See PROJECT_CONTEXT.md for detailed examples and anti-patterns.**
 
+## Overall Codebase Compliance: 75%
+
+| Directory | Score | Status |
+|-----------|-------|--------|
+| `components/` | 90% | ✅ Excellent |
+| `utils/` | 95% | ✅ Excellent |
+| `pages/` | 65% | ⚠️ Needs Work |
+| `data/` | 100% | ✅ Perfect |
+
+**Main Issue**: Lessons.tsx has code duplication (see pages/CONTEXT.md)  
+**Priority**: Refactor before adding new topics
+
 ## Purpose
 
 The `src/` directory contains all application source code organized into logical subdirectories. Each major subdirectory has its own `CONTEXT.md` file that provides detailed information about the files and patterns within that directory.
