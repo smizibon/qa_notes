@@ -78,9 +78,10 @@ export default function Navigation({ activeTab, setActiveTab, setSelectedTopic }
             {/* Topics Mega Menu */}
             <div 
               className="relative group/topics"
+              onMouseEnter={() => setIsTopicsOpen(true)}
+              onMouseLeave={() => setIsTopicsOpen(false)}
             >
               <button
-                onMouseEnter={() => setIsTopicsOpen(true)}
                 onClick={() => setActiveTab('lessons')}
                 className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
                   activeTab === 'lessons'
@@ -92,106 +93,135 @@ export default function Navigation({ activeTab, setActiveTab, setSelectedTopic }
                 Topics
               </button>
 
-              {/* Mega Menu Dropdown */}
-              {isTopicsOpen && (
-                <div 
-                  className="absolute left-0 mt-2 w-80 bg-slate-800/95 backdrop-blur-xl border border-slate-600/50 rounded-2xl shadow-2xl z-10"
-                  onMouseEnter={() => setIsTopicsOpen(true)}
-                  onMouseLeave={() => setIsTopicsOpen(false)}
-                >
-                  <div className="p-3">
-                    <div className="mb-2 px-3 py-2">
-                      <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Learning Topics</h3>
-                    </div>
-                    <div className="space-y-1">
-                      {topics.map((topic) => {
-                        const Icon = topic.icon;
-                        const isActive = topic.status === 'complete';
-                        return (
-                          <button
-                            key={topic.id}
-                            onClick={() => {
-                              if (isActive) {
-                                setSelectedTopic(topic.id);
-                                setActiveTab('lessons');
-                                setIsTopicsOpen(false);
-                              }
-                            }}
-                            disabled={!isActive}
-                            className={`w-full p-3 rounded-xl text-left transition-all duration-200 flex items-center gap-3 ${
-                              isActive
-                                ? 'hover:bg-slate-700/50 hover:pl-4 cursor-pointer text-white'
-                                : 'opacity-50 cursor-not-allowed text-gray-500'
-                            }`}
-                          >
-                            <div className={`p-2 rounded-lg flex-shrink-0 ${
+              {/* Unified Mega Menu Dropdown */}
+              <div 
+                className={`absolute left-0 mt-2 w-80 bg-slate-800/95 backdrop-blur-xl border border-slate-600/50 rounded-2xl shadow-2xl shadow-black/20 transition-all duration-300 ${
+                  isTopicsOpen 
+                    ? 'opacity-100 visible translate-y-0' 
+                    : 'opacity-0 invisible -translate-y-2'
+                } z-10`}
+              >
+                <div className="p-3">
+                  {/* Section Header */}
+                  <div className="mb-2 px-3 py-2">
+                    <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Learning Topics</h3>
+                  </div>
+                  
+                  {/* Topics List */}
+                  <div className="space-y-1">
+                    {topics.map((topic) => {
+                      const Icon = topic.icon;
+                      const isActive = topic.status === 'complete';
+                      return (
+                        <button
+                          key={topic.id}
+                          onClick={() => {
+                            if (isActive) {
+                              setSelectedTopic(topic.id);
+                              setActiveTab('lessons');
+                              setIsTopicsOpen(false);
+                            }
+                          }}
+                          disabled={!isActive}
+                          className={`w-full p-3 rounded-xl text-left transition-all duration-200 flex items-center gap-3 group/item ${
+                            isActive
+                              ? 'hover:bg-slate-700/50 hover:pl-4 cursor-pointer'
+                              : 'opacity-50 cursor-not-allowed'
+                          }`}
+                        >
+                          {/* Icon Container */}
+                          <div className={`p-2 rounded-lg flex-shrink-0 transition-all duration-200 ${
+                            isActive 
+                              ? 'bg-blue-500/20 group-hover/item:bg-blue-500/30' 
+                              : 'bg-slate-700/50'
+                          }`}>
+                            <Icon className={`h-4 w-4 transition-colors ${
                               isActive 
-                                ? 'bg-blue-500/20' 
-                                : 'bg-slate-700/50'
-                            }`}>
-                              <Icon className={`h-4 w-4 ${
+                                ? 'text-blue-400 group-hover/item:text-blue-300' 
+                                : 'text-slate-500'
+                            }`} />
+                          </div>
+                          
+                          {/* Content */}
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2">
+                              <span className={`text-sm font-medium transition-colors ${
                                 isActive 
-                                  ? 'text-blue-400' 
-                                  : 'text-gray-500'
-                              }`} />
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center gap-2">
-                                <span className={`text-sm font-medium ${
-                                  isActive ? 'text-gray-200' : 'text-gray-500'
-                                }`}>
-                                  {topic.name}
-                                </span>
-                                {topic.status === 'complete' && (
-                                  <span className="px-1.5 py-0.5 text-xs font-medium bg-green-500/20 text-green-400 rounded">
-                                    ✓
-                                  </span>
-                                )}
-                              </div>
+                                  ? 'text-slate-200 group-hover/item:text-white' 
+                                  : 'text-slate-500'
+                              }`}>
+                                {topic.name}
+                              </span>
                               {topic.status === 'complete' && (
-                                <p className="text-xs text-gray-400 mt-0.5">
-                                  16 lessons
-                                </p>
-                              )}
-                              {topic.status === 'planned' && (
-                                <p className="text-xs text-gray-500 mt-0.5">
-                                  Coming soon
-                                </p>
+                                <span className="px-1.5 py-0.5 text-xs font-medium bg-green-500/20 text-green-400 rounded">
+                                  ✓
+                                </span>
                               )}
                             </div>
-                          </button>
-                        );
-                      })}
-                    </div>
+                            <p className={`text-xs mt-0.5 transition-colors ${
+                              topic.status === 'complete' 
+                                ? 'text-slate-400 group-hover/item:text-slate-300' 
+                                : 'text-slate-600'
+                            }`}>
+                              {topic.status === 'complete' ? '16 lessons' : 'Coming soon'}
+                            </p>
+                          </div>
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
-              )}
+              </div>
             </div>
 
             {/* Links Dropdown */}
-            <div className="relative group">
+            <div 
+              className="relative group/links"
+              onMouseEnter={() => {}}
+              onMouseLeave={() => {}}
+            >
               <button className="px-4 py-2 rounded-xl text-sm font-medium text-gray-300 hover:bg-slate-700/50 transition-all duration-300 flex items-center gap-2 hover:scale-105">
                 <ExternalLink className="h-4 w-4" />
                 Links
               </button>
-              <div className="absolute right-0 mt-2 w-72 bg-slate-800/90 backdrop-blur-xl border border-slate-600/50 rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 -translate-y-2 z-10">
-                <div className="py-2">
-                  {links.map((link) => (
-                    <a
-                      key={link.name}
-                      href={link.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="block px-4 py-3 text-sm hover:bg-slate-700/50 transition-all duration-200 first:rounded-t-2xl last:rounded-b-2xl hover:pl-6 group/item"
-                    >
-                      <div className="font-medium text-gray-200 group-hover/item:text-blue-400 transition-colors">
-                        {link.name}
-                      </div>
-                      <div className="text-xs text-gray-400 mt-0.5">
-                        {link.tooltip}
-                      </div>
-                    </a>
-                  ))}
+              
+              {/* Unified Links Dropdown */}
+              <div className="absolute right-0 mt-2 w-80 bg-slate-800/95 backdrop-blur-xl border border-slate-600/50 rounded-2xl shadow-2xl shadow-black/20 opacity-0 invisible group-hover/links:opacity-100 group-hover/links:visible transition-all duration-300 transform group-hover/links:translate-y-0 -translate-y-2 z-10">
+                <div className="p-3">
+                  {/* Section Header */}
+                  <div className="mb-2 px-3 py-2">
+                    <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">External Resources</h3>
+                  </div>
+                  
+                  {/* Links List */}
+                  <div className="space-y-1">
+                    {links.map((link) => (
+                      <a
+                        key={link.name}
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block p-3 rounded-xl hover:bg-slate-700/50 transition-all duration-200 hover:pl-4 group/item"
+                      >
+                        <div className="flex items-start gap-3">
+                          {/* Icon */}
+                          <div className="p-2 rounded-lg bg-slate-700/50 group-hover/item:bg-blue-500/20 flex-shrink-0 transition-all duration-200">
+                            <ExternalLink className="h-4 w-4 text-slate-400 group-hover/item:text-blue-400 transition-colors" />
+                          </div>
+                          
+                          {/* Content */}
+                          <div className="flex-1 min-w-0">
+                            <div className="font-medium text-slate-200 group-hover/item:text-white transition-colors text-sm">
+                              {link.name}
+                            </div>
+                            <div className="text-xs text-slate-400 group-hover/item:text-slate-300 mt-0.5 transition-colors">
+                              {link.tooltip}
+                            </div>
+                          </div>
+                        </div>
+                      </a>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
