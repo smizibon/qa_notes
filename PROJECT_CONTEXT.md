@@ -40,13 +40,46 @@ When generating or modifying code in this project, LLMs MUST follow these princi
    - Mark completed TODO tasks as ✅ COMPLETED with date
    - This is MANDATORY - not optional
 
+6. ✅ **Always Add Test IDs (data-testid) to All Components**
+   - Every interactive element MUST have a `data-testid` attribute
+   - Use kebab-case naming: `data-testid="nav-home-button"`
+   - Follow naming convention: `{component}-{element}-{type}`
+   - Examples: `"navigation"`, `"nav-topics-button"`, `"error-display-compact"`
+   - Dynamic elements: Use template literals with IDs: `` data-testid={`topic-${topic.id}`} ``
+   - Mobile vs Desktop: Prefix mobile elements: `"mobile-topic-typescript"`
+   - This enables easier test automation with Playwright, Cypress, etc.
+   - **MANDATORY for all new components and major updates**
+
+**Example of Test ID Naming**:
+```tsx
+// ✅ GOOD: Clear, consistent test IDs
+<nav data-testid="navigation">
+  <button data-testid="nav-home-button">Home</button>
+  <button data-testid="nav-topics-button">Topics</button>
+  <div data-testid="topics-dropdown-menu">
+    {topics.map(topic => (
+      <button data-testid={`topic-${topic.id}`}>
+        {topic.name}
+      </button>
+    ))}
+  </div>
+</nav>
+
+// ❌ BAD: No test IDs
+<nav>
+  <button>Home</button>
+  <button>Topics</button>
+</nav>
+```
+
 **Example Workflow**:
 ```
 1. Make code changes
-2. Test app (npm run dev) - confirm no errors
-3. ✅ Platform is stable
-4. Update relevant CONTEXT.md files
-5. Commit changes with updated documentation
+2. Add data-testid attributes to all interactive elements
+3. Test app (npm run dev) - confirm no errors
+4. ✅ Platform is stable
+5. Update relevant CONTEXT.md files
+6. Commit changes with updated documentation
 ```
 
 **Context Update Triggers**:
@@ -56,6 +89,7 @@ When generating or modifying code in this project, LLMs MUST follow these princi
 - ✅ Bug fixes that change behavior
 - ✅ New patterns or conventions introduced
 - ✅ TODO tasks completed
+- ✅ Test IDs added to components
 - ❌ NOT needed for minor typos or style tweaks
 
 **Example of Good Practice**:

@@ -49,11 +49,12 @@ export default function Navigation({ activeTab, setActiveTab, setSelectedTopic }
   ];
 
   return (
-    <nav className="bg-slate-800/70 backdrop-blur-xl shadow-2xl mb-8 rounded-2xl border border-slate-700/50 sticky top-4 z-50">
+    <nav data-testid="navigation" className="bg-slate-800/70 backdrop-blur-xl shadow-2xl mb-8 rounded-2xl border border-slate-700/50 sticky top-4 z-50">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex justify-between items-center h-16">
           {/* Logo/Brand - Acts as Home Button */}
           <button 
+            data-testid="nav-home-button"
             onClick={() => setActiveTab('home')}
             className="flex-shrink-0 flex items-center gap-3 px-4 py-2 rounded-xl transition-all duration-300 hover:bg-slate-700/50 hover:scale-105 group"
           >
@@ -68,14 +69,16 @@ export default function Navigation({ activeTab, setActiveTab, setSelectedTopic }
           </button>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex items-center space-x-1">
+          <div data-testid="desktop-menu" className="hidden md:flex items-center space-x-1">
             {/* Topics Mega Menu */}
             <div 
+              data-testid="topics-dropdown-container"
               className="relative group/topics"
               onMouseEnter={() => setIsTopicsOpen(true)}
               onMouseLeave={() => setIsTopicsOpen(false)}
             >
               <button
+                data-testid="nav-topics-button"
                 onClick={() => setActiveTab('lessons')}
                 className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
                   activeTab === 'lessons'
@@ -89,6 +92,7 @@ export default function Navigation({ activeTab, setActiveTab, setSelectedTopic }
 
               {/* Unified Mega Menu Dropdown */}
               <div 
+                data-testid="topics-dropdown-menu"
                 className={`absolute left-0 mt-2 w-80 bg-slate-800/95 backdrop-blur-xl border border-slate-600/50 rounded-2xl shadow-2xl shadow-black/20 transition-all duration-300 ${
                   isTopicsOpen 
                     ? 'opacity-100 visible translate-y-0' 
@@ -109,6 +113,7 @@ export default function Navigation({ activeTab, setActiveTab, setSelectedTopic }
                       return (
                         <button
                           key={topic.id}
+                          data-testid={`topic-${topic.id}`}
                           onClick={() => {
                             if (isActive) {
                               setSelectedTopic(topic.id);
@@ -170,17 +175,18 @@ export default function Navigation({ activeTab, setActiveTab, setSelectedTopic }
 
             {/* Links Dropdown */}
             <div 
+              data-testid="links-dropdown-container"
               className="relative group/links"
               onMouseEnter={() => {}}
               onMouseLeave={() => {}}
             >
-              <button className="px-4 py-2 rounded-xl text-sm font-medium text-gray-300 hover:bg-blue-500/20 hover:text-blue-300 transition-all duration-300 flex items-center gap-2 hover:scale-105">
+              <button data-testid="nav-links-button" className="px-4 py-2 rounded-xl text-sm font-medium text-gray-300 hover:bg-blue-500/20 hover:text-blue-300 transition-all duration-300 flex items-center gap-2 hover:scale-105">
                 <ExternalLink className="h-4 w-4" />
                 Links
               </button>
               
               {/* Unified Links Dropdown */}
-              <div className="absolute right-0 mt-2 w-80 bg-slate-800/95 backdrop-blur-xl border border-slate-600/50 rounded-2xl shadow-2xl shadow-black/20 opacity-0 invisible group-hover/links:opacity-100 group-hover/links:visible transition-all duration-300 transform group-hover/links:translate-y-0 -translate-y-2 z-10">
+              <div data-testid="links-dropdown-menu" className="absolute right-0 mt-2 w-80 bg-slate-800/95 backdrop-blur-xl border border-slate-600/50 rounded-2xl shadow-2xl shadow-black/20 opacity-0 invisible group-hover/links:opacity-100 group-hover/links:visible transition-all duration-300 transform group-hover/links:translate-y-0 -translate-y-2 z-10">
                 <div className="p-3">
                   {/* Section Header */}
                   <div className="mb-2 px-3 py-2">
@@ -192,6 +198,7 @@ export default function Navigation({ activeTab, setActiveTab, setSelectedTopic }
                     {links.map((link) => (
                       <a
                         key={link.name}
+                        data-testid={`external-link-${link.name.toLowerCase().replace(/\s+/g, '-')}`}
                         href={link.url}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -224,6 +231,7 @@ export default function Navigation({ activeTab, setActiveTab, setSelectedTopic }
           {/* Mobile menu button */}
           <div className="md:hidden">
             <button
+              data-testid="mobile-menu-button"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="inline-flex items-center justify-center p-2 rounded-md text-gray-300 hover:bg-gray-700 focus:outline-none"
             >
@@ -234,7 +242,7 @@ export default function Navigation({ activeTab, setActiveTab, setSelectedTopic }
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="md:hidden pb-4">
+          <div data-testid="mobile-menu" className="md:hidden pb-4">
             <div className="flex flex-col space-y-2">
               {/* Mobile Topics Section */}
               <div className="pt-2 border-t border-gray-700">
@@ -245,6 +253,7 @@ export default function Navigation({ activeTab, setActiveTab, setSelectedTopic }
                   return (
                     <button
                       key={topic.id}
+                      data-testid={`mobile-topic-${topic.id}`}
                       onClick={() => {
                         if (isActive) {
                           setSelectedTopic(topic.id);
@@ -282,6 +291,7 @@ export default function Navigation({ activeTab, setActiveTab, setSelectedTopic }
                 {links.map((link) => (
                   <a
                     key={link.name}
+                    data-testid={`mobile-link-${link.name.toLowerCase().replace(/\s+/g, '-')}`}
                     href={link.url}
                     target="_blank"
                     rel="noopener noreferrer"

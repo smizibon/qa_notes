@@ -2,12 +2,12 @@ import { Heart, Github, Linkedin } from 'lucide-react';
 
 export default function Footer() {
   return (
-    <footer className="mt-16 pt-8 border-t border-slate-700/30">
+    <footer data-testid="footer" className="mt-16 pt-8 border-t border-slate-700/30">
       <div className="max-w-7xl mx-auto px-4">
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           {/* About */}
-          <div>
+          <div data-testid="footer-about">
             <h3 className="text-lg font-semibold text-white mb-3 flex items-center gap-2">
               <Heart className="w-5 h-5 text-red-400" />
               QA Notes
@@ -20,6 +20,7 @@ export default function Footer() {
               href="https://www.linkedin.com/in/smizibon/" 
               target="_blank" 
               rel="noopener noreferrer"
+              data-testid="footer-linkedin-link"
               className="inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 transition-colors text-sm"
             >
               <Linkedin className="w-4 h-4" />
@@ -28,7 +29,7 @@ export default function Footer() {
           </div>
 
           {/* Quick Links */}
-          <div>
+          <div data-testid="footer-quick-links">
             <h3 className="text-lg font-semibold text-white mb-3">Quick Links</h3>
             <ul className="space-y-2 text-sm">
               <li>
@@ -36,6 +37,7 @@ export default function Footer() {
                   href="https://github.com/smizibon/qa_notes" 
                   target="_blank" 
                   rel="noopener noreferrer"
+                  data-testid="footer-github-link"
                   className="text-slate-400 hover:text-blue-400 transition-colors flex items-center gap-2"
                 >
                   <Github className="w-4 h-4" />
@@ -66,7 +68,7 @@ export default function Footer() {
           </div>
 
           {/* Features */}
-          <div>
+          <div data-testid="footer-features">
             <h3 className="text-lg font-semibold text-white mb-3">Features</h3>
             <ul className="space-y-2 text-sm text-slate-400">
               <li>✅ 16 TypeScript Lessons</li>

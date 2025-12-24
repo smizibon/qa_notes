@@ -7,9 +7,9 @@ interface CodeBlockProps {
 
 export default function CodeBlock({ title, children }: CodeBlockProps) {
   return (
-    <div className="my-4 group">
+    <div data-testid="code-block" className="my-4 group">
       {title && (
-        <div className="flex items-center gap-2 mb-3 px-1">
+        <div data-testid="code-block-title" className="flex items-center gap-2 mb-3 px-1">
           <div className="relative">
             <FileCode className="h-5 w-5 text-blue-400 relative z-10" />
             <div className="absolute inset-0 blur-lg bg-blue-400/30"></div>
@@ -21,7 +21,7 @@ export default function CodeBlock({ title, children }: CodeBlockProps) {
       )}
       <div className="relative rounded-xl overflow-hidden border border-slate-700/50 group-hover:border-blue-500/30 transition-all duration-300">
         <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-full blur-3xl"></div>
-        <pre className="bg-gradient-to-br from-slate-900 to-slate-950 p-5 overflow-x-auto relative z-10">
+        <pre data-testid="code-block-content" className="bg-gradient-to-br from-slate-900 to-slate-950 p-5 overflow-x-auto relative z-10">
           <code className="text-sm text-gray-100 font-mono">{children}</code>
         </pre>
       </div>
