@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import Home from './pages/Home';
 import Navigation from './components/Navigation.tsx';
-import Details from './pages/Details';
 import Lessons from './pages/Lessons';
 
 export default function TypeScriptCheatsheet() {
@@ -13,8 +12,6 @@ export default function TypeScriptCheatsheet() {
         return <Home />;
       case 'lessons':
         return <Lessons />;
-      case 'details':
-        return <Details />;
       default:
         return <Home />;
     }

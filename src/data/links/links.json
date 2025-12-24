@@ -1,0 +1,24 @@
+{
+  "links": [
+    {
+      "name": "TypeScript Playground",
+      "url": "https://www.typescriptlang.org/play",
+      "tooltip": "Interactive TypeScript compiler and sandbox"
+    },
+    {
+      "name": "TypeScript Exercises",
+      "url": "https://typescript-exercises.github.io/",
+      "tooltip": "Practice TypeScript with interactive exercises"
+    },
+    {
+      "name": "Type Challenges",
+      "url": "https://github.com/type-challenges/type-challenges",
+      "tooltip": "Collection of TypeScript type challenges"
+    },
+    {
+      "name": "Exercism TypeScript",
+      "url": "https://exercism.org/tracks/typescript",
+      "tooltip": "Learn TypeScript through coding exercises"
+    }
+  ]
+}

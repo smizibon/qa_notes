@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Menu, X, Home, FileCode, Info, ExternalLink, GraduationCap, BookOpen, Code, Smartphone, GitBranch, Container, Workflow, Brain, ClipboardCheck } from 'lucide-react';
+import { Menu, X, Home, FileCode, ExternalLink, GraduationCap, BookOpen, Code, Smartphone, GitBranch, Container, Workflow, Brain, ClipboardCheck } from 'lucide-react';
+import linksData from '../data/links/links.json';
 
 interface NavigationProps {
   activeTab: string;
@@ -22,12 +23,8 @@ export default function Navigation({ activeTab, setActiveTab }: NavigationProps)
     { id: 'llm-testing', name: 'LLM Testing', icon: Brain, status: 'planned', color: 'violet' },
   ];
 
-  const practiceLinks = [
-    { name: 'TypeScript Playground', url: 'https://www.typescriptlang.org/play' },
-    { name: 'TypeScript Exercises', url: 'https://typescript-exercises.github.io/' },
-    { name: 'Type Challenges', url: 'https://github.com/type-challenges/type-challenges' },
-    { name: 'Exercism TypeScript', url: 'https://exercism.org/tracks/typescript' },
-  ];
+  // Load links from JSON
+  const links = linksData.links;
 
   return (
     <nav className="bg-slate-800/70 backdrop-blur-xl shadow-2xl mb-8 rounded-2xl border border-slate-700/50 sticky top-4 z-50">
@@ -140,35 +137,28 @@ export default function Navigation({ activeTab, setActiveTab }: NavigationProps)
               )}
             </div>
 
-            <button
-              onClick={() => setActiveTab('details')}
-              className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
-                activeTab === 'details'
-                  ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg shadow-blue-500/50 scale-105'
-                  : 'text-gray-300 hover:bg-slate-700/50 hover:scale-105'
-              }`}
-            >
-              <Info className="h-4 w-4" />
-              Details
-            </button>
-
-            {/* Practice Links Dropdown */}
+            {/* Links Dropdown */}
             <div className="relative group">
               <button className="px-4 py-2 rounded-xl text-sm font-medium text-gray-300 hover:bg-slate-700/50 transition-all duration-300 flex items-center gap-2 hover:scale-105">
                 <ExternalLink className="h-4 w-4" />
-                Practice Sites
+                Links
               </button>
-              <div className="absolute right-0 mt-2 w-56 bg-slate-800/90 backdrop-blur-xl border border-slate-600/50 rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 -translate-y-2 z-10">
+              <div className="absolute right-0 mt-2 w-72 bg-slate-800/90 backdrop-blur-xl border border-slate-600/50 rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 -translate-y-2 z-10">
                 <div className="py-2">
-                  {practiceLinks.map((link) => (
+                  {links.map((link) => (
                     <a
                       key={link.name}
                       href={link.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="block px-4 py-3 text-sm text-gray-300 hover:bg-slate-700/50 hover:text-blue-400 transition-all duration-200 first:rounded-t-2xl last:rounded-b-2xl hover:pl-6"
+                      className="block px-4 py-3 text-sm hover:bg-slate-700/50 transition-all duration-200 first:rounded-t-2xl last:rounded-b-2xl hover:pl-6 group/item"
                     >
-                      {link.name}
+                      <div className="font-medium text-gray-200 group-hover/item:text-blue-400 transition-colors">
+                        {link.name}
+                      </div>
+                      <div className="text-xs text-gray-400 mt-0.5">
+                        {link.tooltip}
+                      </div>
                     </a>
                   ))}
                 </div>
@@ -245,34 +235,24 @@ export default function Navigation({ activeTab, setActiveTab }: NavigationProps)
                 })}
               </div>
 
-              <button
-                onClick={() => {
-                  setActiveTab('details');
-                  setIsMenuOpen(false);
-                }}
-                className={`px-4 py-2 rounded-md text-sm font-medium text-left flex items-center gap-2 ${
-                  activeTab === 'details'
-                    ? 'bg-blue-600 text-white'
-                    : 'text-gray-300 hover:bg-gray-700'
-                }`}
-              >
-                <Info className="h-4 w-4" />
-                Details
-              </button>
-
-              {/* Mobile Practice Links */}
+              {/* Mobile Links */}
               <div className="pt-2 border-t border-gray-700 mt-2">
-                <p className="px-4 py-2 text-xs font-semibold text-gray-400 uppercase">Practice Sites</p>
-                {practiceLinks.map((link) => (
+                <p className="px-4 py-2 text-xs font-semibold text-gray-400 uppercase">Links</p>
+                {links.map((link) => (
                   <a
                     key={link.name}
                     href={link.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-blue-400"
+                    className="block px-4 py-2 text-sm hover:bg-gray-700"
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    {link.name}
+                    <div className="font-medium text-gray-200 hover:text-blue-400">
+                      {link.name}
+                    </div>
+                    <div className="text-xs text-gray-400 mt-0.5">
+                      {link.tooltip}
+                    </div>
                   </a>
                 ))}
               </div>
