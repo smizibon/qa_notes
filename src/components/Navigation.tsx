@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Menu, X, FileCode, ExternalLink, GraduationCap, BookOpen, Code, Smartphone, GitBranch, Container, Workflow, Brain, ClipboardCheck } from 'lucide-react';
-import { loadJsonFile, ErrorHandler } from '../utils/errorHandler';
+import { loadJsonFile } from '../utils/errorHandler';
 
 interface NavigationProps {
   activeTab: string;
@@ -14,9 +14,12 @@ interface Link {
   tooltip: string;
 }
 
+
+
 export default function Navigation({ activeTab, setActiveTab, setSelectedTopic }: NavigationProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isTopicsOpen, setIsTopicsOpen] = useState(false);
+  const [hoveredTopic, setHoveredTopic] = useState<string | null>(null);
   const [links, setLinks] = useState<Link[]>([]);
 
   // Load links from JSON with error handling
@@ -37,15 +40,24 @@ export default function Navigation({ activeTab, setActiveTab, setSelectedTopic }
   }, []);
 
   const topics = [
-    { id: 'typescript', name: 'TypeScript', icon: FileCode, status: 'complete', color: 'blue' },
-    { id: 'test-cases', name: 'Test Cases', icon: ClipboardCheck, status: 'planned', color: 'purple' },
-    { id: 'api-testing', name: 'API Testing', icon: Code, status: 'planned', color: 'green' },
-    { id: 'playwright', name: 'Playwright', icon: BookOpen, status: 'planned', color: 'orange' },
-    { id: 'appium', name: 'Appium', icon: Smartphone, status: 'planned', color: 'pink' },
-    { id: 'cicd', name: 'CI/CD', icon: GitBranch, status: 'planned', color: 'indigo' },
-    { id: 'docker', name: 'Docker', icon: Container, status: 'planned', color: 'cyan' },
-    { id: 'n8n', name: 'N8N', icon: Workflow, status: 'planned', color: 'red' },
-    { id: 'llm-testing', name: 'LLM Testing', icon: Brain, status: 'planned', color: 'violet' },
+    { id: 'typescript', name: 'TypeScript', icon: FileCode, status: 'complete', color: 'blue', subtopics: [] },
+    { id: 'test-cases', name: 'Test Cases', icon: ClipboardCheck, status: 'planned', color: 'purple', subtopics: [] },
+    { id: 'api-testing', name: 'API Testing', icon: Code, status: 'planned', color: 'green', subtopics: [] },
+    { id: 'playwright', name: 'Playwright', icon: BookOpen, status: 'planned', color: 'orange', subtopics: [] },
+    { id: 'appium', name: 'Appium', icon: Smartphone, status: 'planned', color: 'pink', subtopics: [] },
+    { id: 'cicd', name: 'CI/CD', icon: GitBranch, status: 'planned', color: 'indigo', subtopics: [] },
+    { id: 'docker', name: 'Docker', icon: Container, status: 'planned', color: 'cyan', subtopics: [] },
+    { id: 'n8n', name: 'N8N', icon: Workflow, status: 'planned', color: 'red', subtopics: [] },
+    { 
+      id: 'llm-ai', 
+      name: 'LLM & AI', 
+      icon: Brain, 
+      status: 'in-progress', 
+      color: 'violet',
+      subtopics: [
+        { id: 'llm-ai', name: 'Prompt Engineering' }
+      ]
+    },
   ];
 
   return (
@@ -109,25 +121,33 @@ export default function Navigation({ activeTab, setActiveTab, setSelectedTopic }
                   <div className="space-y-1">
                     {topics.map((topic) => {
                       const Icon = topic.icon;
-                      const isActive = topic.status === 'complete';
+                      const isActive = topic.status === 'complete' || topic.status === 'in-progress';
+                      const hasSubtopics = topic.subtopics && topic.subtopics.length > 0;
+                      const showSubtopics = hoveredTopic === topic.id && hasSubtopics;
+                      
                       return (
-                        <button
+                        <div 
                           key={topic.id}
-                          data-testid={`topic-${topic.id}`}
-                          onClick={() => {
-                            if (isActive) {
-                              setSelectedTopic(topic.id);
-                              setActiveTab('lessons');
-                              setIsTopicsOpen(false);
-                            }
-                          }}
-                          disabled={!isActive}
-                          className={`w-full p-3 rounded-xl text-left transition-all duration-200 flex items-center gap-3 group/item ${
-                            isActive
-                              ? 'hover:bg-slate-700/50 hover:pl-4 cursor-pointer'
-                              : 'opacity-50 cursor-not-allowed'
-                          }`}
+                          className="relative"
+                          onMouseEnter={() => setHoveredTopic(topic.id)}
+                          onMouseLeave={() => setHoveredTopic(null)}
                         >
+                          <button
+                            data-testid={`topic-${topic.id}`}
+                            onClick={() => {
+                              if (isActive && !hasSubtopics) {
+                                setSelectedTopic(topic.id);
+                                setActiveTab('lessons');
+                                setIsTopicsOpen(false);
+                              }
+                            }}
+                            disabled={!isActive}
+                            className={`w-full p-3 rounded-xl text-left transition-all duration-200 flex items-center gap-3 group/item ${
+                              isActive
+                                ? 'hover:bg-slate-700/50 hover:pl-4 cursor-pointer'
+                                : 'opacity-50 cursor-not-allowed'
+                            }`}
+                          >
                           {/* Icon Container */}
                           <div className={`p-2 rounded-lg flex-shrink-0 transition-all duration-200 ${
                             isActive 
@@ -162,16 +182,60 @@ export default function Navigation({ activeTab, setActiveTab, setSelectedTopic }
                                 ? 'text-slate-400 group-hover/item:text-slate-300' 
                                 : 'text-slate-600'
                             }`}>
-                              {topic.status === 'complete' ? '16 lessons' : 'Coming soon'}
+                              {topic.status === 'complete' ? '16 lessons' : topic.status === 'in-progress' ? 'In Progress' : 'Coming soon'}
                             </p>
                           </div>
                         </button>
+                        
+                        {/* Subtopics Submenu */}
+                        {showSubtopics && (
+                          <div 
+                            className="absolute right-full top-0 mr-1 w-64 bg-slate-800/95 backdrop-blur-xl border border-slate-600/50 rounded-xl shadow-2xl shadow-black/20 p-2 z-20"
+                          >
+                            <div className="mb-1 px-2 py-1">
+                              <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{topic.name}</h4>
+                            </div>
+                            <div className="space-y-1">
+                              {topic.subtopics.map((subtopic) => (
+                                <button
+                                  key={subtopic.id}
+                                  onClick={() => {
+                                    setSelectedTopic(subtopic.id);
+                                    setActiveTab('lessons');
+                                    setIsTopicsOpen(false);
+                                    setHoveredTopic(null);
+                                  }}
+                                  className="w-full p-2 rounded-lg text-left transition-all duration-200 hover:bg-slate-700/50 hover:pl-3 group/sub"
+                                >
+                                  <span className="text-sm text-slate-200 group-hover/sub:text-white transition-colors">
+                                    {subtopic.name}
+                                  </span>
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
                       );
                     })}
                   </div>
                 </div>
               </div>
             </div>
+
+            {/* About Me Button */}
+            <button
+              data-testid="nav-about-button"
+              onClick={() => setActiveTab('about')}
+              className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
+                activeTab === 'about'
+                  ? 'bg-gradient-to-r from-purple-600 to-purple-500 text-white shadow-lg shadow-purple-500/50 scale-105'
+                  : 'text-gray-300 hover:bg-purple-500/20 hover:text-purple-300 hover:scale-105'
+              }`}
+            >
+              <GraduationCap className="h-4 w-4" />
+              About Me
+            </button>
 
             {/* Links Dropdown */}
             <div 
@@ -244,12 +308,40 @@ export default function Navigation({ activeTab, setActiveTab, setSelectedTopic }
         {isMenuOpen && (
           <div data-testid="mobile-menu" className="md:hidden pb-4">
             <div className="flex flex-col space-y-2">
+              {/* Mobile Home and About */}
+              <div className="pt-2 border-t border-gray-700">
+                <button
+                  onClick={() => {
+                    setActiveTab('home');
+                    setIsMenuOpen(false);
+                  }}
+                  className="w-full text-left px-4 py-3 text-sm text-gray-300 hover:bg-gray-700 hover:text-blue-400"
+                >
+                  Home
+                </button>
+                
+                <button
+                  data-testid="mobile-about-button"
+                  onClick={() => {
+                    setActiveTab('about');
+                    setIsMenuOpen(false);
+                  }}
+                  className={`w-full text-left px-4 py-3 text-sm ${
+                    activeTab === 'about'
+                      ? 'bg-purple-600 text-white'
+                      : 'text-gray-300 hover:bg-gray-700 hover:text-purple-400'
+                  }`}
+                >
+                  About Me
+                </button>
+              </div>
+              
               {/* Mobile Topics Section */}
               <div className="pt-2 border-t border-gray-700">
                 <p className="px-4 py-2 text-xs font-semibold text-gray-400 uppercase">Topics</p>
                 {topics.map((topic) => {
                   const Icon = topic.icon;
-                  const isActive = topic.status === 'complete';
+                  const isActive = topic.status === 'complete' || topic.status === 'in-progress';
                   return (
                     <button
                       key={topic.id}

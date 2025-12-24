@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Home from './pages/Home';
 import Navigation from './components/Navigation.tsx';
 import Lessons from './pages/Lessons';
+import AboutMe from './pages/AboutMe';
 import Footer from './components/Footer';
 
 export default function TypeScriptCheatsheet() {
@@ -12,6 +13,8 @@ export default function TypeScriptCheatsheet() {
     switch (activeTab) {
       case 'home':
         return <Home />;
+      case 'about':
+        return <AboutMe />;
       case 'lessons':
         return <Lessons selectedTopic={selectedTopic} />;
       default:

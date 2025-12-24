@@ -1,0 +1,214 @@
+{
+  "id": "examples-foundation-understanding",
+  "title": "Foundation & Understanding - Practical Examples",
+  "description": "Real-world examples demonstrating the concepts from Foundation & Understanding section",
+  "examples": [
+    {
+      "title": "Example 1: Test Case Generation - Before and After",
+      "scenario": "You need test cases for a user registration API",
+      "before": {
+        "prompt": "Write test cases for registration",
+        "output": "Generic test cases that may not fit your API structure",
+        "problems": [
+          "No context about API structure",
+          "Unclear what format is needed",
+          "Missing critical edge cases",
+          "No consideration for your specific requirements"
+        ]
+      },
+      "after": {
+        "prompt": "Write comprehensive test cases for a REST API user registration endpoint.\n\nAPI Details:\n- POST /api/v1/users/register\n- Accepts: { email: string, password: string, name: string }\n- Validations: \n  * Email must be valid format and unique\n  * Password min 8 chars, must have 1 uppercase, 1 number, 1 special char\n  * Name required, 2-50 characters\n- Returns: 201 with user object on success, 400 for validation errors, 409 if email exists\n\nRequirements:\n- 15 test cases total\n- Include: positive cases, negative validation cases, security tests, edge cases\n- Format as table: Test ID | Category | Description | Input | Expected Status | Expected Response\n- Consider SQL injection, XSS, rate limiting",
+        "output": "Detailed, relevant test cases covering all specified scenarios in the exact format needed",
+        "improvements": [
+          "Specific API structure provided",
+          "Clear validation rules stated",
+          "Exact format defined",
+          "Security considerations included",
+          "Quantity specified"
+        ]
+      },
+      "result": "80% time saving - got usable test cases in first attempt instead of multiple iterations"
+    },
+    {
+      "title": "Example 2: Avoiding Hallucination",
+      "scenario": "Getting information about a testing framework",
+      "before": {
+        "prompt": "What are the new features in Cypress 13.0?",
+        "output": "AI might confidently list 'features' that don't exist or are from different versions",
+        "problem": "AI doesn't know current version details and will make up plausible-sounding features",
+        "risk": "You might plan testing strategy around non-existent features"
+      },
+      "after": {
+        "prompt": "I'm providing the Cypress 13.0 release notes below. Based ONLY on this information, summarize the new features. If you're unsure about something, say 'Unclear from notes' instead of guessing.\n\n[Release Notes Content]\n\n---\n\nList the new features with brief explanations. For each feature, quote the relevant section from the release notes.",
+        "output": "Accurate feature list with citations, no made-up information",
+        "safeguards": [
+          "Provided source material",
+          "Explicit instruction to only use provided info",
+          "Required citations to verify",
+          "Permission to say 'don't know'"
+        ]
+      },
+      "lesson": "Always provide source material for factual information. Never trust AI's 'memory' of specific versions or recent updates."
+    },
+    {
+      "title": "Example 3: Token Efficiency in Action",
+      "scenario": "Requesting code review feedback",
+      "inefficient": {
+        "prompt": "I would really appreciate it if you could take some time to thoroughly review the following code that I have written and provide me with your detailed thoughts, suggestions, and recommendations for potential improvements...\n\n[code here]",
+        "tokenCount": "~45 tokens before the code even starts",
+        "issueExplanation": "Wastes tokens on unnecessary politeness and verbose phrasing"
+      },
+      "efficient": {
+        "prompt": "Review this code for:\n1. Bugs and logic errors\n2. Performance issues\n3. Best practice violations\n4. Security concerns\n\nProvide specific line references and improvement suggestions.\n\n[code here]",
+        "tokenCount": "~25 tokens with clearer requirements",
+        "benefits": [
+          "Saves 20 tokens (20 tokens × $0.00003 = real cost savings at scale)",
+          "Clearer what to focus on",
+          "More space for detailed response",
+          "Faster to read and process"
+        ]
+      },
+      "calculation": {
+        "scenarioDescription": "If you do 100 code reviews per month",
+        "tokenSaving": "20 tokens × 100 = 2,000 tokens saved per month",
+        "timeSaving": "Clearer responses mean less back-and-forth",
+        "qualitySaving": "More token budget for detailed answers"
+      }
+    },
+    {
+      "title": "Example 4: Understanding Context Window Limits",
+      "scenario": "Debugging a complex issue in a large codebase",
+      "mistake": {
+        "approach": "Paste entire 3000-line file and ask 'find the bug'",
+        "problem": "Exceeds context window or leaves no room for detailed response",
+        "result": "Truncated analysis or generic advice"
+      },
+      "solution": {
+        "approach": "Break down the problem systematically",
+        "steps": [
+          {
+            "step": 1,
+            "action": "Paste error message and stack trace",
+            "prompt": "Analyze this error and identify which function/module is likely causing it:\n[error details]"
+          },
+          {
+            "step": 2,
+            "action": "Paste only the identified problematic function",
+            "prompt": "Here's the function identified. Find the bug:\n[function code]\n\nContext: [brief description of what it should do]"
+          },
+          {
+            "step": 3,
+            "action": "Get fix suggestion",
+            "prompt": "Provide the corrected version with explanation of what was wrong"
+          }
+        ],
+        "benefits": [
+          "Stays within context limits",
+          "More focused analysis",
+          "Detailed explanations possible",
+          "Step-by-step debugging approach"
+        ]
+      }
+    },
+    {
+      "title": "Example 5: Working with LLM Prediction Mechanism",
+      "scenario": "Generating test data with specific patterns",
+      "understanding": "LLMs predict next tokens based on previous ones. Use this to your advantage!",
+      "technique": "Front-load important constraints",
+      "poorStructure": {
+        "prompt": "Generate user test data. Oh and make sure some have international characters, and some emails should be invalid format, and include edge cases like very long names.",
+        "problem": "Constraints mentioned after the main request - model may 'commit' to simple data structure before seeing requirements"
+      },
+      "goodStructure": {
+        "prompt": "Generate 10 user test records with these characteristics:\n\nCONSTRAINTS (must include all):\n- 3 users with international characters in names (Asian, Arabic, Cyrillic)\n- 2 users with invalid email formats\n- 2 users with edge-case names (very long, single character, with numbers)\n- 3 normal cases\n\nFormat: JSON array with { id, name, email, country }\n\n[Start generation]",
+        "explanation": "Constraints listed FIRST, before generation begins. This influences token prediction from the start."
+      },
+      "result": "Higher likelihood of meeting all requirements because they're part of the 'context' that influences every generated token"
+    },
+    {
+      "title": "Example 6: Failure Mode - Context Confusion",
+      "scenario": "Discussing both mobile and web testing in same conversation",
+      "conversation": [
+        {
+          "turn": 1,
+          "user": "How do I test push notifications in mobile app?",
+          "ai": "[Gives mobile push notification testing advice]"
+        },
+        {
+          "turn": 2,
+          "user": "What about testing real-time updates on the dashboard?",
+          "ai": "[Gives web socket testing advice for web]"
+        },
+        {
+          "turn": 3,
+          "user": "How do I automate these notification tests?",
+          "ai": "CONFUSION: Which notifications? Mobile push or web real-time? Might mix up the two!"
+        }
+      ],
+      "problem": "AI lost track of which context you're asking about",
+      "solution": {
+        "prompt": "For the MOBILE app push notifications we discussed (not the web dashboard), how do I automate these tests using Appium?",
+        "principle": "Always restate context explicitly. Don't rely on AI 'remembering' correctly.",
+        "benefit": "Clear, relevant answer specific to your actual question"
+      }
+    },
+    {
+      "title": "Example 7: Prompt Engineering for Test Automation Code",
+      "scenario": "Generate Playwright test code",
+      "basic": {
+        "prompt": "Write a test for login",
+        "output": "Generic test that may not match your selectors, structure, or patterns"
+      },
+      "engineered": {
+        "prompt": "Write a Playwright test for login functionality.\n\nContext:\n- Page Object Model pattern\n- TypeScript\n- Selectors using data-testid attributes\n- Base URL: https://app.example.com\n\nTest Requirements:\n- Navigate to /login\n- Fill username: 'test@example.com'\n- Fill password: 'Test123!'\n- Click login button\n- Verify redirects to /dashboard\n- Verify username appears in header\n\nCode Style:\n- Use async/await\n- Add descriptive test name\n- Include waiting for navigation\n- Add assertion messages\n\nProvide only the test function, not full file setup.",
+        "output": "Exactly what you need, matching your project patterns, ready to use",
+        "tokenCount": "This longer prompt is worth it - you get usable code immediately instead of fixing generic code"
+      },
+      "timeComparison": {
+        "basicPrompt": "1 min to write prompt, 10 mins to fix and adapt generic output = 11 mins total",
+        "engineeredPrompt": "3 mins to write detailed prompt, 1 min to review output = 4 mins total",
+        "savings": "60% time saved, plus higher quality code"
+      }
+    }
+  ],
+  "practiceChallenge": {
+    "title": "Engineer Your Own Prompts",
+    "tasks": [
+      {
+        "task": "Take a prompt you use regularly at work",
+        "challenge": "Rewrite it using principles learned",
+        "checklist": [
+          "☐ Added specific context?",
+          "☐ Defined exact output format?",
+          "☐ Included constraints and requirements?",
+          "☐ Removed token-wasting verbosity?",
+          "☐ Front-loaded important information?",
+          "☐ Added examples if helpful?"
+        ]
+      },
+      {
+        "task": "Identify a recent AI failure you experienced",
+        "challenge": "Diagnose which limitation or failure mode it was",
+        "options": [
+          "Hallucination - made up facts",
+          "Context confusion - lost track of topic",
+          "Token limit - tried to process too much",
+          "Ambiguity - prompt was unclear",
+          "Outdated info - knowledge cutoff issue"
+        ],
+        "action": "Design a better prompt that avoids that failure mode"
+      }
+    ]
+  },
+  "realWorldImpact": {
+    "casestudy": {
+      "team": "QA team at a fintech company",
+      "before": "Manual test case writing taking 2-3 hours per feature",
+      "intervention": "Trained team on prompt engineering fundamentals",
+      "after": "30-45 minutes per feature with AI assistance using engineered prompts",
+      "savings": "60-75% time reduction",
+      "quality": "Higher coverage due to AI suggesting edge cases humans missed",
+      "testimonial": "Understanding HOW AI works changed everything. We stopped fighting it and started working WITH its strengths."
+    }
+  }
+}

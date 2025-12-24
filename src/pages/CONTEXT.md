@@ -1,12 +1,72 @@
 # Pages Directory
 
-## ✅ Code Quality - Recently Refactored
+## ✅ Code Quality - Recently Updated
+
+### ✅ COMPLETED: Dynamic Topic Headers with Icons (December 24, 2025)
+
+**User Request**: "it still said 'TypeScript Lessons' it should be dynamic based on page and a custom logo must be associated with it"  
+**Solution**: Implemented dynamic header system with topic-specific metadata  
+**Result**: Header displays correct topic name, icon, and description
+
+**Implementation**:
+```typescript
+interface TopicMetadata {
+  name: string;
+  icon: LucideIcon;
+  description: string;
+  color: string;
+}
+
+function getTopicMetadata(topicId: string): TopicMetadata {
+  switch (topicId) {
+    case 'typescript': 
+      return { name: 'TypeScript Lessons', icon: FileCode, ... };
+    case 'llm-ai': 
+      return { name: 'LLM & AI - Prompt Engineering', icon: Brain, ... };
+  }
+}
+
+// In component:
+const topicMetadata = getTopicMetadata(selectedTopic);
+const TopicIcon = topicMetadata.icon;
+```
+
+**Benefits**:
+- ✅ Automatic topic detection from selectedTopic prop
+- ✅ Custom icons per topic (FileCode for TypeScript, Brain for LLM & AI)
+- ✅ Custom descriptions per topic
+- ✅ Color theming per topic
+- ✅ Scalable for all 9 planned topics
+
+---
+
+### ✅ COMPLETED: Multi-Topic Support (December 24, 2025)
+
+**Previous Issue**: Lessons.tsx hardcoded to TypeScript only  
+**Solution**: Implemented dynamic topic switching with helper functions  
+**Result**: Now supports TypeScript + LLM & AI (Prompt Engineering) topics
+
+**Implementation**:
+```typescript
+// Before (hardcoded)
+const LESSONS = TYPESCRIPT_LESSONS;  // Only TypeScript
+
+// After (dynamic)
+const LESSONS = getLessonsForTopic(selectedTopic);  // Any topic
+const IMPORTS = getContentImportsForTopic(selectedTopic);
+```
+
+**Benefits**:
+- ✅ Scalable for all 9 planned topics
+- ✅ Clean separation between topics
+- ✅ Easy to add new topics
+- ✅ Maintains existing content structure
 
 ### ✅ COMPLETED: Import Map Duplication Fixed (December 24, 2025)
 
 **Previous Issue**: 48 lines of duplicated import map code  
 **Solution**: Created `utils/contentLoader.ts` utility  
-**Result**: Reduced from 48 lines to 3 lines
+**Result**: Reduced from 48 lines to 3 lines per topic
 
 **Before** (48 lines):
 ```typescript
@@ -36,13 +96,14 @@ const EXAMPLES_IMPORTS = createContentImports('typescript', 'examples', TYPESCRI
 - ✅ Easy to add new topics
 - ✅ Compliance improved from 60% → 95%
 
-### ✅ Good Practices (95% Compliance):
+### ✅ Good Practices (98% Compliance):
 
 1. **Error Handling**: All render functions wrapped with try-catch ✅
 2. **ErrorDisplay Usage**: Consistent error UI across all tabs ✅
 3. **loadJsonFile**: Using centralized error-handling utility ✅
 4. **Type Safety**: TypeScript interfaces for all data structures ✅
 5. **Error Boundaries**: Lines 813, 870, 928 properly implemented ✅
+6. **Dynamic Topic Support**: Scalable architecture for multiple topics ✅
 
 ## 🔄 Update This File After Page Changes
 
@@ -92,11 +153,105 @@ Top-level page components that represent different views/routes in the applicati
 
 ## Key Files
 
+### **`AboutMe.tsx`** (408 lines)
+**Purpose**: Personal profile page displaying professional background and expertise
+
+**Features**:
+- ✅ Professional profile image with smart fallback to gradient avatar
+- ✅ Left-right layout with balanced proportions
+- ✅ Dynamic profile loading from JSON
+- Hero section with enhanced typography and badges
+- Current roles and past experience sections
+- Specializations grid with smart icon mapping
+- Professional highlights section showcasing global experience
+- Professional stats (years, specializations count, companies) with icons
+- Call-to-action with LinkedIn, GitHub, and Email links
+- Error handling with ErrorDisplay component
+- Loading state with animated spinner
+- ✅ **Enhanced Design** (December 24, 2025): Professional styling with gradient effects, hover animations, verified badges
+- ✅ **Test IDs added** (December 24, 2025): All sections and links have data-testid attributes
+- ✅ **Profile Image Integration** (December 24, 2025): Actual profile photo with automatic fallback
+
+**Layout Design** (December 24, 2025):
+- Left side: Large square profile image (w-72 h-72 mobile, w-80 h-80 desktop)
+- Right side: Name, title, tagline, stats - vertically aligned
+- Square frame with gradient border and rounded corners
+- Active badge (bottom-right) and Verified badge (top-right)
+- Responsive: Stacks vertically on mobile, side-by-side on desktop
+- Balanced proportions with `items-center` alignment
+
+**Design Elements**:
+- Large square profile image with 320px dimensions
+- Gradient border frame (blue→cyan→purple)
+- Active status badge (Zap icon with bounce animation)
+- Verified badge (Award icon)
+- Animated gradient text on name
+- Enhanced stats section with icon backgrounds and hover effects
+- Smart icon mapping for specializations (Shield, Smartphone, Monitor, Heart, Users)
+- Professional Highlights section with 3 cards (Global, Expertise, Community)
+- Gradient borders and hover effects throughout
+
+**Profile Image System**:
+- Primary: `/images/profile/smizibon.jpg` (actual photo)
+- Fallback: Gradient avatar with initials "SMI" (automatic on error)
+- Smart error handling with onError handler
+- Maintains design consistency in both modes
+
+**State**:
+- `profile` - Loaded profile data (ProfileData | null)
+- `isLoading` - Loading state
+- `error` - Error state (AppError | null)
+
+**Props**: None (standalone page)
+
+**Data Source**: `/src/data/profile/about.json`
+
+**Icons Used** (21 total):
+- Navigation: Briefcase, Award, MapPin, Calendar, Sparkles
+- Stats: TrendingUp, Target, Building2
+- Badges: Zap, Award, Rocket
+- Specializations: Shield, Smartphone, Monitor, Heart, Users, TestTube2
+- Highlights: Globe, TestTube2, Users
+- Social: Linkedin, Github, Mail
+
+**Test IDs** (Ground Rule #6):
+- `about-me-page` - Main container
+- `about-hero-section` - Hero section
+- `about-current-roles` - Current roles header
+- `about-past-experience` - Past experience header
+- `about-specializations` - Specializations header
+- `about-linkedin-link` - LinkedIn link
+- `about-github-link` - GitHub link
+- `about-email-link` - Email link (new)
+
+**Profile Data Structure**:
+```typescript
+interface ProfileData {
+  name: string;
+  title: string;
+  currentRole: string;
+  tagline: string;
+  bio: string;
+  experience: Experience[];
+  specializations: string[];
+  yearsOfExperience: string;
+  experienceDescription: string;
+}
+```
+
+**Sections**:
+1. Hero - Profile image placeholder, name, title, tagline, bio, stats
+2. Current Roles - Active positions with green badges
+3. Professional Journey - Past experience with location
+4. Areas of Expertise - Specializations grid with dynamic icons
+5. Call to Action - Connect links (LinkedIn, GitHub)
+
 ### **`Lessons.tsx`** (1100+ lines)
 **Purpose**: Multi-topic lesson browser with 3-tab interface (Lesson | Cheatsheet | Examples)
 
 **Features**:
-- Dynamic content loading for 16 TypeScript lessons
+- ✅ Multi-topic support for TypeScript and LLM & AI (Prompt Engineering)
+- Dynamic content loading for 16+ lessons across topics
 - Progress tracking with completion status
 - Error boundaries on all render functions
 - Sidebar curriculum navigation
@@ -111,15 +266,47 @@ Top-level page components that represent different views/routes in the applicati
 - `error` - Error state (AppError | null)
 
 **Props**:
-- `selectedTopic` - Which topic is selected (e.g., 'typescript')
+- `selectedTopic` - Which topic is selected (e.g., 'typescript', 'llm-ai')
+
+**Multi-Topic Architecture**:
+Implements dynamic topic switching with helper functions:
+```typescript
+function getLessonsForTopic(topicId: string): LessonMetadata[] {
+  switch (topicId) {
+    case 'typescript': return TYPESCRIPT_LESSONS;
+    case 'llm-ai': return PROMPT_ENGINEERING_LESSONS;
+    default: return [];
+  }
+}
+
+function getContentImportsForTopic(topicId: string) {
+  switch (topicId) {
+    case 'typescript': return {
+      lessons: TYPESCRIPT_LESSON_IMPORTS,
+      cheatsheet: TYPESCRIPT_CHEATSHEET_IMPORTS,
+      examples: TYPESCRIPT_EXAMPLES_IMPORTS
+    };
+    case 'llm-ai': return {
+      lessons: PROMPT_ENGINEERING_LESSON_IMPORTS,
+      cheatsheet: PROMPT_ENGINEERING_CHEATSHEET_IMPORTS,
+      examples: PROMPT_ENGINEERING_EXAMPLES_IMPORTS
+    };
+    default: return { lessons: {}, cheatsheet: {}, examples: {} };
+  }
+}
+```
 
 **Content Loading**:
-Uses centralized `loadJsonFile` from error handler:
+Uses centralized `createContentImports` from contentLoader utility:
 ```typescript
-const LESSON_IMPORTS: Record<string, () => Promise<any>> = {
-  'getting-started.json': () => loadJsonFile('/src/data/typescript/lessons/getting-started.json'),
-  // ... 15 more
-};
+// TypeScript Topic
+const TYPESCRIPT_LESSON_IMPORTS = createContentImports('typescript', 'lessons', TYPESCRIPT_FILES);
+const TYPESCRIPT_CHEATSHEET_IMPORTS = createContentImports('typescript', 'cheatsheet', TYPESCRIPT_CHEATSHEET_FILES);
+const TYPESCRIPT_EXAMPLES_IMPORTS = createContentImports('typescript', 'examples', TYPESCRIPT_EXAMPLES_FILES);
+
+// LLM & AI Topic (Prompt Engineering)
+const PROMPT_ENGINEERING_LESSON_IMPORTS = createContentImports('llm-ai/prompt-engineering', 'lessons', PROMPT_ENGINEERING_FILES);
+// ... cheatsheet and examples
 ```
 
 **Render Functions**:
@@ -513,5 +700,5 @@ When modifying pages:
 
 ---
 
-**Last Updated**: December 24, 2025
+**Last Updated**: December 24, 2025 (Profile Image Integration & Layout Redesign)
 **Maintainer**: Development Team

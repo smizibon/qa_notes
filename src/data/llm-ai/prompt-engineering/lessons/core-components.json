@@ -1,0 +1,232 @@
+{
+  "id": "lesson-core-components",
+  "title": "Core Components of Effective Prompts",
+  "description": "Master the essential building blocks of prompt engineering - standard prompts, system messages, and techniques to steer AI behavior consistently",
+  "sections": [
+    {
+      "title": "Standard Prompts: The Starting Point",
+      "content": "Standard prompts are your direct instructions to the AI. They're the explicit requests you make, and they form the foundation of every interaction with language models. A well-crafted standard prompt has several key components that work together to produce the desired output.",
+      "analogy": "Think of a standard prompt like ordering at a restaurant. A vague order like 'I want food' leaves everything to chance. But saying 'I'd like a medium-rare ribeye steak with mashed potatoes and steamed broccoli, hold the butter' gets you exactly what you want. Standard prompts work the same way - specificity leads to satisfaction.",
+      "components": [
+        {
+          "component": "Task",
+          "description": "What you want the AI to do",
+          "example": "'Generate test cases' or 'Explain the difference between'",
+          "importance": "Without a clear task, the AI doesn't know what action to take"
+        },
+        {
+          "component": "Context",
+          "description": "Background information and constraints",
+          "example": "'For a payment processing API' or 'In the context of mobile automation'",
+          "importance": "Context narrows the scope and makes outputs relevant to your specific situation"
+        },
+        {
+          "component": "Constraints",
+          "description": "Rules, limitations, and requirements",
+          "example": "'Must cover security cases' or 'Limit to 500 words'",
+          "importance": "Constraints prevent the AI from going off-track or providing irrelevant information"
+        },
+        {
+          "component": "Format",
+          "description": "How you want the output structured",
+          "example": "'As a numbered list' or 'In JSON format' or 'As a markdown table'",
+          "importance": "Format specifications make outputs immediately usable without reformatting"
+        },
+        {
+          "component": "Examples (Optional)",
+          "description": "Sample outputs showing what good looks like",
+          "example": "'Like this: Test ID | Description | Expected Result'",
+          "importance": "Examples dramatically improve quality by showing the AI exactly what you want"
+        }
+      ],
+      "formula": "Standard Prompt = [Role (optional)] + [Task] + [Context] + [Constraints] + [Format] + [Examples (optional)]",
+      "example": {
+        "poor": "Write test cases",
+        "good": "As a QA engineer, write 10 test cases for a login API endpoint that accepts email and password. Include positive, negative, and security test scenarios. Format as a table with columns: Test ID, Scenario, Steps, Expected Result.",
+        "why": "The good prompt defines role, task quantity (10), context (login API with specific inputs), constraints (test types), and format (table with specific columns)."
+      }
+    },
+    {
+      "title": "System Messages: The Hidden Guide",
+      "content": "System messages are special instructions that run 'behind the scenes' of your conversation with AI. Unlike standard prompts that you send with each request, system messages set persistent rules and behavior patterns that apply to all subsequent prompts. They're incredibly powerful because they define WHO the AI should be and HOW it should respond.",
+      "explanation": "Think of system messages as programming the AI's personality and expertise before the conversation even begins. It's like hiring a consultant and giving them a detailed brief about their role, your expectations, and how they should communicate. Once set, this context influences every response without you having to repeat it.",
+      "whatTheyDefine": [
+        "Role and expertise level (e.g., 'You are a senior QA automation engineer with 10 years of experience')",
+        "Communication style (e.g., 'Be concise and technical' vs 'Explain like I'm new to testing')",
+        "Output requirements (e.g., 'Always include code examples' or 'Provide step-by-step instructions')",
+        "Constraints and rules (e.g., 'Never suggest deprecated APIs' or 'Always consider edge cases')",
+        "Things to emphasize (e.g., 'Prioritize security and performance')",
+        "Things to avoid (e.g., 'Don't make assumptions about the tech stack')"
+      ],
+      "benefits": [
+        {
+          "benefit": "Consistency",
+          "explanation": "Once set, all responses follow the same guidelines without repeating context",
+          "example": "Set system message once: 'Write tests in TypeScript using Jest'. Now every test you ask for will automatically use that stack."
+        },
+        {
+          "benefit": "Reduced Token Usage",
+          "explanation": "You don't need to repeat context in every prompt, saving cost and space",
+          "example": "Instead of saying 'As a QA expert, using Playwright...' in every prompt, set it once in system message"
+        },
+        {
+          "benefit": "Quality Control",
+          "explanation": "System messages act as quality gates, ensuring output meets your standards",
+          "example": "System message: 'Always include error handling' ensures every generated code has try-catch blocks"
+        },
+        {
+          "benefit": "Behavior Steering",
+          "explanation": "Guide the AI to behave in specific ways that match your workflow",
+          "example": "System message: 'Ask clarifying questions before answering' makes AI more thorough"
+        }
+      ],
+      "structure": {
+        "identity": "Who the AI should be (role, expertise, experience level)",
+        "guidelines": "How it should behave and communicate",
+        "requirements": "What must be included in outputs",
+        "constraints": "What rules must be followed",
+        "prohibitions": "What should never be done"
+      },
+      "example": {
+        "basic": "You are a helpful assistant.",
+        "engineered": "You are an expert QA automation engineer specializing in API testing. You have 10+ years of experience with REST APIs, authentication flows, and test frameworks like Postman, REST Assured, and Playwright.\n\nWhen answering questions:\n- Provide practical, implementable solutions\n- Always consider edge cases and error scenarios\n- Include code examples when relevant\n- Mention security implications\n- Use industry best practices\n- Explain your reasoning\n\nWhen writing test code:\n- Use the AAA pattern (Arrange-Act-Assert)\n- Include descriptive test names\n- Add comments for complex logic\n- Handle errors gracefully\n- Consider test data setup and cleanup\n\nNever:\n- Provide untested theoretical solutions\n- Skip error handling\n- Make assumptions without stating them\n- Suggest deprecated methods",
+        "impact": "The engineered system message transforms generic responses into expert-level, production-ready outputs tailored to QA needs."
+      }
+    },
+    {
+      "title": "Steering AI with System Messages",
+      "content": "System messages are your steering wheel for AI behavior. By crafting them strategically, you can dramatically improve output quality, consistency, and relevance. The key is understanding that system messages create a 'mode' that the AI operates in - like switching between different expert consultants.",
+      "strategies": [
+        {
+          "strategy": "Role-Based Prompting",
+          "description": "Define a specific expert role for the AI to embody",
+          "example": "System: 'You are a mobile automation specialist using Appium and XCUITest. You focus on iOS testing with real devices.'\nUser: 'How do I test biometric authentication?'\nResult: Response will be iOS-specific, Appium-focused, considering real device constraints",
+          "whenToUse": "When you need domain-specific expertise and terminology"
+        },
+        {
+          "strategy": "Output Formatting",
+          "description": "Enforce consistent output structure across all responses",
+          "example": "System: 'Always structure responses as: 1) Summary, 2) Detailed explanation, 3) Code example, 4) Common pitfalls, 5) Best practices'\nResult: Every response follows this exact format automatically",
+          "whenToUse": "When you need predictable, scannable outputs for documentation or reports"
+        },
+        {
+          "strategy": "Code Style Enforcement",
+          "description": "Set coding standards that apply to all generated code",
+          "example": "System: 'All code must use: TypeScript strict mode, async/await (no callbacks), descriptive variable names, JSDoc comments, error handling for every async operation'\nResult: Generated code always follows your team's standards",
+          "whenToUse": "When integrating AI-generated code into existing codebases with established conventions"
+        },
+        {
+          "strategy": "Context-Specific Constraints",
+          "description": "Add domain-specific rules and considerations",
+          "example": "System: 'You are reviewing code for a financial application. Always consider: GDPR compliance, PCI-DSS requirements, audit logging, data encryption at rest and in transit, rate limiting, and fraud detection'\nResult: Every code review includes these critical security aspects",
+          "whenToUse": "When working in regulated industries or with sensitive data"
+        },
+        {
+          "strategy": "Pedagogical Approach",
+          "description": "Define how the AI should teach or explain concepts",
+          "example": "System: 'You are teaching beginners. Always: Start with analogies, use simple language, break complex topics into steps, provide visual descriptions, avoid jargon (or explain it), give multiple examples'\nResult: Explanations become accessible to newcomers",
+          "whenToUse": "When creating training materials or mentoring junior team members"
+        }
+      ],
+      "practicalExamples": [
+        {
+          "scenario": "API Test Generation",
+          "systemMessage": "You are an API testing expert using Playwright for Node.js. Generate tests that:\n- Use the AAA pattern\n- Include authentication setup\n- Validate response status, headers, and body\n- Test both happy and error paths\n- Handle async operations properly\n- Use descriptive test names: 'should [expected] when [condition]'\n- Include cleanup in afterEach hooks",
+          "userPrompt": "Write tests for GET /users/:id endpoint",
+          "result": "Generates Playwright tests following all specified patterns automatically"
+        },
+        {
+          "scenario": "Bug Report Analysis",
+          "systemMessage": "You analyze bug reports for a development team. For each bug:\n1. Assess severity (Critical/High/Medium/Low)\n2. Rate reproducibility (1-5 scale)\n3. Identify missing information\n4. Suggest root cause category\n5. Recommend priority\n6. Note security implications if any\n\nBe objective and data-driven. If information is unclear, say so.",
+          "userPrompt": "Analyze: 'App crashes when I click submit'",
+          "result": "Structured analysis highlighting the vague nature of the report and listing specific information needed"
+        },
+        {
+          "scenario": "Code Review Assistant",
+          "systemMessage": "You review test automation code. Check for:\n- Test isolation (no dependencies between tests)\n- Proper assertions (specific, not generic)\n- Error messages (helpful debugging info)\n- Test data (no hardcoded production data)\n- Flaky test risks (waits, timing dependencies)\n- Code duplication (suggest refactoring)\n- Naming conventions (clear and consistent)\n\nProvide feedback as: Strengths, Issues (with severity), Suggestions (with code examples)",
+          "userPrompt": "[paste test code]",
+          "result": "Comprehensive review following the specified structure and checking criteria"
+        }
+      ],
+      "dynamicSystemMessages": {
+        "concept": "You can change system messages mid-conversation to switch contexts",
+        "example": "Start with: 'You are an API testing expert'\nAfter discussing API tests, switch to: 'You are now a UI automation expert using Playwright'\nResult: The AI seamlessly transitions expertise domains",
+        "useCase": "When covering multiple testing domains in one session"
+      },
+      "tip": "Start with a general system message, then refine based on outputs. If responses lack something consistently (e.g., error handling), add it to the system message. This iterative refinement creates your perfect AI assistant."
+    },
+    {
+      "title": "Combining Standard Prompts and System Messages",
+      "content": "The real power comes from using system messages and standard prompts together strategically. System messages set the stage, standard prompts give specific directions. This combination creates consistently high-quality, contextually appropriate outputs.",
+      "workflow": {
+        "step1": {
+          "title": "Set System Message Once",
+          "action": "Define the AI's role, expertise, and general behavior",
+          "example": "System: 'You are a senior QA engineer specialized in mobile testing with Appium. You write clean, maintainable test code using Page Object Model pattern.'"
+        },
+        "step2": {
+          "title": "Use Standard Prompts for Specific Tasks",
+          "action": "Make specific requests knowing the system context is already set",
+          "example": "User: 'Write tests for the login screen with email and password fields'\nNote: No need to repeat that you want Appium, Page Object Model, or mobile-specific code - it's already in the system message"
+        },
+        "step3": {
+          "title": "Iterate Without Repeating Context",
+          "action": "Continue asking follow-up questions, relying on system message context",
+          "example": "User: 'Now add tests for biometric login'\nNote: Still follows mobile testing, Appium, POM pattern from system message"
+        },
+        "step4": {
+          "title": "Update System Message When Switching Contexts",
+          "action": "When changing topics or approaches, update the system message",
+          "example": "System: 'You are now a performance testing expert using k6. Focus on load testing scenarios.'"
+        }
+      },
+      "antiPatterns": [
+        {
+          "pattern": "Repeating System Message Content in Every Prompt",
+          "problem": "Wastes tokens, makes prompts verbose, increases cost",
+          "bad": "User: 'As a senior QA engineer using Appium with Page Object Model, write tests for...'\nNote: This info should be in system message, not repeated",
+          "good": "System: [Define role and patterns]\nUser: 'Write tests for...'"
+        },
+        {
+          "pattern": "Forgetting to Set System Message",
+          "problem": "Generic responses that need heavy editing",
+          "bad": "User: 'Write tests' → Gets generic test code\nUser: 'No, use Playwright' → Rewrites\nUser: 'Use Page Object Model' → Rewrites again",
+          "good": "System: [Define Playwright + POM]\nUser: 'Write tests' → Gets exactly what you need first time"
+        },
+        {
+          "pattern": "Too Vague System Message",
+          "problem": "Doesn't actually constrain or guide behavior",
+          "bad": "System: 'You are helpful and write good code'",
+          "good": "System: 'You write Playwright tests in TypeScript using Page Object Model. Tests must include error handling, use data-testid selectors, and follow AAA pattern.'"
+        }
+      ],
+      "practicalTip": {
+        "concept": "Save Your Best System Messages",
+        "explanation": "When you craft a great system message that produces excellent results, save it as a template. Build a library of system messages for different tasks: API testing, UI automation, performance testing, security testing, code review, etc.",
+        "benefit": "This creates reusable 'AI modes' that you can switch between, dramatically improving productivity and consistency across projects."
+      }
+    }
+  ],
+  "keyTakeaways": [
+    "Standard prompts have 5 key components: Task, Context, Constraints, Format, Examples",
+    "More specific prompts = better outputs (every time)",
+    "System messages define persistent behavior across all prompts",
+    "System messages save tokens and improve consistency",
+    "Use system messages for 'who and how', standard prompts for 'what'",
+    "Combine both strategically for maximum effectiveness",
+    "Build a library of system messages for different scenarios"
+  ],
+  "practiceExercise": {
+    "title": "Create a System Message for Your Work",
+    "task": "Design a system message for a specific task you do regularly",
+    "steps": [
+      "Identify a repetitive task (e.g., reviewing code, writing tests, analyzing bugs)",
+      "Define what role/expertise is needed for this task",
+      "List what must always be included in outputs",
+      "List what must never be done",
+      "Write the system message combining all these elements",
+      "Test it with 3 different prompts and refine based on results"
+    ],
+    "example": "If you frequently write API tests: System message should define: testing framework, language, patterns to use, what to check (status, headers, body, errors), how to structure tests, naming conventions, etc."
+  }
+}

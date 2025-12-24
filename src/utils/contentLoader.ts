@@ -104,3 +104,14 @@ export const TYPESCRIPT_EXAMPLES_FILES = [
   'tsconfig-example.json', // Different file name
   ...TYPESCRIPT_FILES.slice(13), // Rest are the same
 ];
+
+/**
+ * Prompt Engineering files for LLM Testing topic
+ * All three content types use the same file names
+ */
+export const PROMPT_ENGINEERING_FILES = [
+  'foundation-understanding.json',
+  'core-components.json',
+  'context-mastery.json',
+  'advanced-techniques.json',
+];

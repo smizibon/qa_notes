@@ -1,0 +1,46 @@
+{
+  "name": "Syed Monowarul Islam",
+  "title": "Co-Founder of Shunnek Labs",
+  "currentRole": "Sr. Software Engineer in Test at Tiger IT Bangladesh Ltd.",
+  "tagline": "Over a decade of experience. 10+ years in the industry, driving technological advancements and solutions.",
+  "bio": "",
+  "experience": [
+    {
+      "company": "Tiger IT Bangladesh Ltd.",
+      "position": "Sr. Software Engineer in Test",
+      "type": "current"
+    },
+    {
+      "company": "Shunnek Labs",
+      "position": "Co-Founder",
+      "type": "current"
+    },
+    {
+      "company": "Property Guru",
+      "position": "Software Engineer in Test",
+      "location": "Singapore",
+      "type": "past"
+    },
+    {
+      "company": "SendHelper",
+      "position": "Software Engineer in Test",
+      "location": "Singapore",
+      "type": "past"
+    },
+    {
+      "company": "Flarie",
+      "position": "Software Engineer in Test",
+      "location": "Sweden",
+      "type": "past"
+    }
+  ],
+  "specializations": [
+    "Owner of STLC",
+    "Mobile automation",
+    "Web automation",
+    "Community contribution",
+    "Community Building"
+  ],
+  "yearsOfExperience": "10+",
+  "experienceDescription": "10+ years in the industry, driving technological advancements and solutions."
+}

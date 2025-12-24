@@ -1,0 +1,116 @@
+{
+  "id": "prompt-engineering-toc",
+  "title": "Mastering Prompt Engineering",
+  "description": "A comprehensive guide to understanding and mastering the art of prompt engineering for Large Language Models",
+  "sections": [
+    {
+      "sectionNumber": 1,
+      "sectionTitle": "Foundation & Understanding",
+      "topics": [
+        {
+          "id": "what-is-prompt-engineering",
+          "title": "What Is Prompt Engineering?",
+          "description": "Introduction to the fundamentals of prompt engineering"
+        },
+        {
+          "id": "why-prompt-engineering-matters",
+          "title": "Why Prompt Engineering Matters",
+          "description": "Understanding the importance and impact of well-crafted prompts"
+        },
+        {
+          "id": "when-ai-gets-it-wrong",
+          "title": "When AI Gets It Wrong",
+          "description": "Common scenarios where AI models fail and why"
+        },
+        {
+          "id": "understanding-llm-limitations",
+          "title": "Understanding LLM Limitations",
+          "description": "Technical constraints and boundaries of Large Language Models"
+        },
+        {
+          "id": "how-llms-think",
+          "title": "How LLMs Think: The Token Game",
+          "description": "Deep dive into how language models process and generate text"
+        }
+      ]
+    },
+    {
+      "sectionNumber": 2,
+      "sectionTitle": "Core Components",
+      "topics": [
+        {
+          "id": "standard-prompts",
+          "title": "Standard Prompts: The Starting Point",
+          "description": "Basic prompt structures and how to use them effectively"
+        },
+        {
+          "id": "system-messages",
+          "title": "System Messages: The Hidden Guide",
+          "description": "Understanding and leveraging system messages for better control"
+        },
+        {
+          "id": "steering-ai-with-system-messages",
+          "title": "Steering AI with System Messages",
+          "description": "Advanced techniques for guiding AI behavior"
+        }
+      ]
+    },
+    {
+      "sectionNumber": 3,
+      "sectionTitle": "Context Mastery",
+      "topics": [
+        {
+          "id": "context-power-of-specificity",
+          "title": "Context: The Power of Specificity",
+          "description": "How specific context improves AI responses"
+        },
+        {
+          "id": "context-windows-token-limits",
+          "title": "Context Windows & Token Limits",
+          "description": "Understanding and working within context limitations"
+        },
+        {
+          "id": "context-placement-matters",
+          "title": "Lost in the Middle: Context Placement Matters",
+          "description": "Strategic positioning of information in prompts"
+        },
+        {
+          "id": "context-best-practices",
+          "title": "Context Best Practices",
+          "description": "Proven strategies for optimal context usage"
+        }
+      ]
+    },
+    {
+      "sectionNumber": 4,
+      "sectionTitle": "Advanced Techniques",
+      "topics": [
+        {
+          "id": "personas-and-roles",
+          "title": "Personas & Roles: Unlocking Expertise",
+          "description": "Using role-play to access specialized knowledge"
+        },
+        {
+          "id": "crafting-effective-personas",
+          "title": "Crafting Effective Personas",
+          "description": "How to create and use personas for better results"
+        },
+        {
+          "id": "complete-prompt-framework",
+          "title": "The Complete Prompt Framework",
+          "description": "A comprehensive framework for building powerful prompts"
+        },
+        {
+          "id": "common-prompt-patterns",
+          "title": "Common Prompt Patterns",
+          "description": "Reusable patterns for common use cases"
+        },
+        {
+          "id": "building-prompt-evolution",
+          "title": "Building Your Prompt Evolution",
+          "description": "Iterative improvement and refinement strategies"
+        }
+      ]
+    }
+  ]
+}

@@ -50,15 +50,38 @@
    - Returns { lessons, cheatsheet, examples }
 
 **Exports**:
-- `TYPESCRIPT_FILES` - Standard file names array
-- `TYPESCRIPT_CHEATSHEET_FILES` - Cheatsheet specific files
-- `TYPESCRIPT_EXAMPLES_FILES` - Examples specific files
+- `TYPESCRIPT_FILES` - Standard TypeScript lesson file names array
+- `TYPESCRIPT_CHEATSHEET_FILES` - TypeScript cheatsheet specific files
+- `TYPESCRIPT_EXAMPLES_FILES` - TypeScript examples specific files
+- `PROMPT_ENGINEERING_FILES` - Prompt Engineering lesson file names array (LLM & AI topic)
+
+**File Arrays**:
+```typescript
+// TypeScript Topic (16 files)
+export const TYPESCRIPT_FILES = [
+  'getting-started.json',
+  'basic-types.json',
+  // ... 14 more
+];
+
+// LLM & AI Topic - Prompt Engineering (4 sections)
+export const PROMPT_ENGINEERING_FILES = [
+  'foundation-understanding.json',
+  'core-components.json',
+  'context-mastery.json',
+  'advanced-techniques.json'
+];
+```
 
 **Usage**:
 ```typescript
-import { createContentImports, TYPESCRIPT_FILES } from '../utils/contentLoader';
+import { createContentImports, TYPESCRIPT_FILES, PROMPT_ENGINEERING_FILES } from '../utils/contentLoader';
 
-const LESSON_IMPORTS = createContentImports('typescript', 'lessons', TYPESCRIPT_FILES);
+// TypeScript Topic
+const TYPESCRIPT_LESSON_IMPORTS = createContentImports('typescript', 'lessons', TYPESCRIPT_FILES);
+
+// LLM & AI Topic (Prompt Engineering)
+const PE_LESSON_IMPORTS = createContentImports('llm-ai/prompt-engineering', 'lessons', PROMPT_ENGINEERING_FILES);
 ```
 
 **Impact**: Reduced Lessons.tsx from 48 lines to 3 lines (94% reduction)
@@ -615,5 +638,5 @@ export async function retryableOperation<T>(
 
 ---
 
-**Last Updated**: December 24, 2025
+**Last Updated**: December 24, 2025 (Added PROMPT_ENGINEERING_FILES)
 **Maintainer**: Development Team

@@ -1,0 +1,28 @@
+{
+  "id": "foundation-understanding",
+  "title": "Foundation & Understanding",
+  "explanation": "Master the fundamentals of prompt engineering - understanding what it is, why it matters, and how AI models actually work. This foundation is crucial for crafting effective prompts.",
+  "codeBlocks": [
+    {
+      "title": "What Is Prompt Engineering?",
+      "code": "// Prompt Engineering is the art and science of crafting inputs\n// to get desired outputs from AI models\n\n// Basic Prompt (Vague)\n\"Tell me about testing\"\n// Result: Generic, unfocused response\n\n// Engineered Prompt (Specific)\n\"As a QA expert, explain the differences between integration \ntesting and end-to-end testing in web applications, with \nexamples for each. Focus on when to use which approach.\"\n// Result: Detailed, targeted, actionable response\n\n// Key Elements:\n// 1. Role definition (\"As a QA expert\")\n// 2. Specific task (\"explain the differences\")\n// 3. Context (\"in web applications\")\n// 4. Format requirement (\"with examples\")\n// 5. Guidance (\"Focus on when to use\")"
+    },
+    {
+      "title": "Why Prompt Engineering Matters",
+      "code": "// Impact of Good vs Bad Prompts\n\n// ❌ BAD: Vague, no context\nPrompt: \"Write test cases\"\nResult: Generic, may not fit your needs\n\n// ✅ GOOD: Specific, contextualized\nPrompt: `Write 5 test cases for a login API endpoint that:\n- Accepts email and password\n- Returns JWT token on success\n- Returns 401 on invalid credentials\n- Has rate limiting (5 attempts per minute)\nInclude: positive, negative, and edge cases`\nResult: Relevant, comprehensive test cases\n\n// Benefits:\n// • Saves time (fewer iterations)\n// • Better quality outputs\n// • Consistent results\n// • Reduced ambiguity\n// • More control over AI behavior"
+    },
+    {
+      "title": "When AI Gets It Wrong",
+      "code": "// Common Failure Scenarios\n\n// 1. Hallucination - Making up facts\nPrompt: \"What are the features of TestFrameworkXYZ 5.0?\"\n// AI might invent features that don't exist!\n\n// Better approach:\nPrompt: \"Based on the following documentation: [paste docs]\nSummarize the key features.\"\n\n// 2. Outdated Information\nPrompt: \"Latest best practices for React testing 2024?\"\n// AI training data might be from 2023 or earlier\n\n// Better:\nPrompt: \"According to the React Testing Library documentation,\nwhat are the recommended patterns for testing hooks?\"\n\n// 3. Ambiguity Confusion\nPrompt: \"Test the button\"\n// Which button? What kind of test? What should it do?\n\n// Better:\nPrompt: \"Write a Playwright test to verify that clicking the \n'Submit' button on the checkout form triggers form validation \nand displays error messages for empty required fields.\""
+    },
+    {
+      "title": "Understanding LLM Limitations",
+      "code": "// Key Limitations to Remember\n\n// 1. Context Window Limits\n// • GPT-3.5: ~4K tokens (~3,000 words)\n// • GPT-4: ~8K-32K tokens depending on version\n// • Claude: ~100K tokens\n\n// Example: Too much context\nPrompt: `[Entire 10,000-line codebase pasted]\nFind all the bugs`\n// Result: Fails or truncates information\n\n// 2. No Real-Time Information\nPrompt: \"What's the current price of Bitcoin?\"\n// Result: Outdated or refuses to answer\n\n// 3. Cannot Execute Code (unless tool-enabled)\nPrompt: \"Run this test and tell me if it passes\"\n// Result: Can only analyze, not execute\n\n// 4. Reasoning Limitations\n// Complex multi-step logic may fail\n// Better to break into smaller steps\n\n// 5. Consistency Issues\n// Same prompt might give different responses"
+    },
+    {
+      "title": "How LLMs Think: The Token Game",
+      "code": "// Understanding Tokens\n\n// Tokens ≠ Words\n// Tokens are chunks of text (can be words, parts of words, or punctuation)\n\n// Examples:\n\"Hello\" = 1 token\n\"Hello, world!\" = 4 tokens [\"Hello\", \",\", \" world\", \"!\"]\n\"Internationalization\" = 5 tokens\n\"AI\" = 1 token\n\"ChatGPT\" = 2 tokens [\"Chat\", \"GPT\"]\n\n// Why This Matters:\n// 1. Context limits are measured in tokens\n// 2. API costs are based on tokens\n// 3. Longer words = more tokens = more cost\n\n// Token Efficiency Tips:\n// • Be concise but clear\n// • Use simple words when possible\n// • Remove unnecessary verbose explanations\n// • Use abbreviations wisely (but not at cost of clarity)\n\n// Example:\n// Verbose (many tokens):\n\"I would appreciate it if you could please provide me with \na comprehensive explanation...\"\n\n// Efficient (fewer tokens):\n\"Explain in detail:\"\n\n// How LLMs Process:\n// 1. Break input into tokens\n// 2. Process tokens through neural network\n// 3. Predict next most likely token\n// 4. Repeat until completion\n// (This is why they can't \"go back\" and edit easily)"
+    }
+  ],
+  "tip": "The foundation of good prompt engineering is understanding that AI models are prediction engines, not reasoning engines. They predict what comes next based on patterns, so your job is to provide clear patterns through well-structured prompts. Always be specific, provide context, and break complex tasks into smaller steps."
+}

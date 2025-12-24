@@ -7,16 +7,19 @@ import {
   Code2, 
   GraduationCap,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  Brain,
+  LucideIcon
 } from 'lucide-react';
 import CodeBlock from '../components/CodeBlock';
 import ErrorDisplay from '../components/ErrorDisplay';
-import { ErrorHandler, ErrorType, AppError, loadJsonFile } from '../utils/errorHandler';
+import { ErrorHandler, ErrorType, AppError } from '../utils/errorHandler';
 import { 
   createContentImports, 
   TYPESCRIPT_FILES, 
   TYPESCRIPT_CHEATSHEET_FILES, 
-  TYPESCRIPT_EXAMPLES_FILES 
+  TYPESCRIPT_EXAMPLES_FILES,
+  PROMPT_ENGINEERING_FILES
 } from '../utils/contentLoader';
 
 // =============================================================================
@@ -38,7 +41,47 @@ interface LessonMetadata {
 
 type ContentTab = 'lesson' | 'cheatsheet' | 'examples';
 
-const LESSONS: LessonMetadata[] = [
+interface TopicMetadata {
+  name: string;
+  icon: LucideIcon;
+  description: string;
+  color: string;
+}
+
+/**
+ * Get topic metadata (name, icon, description) for display
+ */
+function getTopicMetadata(topicId: string): TopicMetadata {
+  switch (topicId) {
+    case 'typescript':
+      return {
+        name: 'TypeScript Lessons',
+        icon: FileCode,
+        description: 'Complete tutorials with cheatsheets and practical examples for each topic.',
+        color: 'blue'
+      };
+    case 'llm-ai':
+      return {
+        name: 'LLM & AI - Prompt Engineering',
+        icon: Brain,
+        description: 'Master the art of prompt engineering and unlock the full potential of AI models.',
+        color: 'violet'
+      };
+    default:
+      return {
+        name: 'Lessons',
+        icon: BookOpen,
+        description: 'Complete tutorials with cheatsheets and practical examples.',
+        color: 'blue'
+      };
+  }
+}
+
+// =============================================================================
+// Lesson Metadata by Topic
+// =============================================================================
+
+const TYPESCRIPT_LESSONS: LessonMetadata[] = [
   {
     id: 'getting-started',
     title: 'Getting Started with TypeScript',
@@ -169,14 +212,87 @@ const LESSONS: LessonMetadata[] = [
   }
 ];
 
+const PROMPT_ENGINEERING_LESSONS: LessonMetadata[] = [
+  {
+    id: 'foundation-understanding',
+    title: 'Foundation & Understanding',
+    description: 'Learn the fundamentals of prompt engineering and how LLMs work',
+    lessonFile: 'foundation-understanding.json',
+    cheatsheetFile: 'foundation-understanding.json',
+    examplesFile: 'foundation-understanding.json'
+  },
+  {
+    id: 'core-components',
+    title: 'Core Components',
+    description: 'Master standard prompts and system messages',
+    lessonFile: 'core-components.json',
+    cheatsheetFile: 'core-components.json',
+    examplesFile: 'core-components.json'
+  },
+  {
+    id: 'context-mastery',
+    title: 'Context Mastery',
+    description: 'Understand context windows, token limits, and placement strategies',
+    lessonFile: 'context-mastery.json',
+    cheatsheetFile: 'context-mastery.json',
+    examplesFile: 'context-mastery.json'
+  },
+  {
+    id: 'advanced-techniques',
+    title: 'Advanced Techniques',
+    description: 'Learn personas, roles, prompt frameworks, and patterns',
+    lessonFile: 'advanced-techniques.json',
+    cheatsheetFile: 'advanced-techniques.json',
+    examplesFile: 'advanced-techniques.json'
+  }
+];
+
+/**
+ * Get lessons for a specific topic
+ */
+function getLessonsForTopic(topic: string): LessonMetadata[] {
+  switch (topic) {
+    case 'typescript':
+      return TYPESCRIPT_LESSONS;
+    case 'llm-ai':
+      return PROMPT_ENGINEERING_LESSONS;
+    default:
+      return TYPESCRIPT_LESSONS; // Default fallback
+  }
+}
+
+/**
+ * Get content import maps for a specific topic
+ */
+function getContentImportsForTopic(topic: string) {
+  switch (topic) {
+    case 'typescript':
+      return {
+        lessons: createContentImports('typescript', 'lessons', TYPESCRIPT_FILES),
+        cheatsheet: createContentImports('typescript', 'cheatsheet', TYPESCRIPT_CHEATSHEET_FILES),
+        examples: createContentImports('typescript', 'examples', TYPESCRIPT_EXAMPLES_FILES),
+      };
+    case 'llm-ai':
+      return {
+        lessons: createContentImports('llm-ai/prompt-engineering', 'lessons', PROMPT_ENGINEERING_FILES),
+        cheatsheet: createContentImports('llm-ai/prompt-engineering', 'cheatsheet', PROMPT_ENGINEERING_FILES),
+        examples: createContentImports('llm-ai/prompt-engineering', 'examples', PROMPT_ENGINEERING_FILES),
+      };
+    default:
+      return {
+        lessons: createContentImports('typescript', 'lessons', TYPESCRIPT_FILES),
+        cheatsheet: createContentImports('typescript', 'cheatsheet', TYPESCRIPT_CHEATSHEET_FILES),
+        examples: createContentImports('typescript', 'examples', TYPESCRIPT_EXAMPLES_FILES),
+      };
+  }
+}
+
 // =============================================================================
 // Import Maps for Dynamic Loading
 // =============================================================================
 
-// TypeScript Content Imports - using reusable contentLoader utility
-const LESSON_IMPORTS = createContentImports('typescript', 'lessons', TYPESCRIPT_FILES);
-const CHEATSHEET_IMPORTS = createContentImports('typescript', 'cheatsheet', TYPESCRIPT_CHEATSHEET_FILES);
-const EXAMPLES_IMPORTS = createContentImports('typescript', 'examples', TYPESCRIPT_EXAMPLES_FILES);
+// Note: Import maps are now created dynamically based on selected topic
+// See getContentImportsForTopic() function above
 
 // =============================================================================
 // Main Component
@@ -192,6 +308,13 @@ const Lessons: React.FC<LessonsProps> = ({ selectedTopic }) => {
   const [error, setError] = useState<AppError | null>(null);
   const [completedLessons, setCompletedLessons] = useState<Set<string>>(new Set());
   const [expandedSections, setExpandedSections] = useState<Set<number>>(new Set([0])); // First section expanded by default
+
+  // Get lessons and imports based on selected topic
+  const LESSONS = getLessonsForTopic(selectedTopic);
+  const contentImports = getContentImportsForTopic(selectedTopic);
+  const LESSON_IMPORTS = contentImports.lessons;
+  const CHEATSHEET_IMPORTS = contentImports.cheatsheet;
+  const EXAMPLES_IMPORTS = contentImports.examples;
 
   const toggleSection = (index: number) => {
     setExpandedSections(prev => {
@@ -952,21 +1075,25 @@ const Lessons: React.FC<LessonsProps> = ({ selectedTopic }) => {
     }
   };
 
+  // Get topic metadata for dynamic header
+  const topicMetadata = getTopicMetadata(selectedTopic);
+  const TopicIcon = topicMetadata.icon;
+  
   return (
     <div className="min-h-screen p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
+        {/* Header - Dynamic based on topic */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-3 mb-4">
-            <div className="p-3 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl shadow-lg shadow-blue-500/20">
-              <BookOpen className="w-8 h-8 text-white" />
+            <div className={`p-3 bg-gradient-to-br from-${topicMetadata.color}-500 to-${topicMetadata.color}-600 rounded-2xl shadow-lg shadow-${topicMetadata.color}-500/20`}>
+              <TopicIcon className="w-8 h-8 text-white" />
             </div>
             <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-400 bg-clip-text text-transparent">
-              TypeScript Lessons
+              {topicMetadata.name}
             </h1>
           </div>
           <p className="text-lg text-slate-300 max-w-2xl mx-auto">
-            Complete tutorials with cheatsheets and practical examples for each topic.
+            {topicMetadata.description}
           </p>
         </div>
 
