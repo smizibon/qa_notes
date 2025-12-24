@@ -262,17 +262,17 @@ const Lessons: React.FC<LessonsProps> = ({ selectedTopic }) => {
     
     try {
       return (
-        <div className="space-y-6">
+        <div data-testid="lesson-content" className="space-y-6">
           {/* Description at top if available */}
           {lessonContent.description && (
-            <div className="bg-blue-500/10 rounded-2xl p-6 border border-blue-500/20">
+            <div data-testid="lesson-description-block" className="bg-blue-500/10 rounded-2xl p-6 border border-blue-500/20">
               <p className="text-slate-300">{lessonContent.description}</p>
             </div>
           )}
           
           {lessonContent.sections.map((section: any, idx: number) => (
-          <div key={idx} className="bg-slate-800/70 rounded-2xl p-6 border border-slate-700/50">
-            <h3 className="text-xl font-bold text-white mb-3 flex items-center gap-3">
+          <div key={idx} data-testid={`lesson-section-${idx}`} className="bg-slate-800/70 rounded-2xl p-6 border border-slate-700/50">
+            <h3 data-testid={`section-title-${idx}`} className="text-xl font-bold text-white mb-3 flex items-center gap-3">
               <span className="w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center text-sm font-bold">
                 {idx + 1}
               </span>
@@ -280,11 +280,11 @@ const Lessons: React.FC<LessonsProps> = ({ selectedTopic }) => {
             </h3>
             
             {/* Main content */}
-            {section.content && <p className="text-slate-300 mb-4">{section.content}</p>}
+            {section.content && <p data-testid={`section-content-${idx}`} className="text-slate-300 mb-4">{section.content}</p>}
             
             {/* Quick Reference - for quick-reference.json */}
             {section.quick_ref && Array.isArray(section.quick_ref) && section.quick_ref.length > 0 && (
-              <div className="bg-slate-900/50 rounded-xl p-4 mb-4 border border-slate-700/50">
+              <div data-testid={`section-quick-ref-${idx}`} className="bg-slate-900/50 rounded-xl p-4 mb-4 border border-slate-700/50">
                 <div className="space-y-3">
                   {section.quick_ref.map((ref: any, i: number) => (
                     <div key={i} className="flex flex-col gap-1">
@@ -300,14 +300,14 @@ const Lessons: React.FC<LessonsProps> = ({ selectedTopic }) => {
             
             {/* Explanation (separate from content) */}
             {section.explanation && (
-              <div className="bg-slate-700/30 rounded-xl p-4 mb-4 border-l-4 border-slate-500">
+              <div data-testid={`section-explanation-${idx}`} className="bg-slate-700/30 rounded-xl p-4 mb-4 border-l-4 border-slate-500">
                 <span className="text-slate-300">{section.explanation}</span>
               </div>
             )}
             
             {/* Analogy */}
             {section.analogy && (
-              <div className="bg-purple-500/10 border-l-4 border-purple-400 rounded-r-xl p-4 mb-4">
+              <div data-testid={`section-analogy-${idx}`} className="bg-purple-500/10 border-l-4 border-purple-400 rounded-r-xl p-4 mb-4">
                 <span className="text-purple-400 font-semibold">💡 Analogy: </span>
                 <span className="text-slate-300">{section.analogy}</span>
               </div>
@@ -315,7 +315,7 @@ const Lessons: React.FC<LessonsProps> = ({ selectedTopic }) => {
             
             {/* Warning */}
             {section.warning && (
-              <div className="bg-red-500/10 border-l-4 border-red-400 rounded-r-xl p-4 mb-4">
+              <div data-testid={`section-warning-${idx}`} className="bg-red-500/10 border-l-4 border-red-400 rounded-r-xl p-4 mb-4">
                 <span className="text-red-400 font-semibold">⚠️ Warning: </span>
                 <span className="text-slate-300">{section.warning}</span>
               </div>
@@ -323,7 +323,7 @@ const Lessons: React.FC<LessonsProps> = ({ selectedTopic }) => {
             
             {/* Best Practice */}
             {section.bestPractice && (
-              <div className="bg-green-500/10 border-l-4 border-green-400 rounded-r-xl p-4 mb-4">
+              <div data-testid={`section-best-practice-${idx}`} className="bg-green-500/10 border-l-4 border-green-400 rounded-r-xl p-4 mb-4">
                 <span className="text-green-400 font-semibold">✅ Best Practice: </span>
                 <span className="text-slate-300">{section.bestPractice}</span>
               </div>
@@ -339,7 +339,7 @@ const Lessons: React.FC<LessonsProps> = ({ selectedTopic }) => {
             
             {/* When to Use - string or array */}
             {section.whenToUse && (
-              <div className="bg-cyan-500/10 rounded-xl p-4 mb-4 border border-cyan-500/20">
+              <div data-testid={`section-when-to-use-${idx}`} className="bg-cyan-500/10 rounded-xl p-4 mb-4 border border-cyan-500/20">
                 <h4 className="text-cyan-400 font-semibold mb-2">🎯 When to Use</h4>
                 {typeof section.whenToUse === 'string' ? (
                   <p className="text-slate-300">{section.whenToUse}</p>
@@ -409,10 +409,10 @@ const Lessons: React.FC<LessonsProps> = ({ selectedTopic }) => {
             
             {/* Multiple examples array */}
             {section.examples && Array.isArray(section.examples) && section.examples.length > 0 && (
-              <div className="space-y-3 mb-4">
+              <div data-testid={`section-examples-${idx}`} className="space-y-3 mb-4">
                 <h4 className="text-blue-400 font-semibold">📝 Examples</h4>
                 {section.examples.map((ex: any, i: number) => (
-                  <div key={i} className="bg-slate-900/50 rounded-xl p-4 border border-slate-600/30">
+                  <div key={i} data-testid={`section-example-${idx}-${i}`} className="bg-slate-900/50 rounded-xl p-4 border border-slate-600/30">
                     <CodeBlock title={`Example ${i + 1}`}>{ex.code}</CodeBlock>
                     {ex.explanation && (
                       <p className="text-slate-400 text-sm mt-2 italic">↳ {ex.explanation}</p>
@@ -424,7 +424,7 @@ const Lessons: React.FC<LessonsProps> = ({ selectedTopic }) => {
             
             {/* Common Operations */}
             {section.commonOperations && (
-              <div className="bg-emerald-500/10 rounded-xl p-4 mb-4 border border-emerald-500/20">
+              <div data-testid={`section-common-operations-${idx}`} className="bg-emerald-500/10 rounded-xl p-4 mb-4 border border-emerald-500/20">
                 <h4 className="text-emerald-400 font-semibold mb-2">🔧 Common Operations</h4>
                 <ul className="space-y-1">
                   {section.commonOperations.map((op: string, i: number) => (
@@ -438,7 +438,7 @@ const Lessons: React.FC<LessonsProps> = ({ selectedTopic }) => {
             
             {/* Use Cases */}
             {section.useCases && (
-              <div className="bg-violet-500/10 rounded-xl p-4 mb-4 border border-violet-500/20">
+              <div data-testid={`section-use-cases-${idx}`} className="bg-violet-500/10 rounded-xl p-4 mb-4 border border-violet-500/20">
                 <h4 className="text-violet-400 font-semibold mb-2">💼 Use Cases</h4>
                 <ul className="space-y-1">
                   {section.useCases.map((uc: string, i: number) => (
@@ -597,10 +597,10 @@ const Lessons: React.FC<LessonsProps> = ({ selectedTopic }) => {
             
             {/* Steps */}
             {section.steps && (
-              <div className="space-y-4 mb-4">
+              <div data-testid={`section-steps-${idx}`} className="space-y-4 mb-4">
                 <h4 className="text-cyan-400 font-semibold">📋 Steps</h4>
                 {section.steps.map((stepItem: any, i: number) => (
-                  <div key={i} className="bg-cyan-500/10 rounded-xl p-4 border border-cyan-500/20">
+                  <div key={i} data-testid={`section-step-${idx}-${i}`} className="bg-cyan-500/10 rounded-xl p-4 border border-cyan-500/20">
                     <div className="flex items-start gap-3 mb-2">
                       <span className="w-6 h-6 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-xs font-bold flex-shrink-0">
                         {i + 1}
@@ -623,7 +623,7 @@ const Lessons: React.FC<LessonsProps> = ({ selectedTopic }) => {
             
             {/* Process */}
             {section.process && (
-              <div className="bg-indigo-500/10 rounded-xl p-4 mb-4 border border-indigo-500/20">
+              <div data-testid={`section-process-${idx}`} className="bg-indigo-500/10 rounded-xl p-4 mb-4 border border-indigo-500/20">
                 <h4 className="text-indigo-400 font-semibold mb-2">⚙️ Process</h4>
                 <ol className="space-y-2">
                   {section.process.map((step: string, i: number) => (
@@ -638,7 +638,7 @@ const Lessons: React.FC<LessonsProps> = ({ selectedTopic }) => {
             
             {/* Workflow */}
             {section.workflow && (
-              <div className="space-y-3 mb-4">
+              <div data-testid={`section-workflow-${idx}`} className="space-y-3 mb-4">
                 <h4 className="text-purple-400 font-semibold">🔄 Workflow</h4>
                 {section.workflow.map((phase: any, i: number) => (
                   <div key={i} className="bg-purple-500/10 rounded-xl p-4 border border-purple-500/20">
@@ -656,7 +656,7 @@ const Lessons: React.FC<LessonsProps> = ({ selectedTopic }) => {
             
             {/* Tips */}
             {section.tips && Array.isArray(section.tips) && (
-              <div className="bg-amber-500/10 rounded-xl p-4 mb-4 border border-amber-500/20">
+              <div data-testid={`section-tips-${idx}`} className="bg-amber-500/10 rounded-xl p-4 mb-4 border border-amber-500/20">
                 <h4 className="text-amber-400 font-semibold mb-3">💡 Quick Tips</h4>
                 <ul className="space-y-2">
                   {section.tips.map((tipItem: any, i: number) => (
@@ -671,7 +671,7 @@ const Lessons: React.FC<LessonsProps> = ({ selectedTopic }) => {
             
             {/* Mistakes */}
             {section.mistakes && (
-              <div className="space-y-3 mb-4">
+              <div data-testid={`section-mistakes-${idx}`} className="space-y-3 mb-4">
                 <h4 className="text-red-400 font-semibold">⚠️ Common Mistakes</h4>
                 {section.mistakes.map((mistakeItem: any, i: number) => (
                   <div key={i} className="bg-red-500/10 rounded-xl p-4 border border-red-500/20">
@@ -689,7 +689,7 @@ const Lessons: React.FC<LessonsProps> = ({ selectedTopic }) => {
             
             {/* Shortcuts */}
             {section.shortcuts && Array.isArray(section.shortcuts) && (
-              <div className="bg-purple-500/10 rounded-xl p-4 mb-4 border border-purple-500/20">
+              <div data-testid={`section-shortcuts-${idx}`} className="bg-purple-500/10 rounded-xl p-4 mb-4 border border-purple-500/20">
                 <h4 className="text-purple-400 font-semibold mb-3">⌨️ Keyboard Shortcuts</h4>
                 <div className="space-y-2">
                   {section.shortcuts.map((shortcut: any, i: number) => (
@@ -711,7 +711,7 @@ const Lessons: React.FC<LessonsProps> = ({ selectedTopic }) => {
             
             {/* Commands */}
             {section.commands && Array.isArray(section.commands) && (
-              <div className="bg-cyan-500/10 rounded-xl p-4 mb-4 border border-cyan-500/20">
+              <div data-testid={`section-commands-${idx}`} className="bg-cyan-500/10 rounded-xl p-4 mb-4 border border-cyan-500/20">
                 <h4 className="text-cyan-400 font-semibold mb-3">⚡ CLI Commands</h4>
                 <div className="space-y-3">
                   {section.commands.map((cmd: any, i: number) => (
@@ -736,7 +736,7 @@ const Lessons: React.FC<LessonsProps> = ({ selectedTopic }) => {
             
             {/* Resources (array of objects with name and url) */}
             {section.resources && Array.isArray(section.resources) && (
-              <div className="bg-blue-500/10 rounded-xl p-4 mb-4 border border-blue-500/20">
+              <div data-testid={`section-resources-${idx}`} className="bg-blue-500/10 rounded-xl p-4 mb-4 border border-blue-500/20">
                 <h4 className="text-blue-400 font-semibold mb-3">📚 Useful Resources</h4>
                 <ul className="space-y-2">
                   {section.resources.map((resource: any, i: number) => (
@@ -909,15 +909,16 @@ const Lessons: React.FC<LessonsProps> = ({ selectedTopic }) => {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Sidebar */}
           <div className="lg:col-span-1">
-            <div className="bg-slate-800/70 backdrop-blur-xl rounded-2xl p-4 border border-slate-700/50 sticky top-24">
+            <div data-testid="lessons-sidebar" className="bg-slate-800/70 backdrop-blur-xl rounded-2xl p-4 border border-slate-700/50 sticky top-24">
               <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
                 <BookOpen className="w-5 h-5 text-blue-400" />
                 Topics ({LESSONS.length})
               </h2>
-              <div className="space-y-1 max-h-[60vh] overflow-y-auto pr-2">
+              <div data-testid="lessons-list" className="space-y-1 max-h-[60vh] overflow-y-auto pr-2">
                 {LESSONS.map((lesson, index) => (
                   <button
                     key={lesson.id}
+                    data-testid={`lesson-${lesson.id}`}
                     onClick={() => loadAllContent(lesson)}
                     className={`w-full text-left p-3 rounded-xl transition-all duration-200 ${
                       selectedLesson?.id === lesson.id
@@ -944,13 +945,14 @@ const Lessons: React.FC<LessonsProps> = ({ selectedTopic }) => {
               </div>
               
               {/* Progress */}
-              <div className="mt-4 pt-4 border-t border-slate-700/50">
+              <div data-testid="lessons-progress" className="mt-4 pt-4 border-t border-slate-700/50">
                 <div className="flex justify-between text-sm mb-2">
                   <span className="text-slate-400">Progress</span>
-                  <span className="text-blue-400 font-semibold">{completedLessons.size}/{LESSONS.length}</span>
+                  <span data-testid="progress-count" className="text-blue-400 font-semibold">{completedLessons.size}/{LESSONS.length}</span>
                 </div>
                 <div className="h-2 bg-slate-700/50 rounded-full overflow-hidden">
                   <div
+                    data-testid="progress-bar"
                     className="h-full bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full transition-all"
                     style={{ width: (completedLessons.size / LESSONS.length * 100) + '%' }}
                   />
@@ -960,15 +962,15 @@ const Lessons: React.FC<LessonsProps> = ({ selectedTopic }) => {
           </div>
 
           {/* Main Content */}
-          <div className="lg:col-span-3">
+          <div data-testid="lessons-main-content" className="lg:col-span-3">
             {!selectedLesson ? (
-              <div className="bg-slate-800/50 rounded-2xl p-12 border border-slate-700/50 text-center">
+              <div data-testid="lessons-empty-state" className="bg-slate-800/50 rounded-2xl p-12 border border-slate-700/50 text-center">
                 <BookOpen className="w-16 h-16 text-blue-400 mx-auto mb-4" />
                 <h2 className="text-2xl font-bold text-white mb-2">Select a Topic</h2>
                 <p className="text-slate-300">Choose from {LESSONS.length} topics to see lessons, cheatsheets, and examples.</p>
               </div>
             ) : isLoading ? (
-              <div className="bg-slate-800/50 rounded-2xl p-12 border border-slate-700/50 text-center">
+              <div data-testid="lessons-loading" className="bg-slate-800/50 rounded-2xl p-12 border border-slate-700/50 text-center">
                 <div className="animate-spin w-12 h-12 border-4 border-blue-400 border-t-transparent rounded-full mx-auto" />
                 <p className="text-slate-300 mt-4">Loading...</p>
               </div>
@@ -980,12 +982,13 @@ const Lessons: React.FC<LessonsProps> = ({ selectedTopic }) => {
             ) : (
               <div className="space-y-6">
                 {/* Header with Tabs */}
-                <div className="bg-slate-800/70 rounded-2xl p-6 border border-slate-700/50">
-                  <h1 className="text-2xl font-bold text-white mb-2">{selectedLesson.title}</h1>
-                  <p className="text-slate-400 mb-4">{selectedLesson.description}</p>
+                <div data-testid="lesson-header" className="bg-slate-800/70 rounded-2xl p-6 border border-slate-700/50">
+                  <h1 data-testid="lesson-title" className="text-2xl font-bold text-white mb-2">{selectedLesson.title}</h1>
+                  <p data-testid="lesson-description" className="text-slate-400 mb-4">{selectedLesson.description}</p>
                   
-                  <div className="flex flex-wrap gap-2">
+                  <div data-testid="lesson-tabs" className="flex flex-wrap gap-2">
                     <button
+                      data-testid="tab-lesson"
                       onClick={() => setActiveTab('lesson')}
                       className={`px-4 py-2 rounded-xl font-medium flex items-center gap-2 transition-all ${
                         activeTab === 'lesson'
@@ -996,6 +999,7 @@ const Lessons: React.FC<LessonsProps> = ({ selectedTopic }) => {
                       <GraduationCap className="w-4 h-4" /> Lesson
                     </button>
                     <button
+                      data-testid="tab-cheatsheet"
                       onClick={() => setActiveTab('cheatsheet')}
                       className={`px-4 py-2 rounded-xl font-medium flex items-center gap-2 transition-all ${
                         activeTab === 'cheatsheet'
@@ -1006,6 +1010,7 @@ const Lessons: React.FC<LessonsProps> = ({ selectedTopic }) => {
                       <FileCode className="w-4 h-4" /> Cheatsheet
                     </button>
                     <button
+                      data-testid="tab-examples"
                       onClick={() => setActiveTab('examples')}
                       className={`px-4 py-2 rounded-xl font-medium flex items-center gap-2 transition-all ${
                         activeTab === 'examples'
@@ -1018,6 +1023,7 @@ const Lessons: React.FC<LessonsProps> = ({ selectedTopic }) => {
                     
                     {!isCompleted(selectedLesson.id) && (
                       <button
+                        data-testid="mark-complete-button"
                         onClick={() => markComplete(selectedLesson.id)}
                         className="ml-auto px-4 py-2 bg-green-600 hover:bg-green-500 text-white rounded-xl font-medium flex items-center gap-2"
                       >
