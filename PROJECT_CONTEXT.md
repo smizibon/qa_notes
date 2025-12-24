@@ -2,6 +2,79 @@
 
 ## 🚨 CRITICAL: Documentation-First Development
 
+### **LLM Coding Ground Rules**
+
+When generating or modifying code in this project, LLMs MUST follow these principles:
+
+1. ✅ **Always Try to Use Reusable Code**
+   - Search for existing functions/components before creating new ones
+   - Use `grep_search` or `semantic_search` to find similar implementations
+   - Prefer composition over duplication
+
+2. ✅ **Only Create New Functions When Necessary**
+   - New functions should only be created if existing ones cannot be reused
+   - Check `src/utils/` for utility functions before implementing
+   - Review `src/components/` for UI components before creating new ones
+
+3. ✅ **Function Creation Must Consider Reusability**
+   - Make functions generic and parameterized
+   - Avoid hardcoding values - use parameters instead
+   - Write pure functions when possible (no side effects)
+   - Add TypeScript interfaces/types for better reusability
+   - Document parameters and return types clearly
+
+4. ✅ **Always Maintain Error Handling Properly**
+   - Use `ErrorHandler` from `src/utils/errorHandler.ts` for all async operations
+   - Wrap component renders with try-catch and `ErrorDisplay`
+   - Use `safeFetch()` for network requests (automatic retries)
+   - Use `loadJsonFile()` for loading JSON with validation
+   - Never let the app crash - always provide graceful fallbacks
+   - Log errors with context for debugging
+
+**Example of Good Practice**:
+```typescript
+// ✅ GOOD: Reusable, error-handled, generic function
+import { loadJsonFile, ErrorType } from '../utils/errorHandler';
+
+async function loadContent<T>(path: string, validator?: (data: any) => boolean) {
+  const { data, error } = await loadJsonFile(path, validator);
+  if (error) {
+    return { content: null, error };
+  }
+  return { content: data as T, error: null };
+}
+
+// ✅ GOOD: Component with error boundary
+try {
+  return (
+    <div>
+      {content && <ContentDisplay data={content} />}
+    </div>
+  );
+} catch (err) {
+  return <ErrorDisplay error={err} compact />;
+}
+```
+
+**Example of Bad Practice**:
+```typescript
+// ❌ BAD: Not reusable, no error handling, hardcoded
+async function loadTypeScriptLesson() {
+  const response = await fetch('/src/data/typescript/lessons/lesson1.json');
+  const data = await response.json(); // No error handling!
+  return data;
+}
+
+// ❌ BAD: Component without error boundary
+return (
+  <div>
+    {content.sections.map(section => ( // Will crash if content is null!
+      <div>{section.title}</div>
+    ))}
+  </div>
+);
+```
+
 ### Context Documentation System
 
 This project uses **hierarchical context documentation** to help LLMs understand the codebase efficiently:
