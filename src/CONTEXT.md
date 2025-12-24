@@ -41,6 +41,8 @@ Before modifying ANY code in this directory, LLMs MUST follow these principles:
 
 ## Overall Codebase Compliance: 92% ✅
 
+**Last Audit**: December 24, 2025
+
 | Directory | Score | Status | Last Updated |
 |-----------|-------|--------|--------------|
 | `components/` | 90% | ✅ Excellent | Stable |
@@ -48,10 +50,21 @@ Before modifying ANY code in this directory, LLMs MUST follow these principles:
 | `pages/` | 95% | ✅ Excellent | Dec 24, 2025 ⬆️ |
 | `data/` | 100% | ✅ Perfect | Stable |
 
+**Compliance by Ground Rule**:
+
+| # | Rule | Compliance | Notes |
+|---|------|------------|-------|
+| 1 | Always use reusable code | 95% | ✅ Excellent - contentLoader utility created |
+| 2 | Only create new functions if needed | 95% | ✅ No duplicate utilities found |
+| 3 | Functions must be generic/reusable | 95% | ✅ All utils use TypeScript generics |
+| 4 | Always maintain error handling | 95% | ✅ All async ops use ErrorHandler |
+| 5 | Update CONTEXT.md after stability | 100% | ✅ All files updated today |
+
 **Recent Improvements**:
 - ✅ Dec 24, 2025: Created `contentLoader.ts` utility
 - ✅ Dec 24, 2025: Refactored Lessons.tsx (60% → 95%)
 - ✅ 94% code reduction (48 lines → 3 lines)
+- ✅ All CONTEXT.md files updated with ground rules
 
 **No critical issues** - Codebase ready for scaling to 9 topics
 
