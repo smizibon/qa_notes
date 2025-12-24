@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Menu, X, Home, FileCode, ExternalLink, GraduationCap, BookOpen, Code, Smartphone, GitBranch, Container, Workflow, Brain, ClipboardCheck } from 'lucide-react';
+import { Menu, X, FileCode, ExternalLink, GraduationCap, BookOpen, Code, Smartphone, GitBranch, Container, Workflow, Brain, ClipboardCheck } from 'lucide-react';
 import { loadJsonFile, ErrorHandler } from '../utils/errorHandler';
 
 interface NavigationProps {
@@ -52,29 +52,23 @@ export default function Navigation({ activeTab, setActiveTab, setSelectedTopic }
     <nav className="bg-slate-800/70 backdrop-blur-xl shadow-2xl mb-8 rounded-2xl border border-slate-700/50 sticky top-4 z-50">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex justify-between items-center h-16">
-          {/* Logo/Brand */}
-          <div className="flex-shrink-0 flex items-center">
+          {/* Logo/Brand - Acts as Home Button */}
+          <button 
+            onClick={() => setActiveTab('home')}
+            className="flex-shrink-0 flex items-center gap-3 px-4 py-2 rounded-xl transition-all duration-300 hover:bg-slate-700/50 hover:scale-105 group"
+          >
             <div className="relative">
-              <FileCode className="h-8 w-8 text-blue-400" />
-              <div className="absolute inset-0 blur-xl bg-blue-400/30"></div>
+              <FileCode className="h-8 w-8 text-blue-400 group-hover:text-blue-300 transition-colors" />
+              <div className="absolute inset-0 blur-xl bg-blue-400/30 group-hover:bg-blue-400/50 transition-all"></div>
             </div>
-            <span className="ml-3 text-xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">QA Notes</span>
-          </div>
+            <div>
+              <span className="block text-xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 group-hover:from-blue-300 group-hover:to-cyan-300 bg-clip-text text-transparent transition-all">QA Notes</span>
+              <span className="block text-xs text-slate-400 group-hover:text-slate-300 transition-colors">Your Revision Companion</span>
+            </div>
+          </button>
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-1">
-            <button
-              onClick={() => setActiveTab('home')}
-              className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
-                activeTab === 'home'
-                  ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg shadow-blue-500/50 scale-105'
-                  : 'text-gray-300 hover:bg-slate-700/50 hover:scale-105'
-              }`}
-            >
-              <Home className="h-4 w-4" />
-              Home
-            </button>
-
             {/* Topics Mega Menu */}
             <div 
               className="relative group/topics"
@@ -86,7 +80,7 @@ export default function Navigation({ activeTab, setActiveTab, setSelectedTopic }
                 className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
                   activeTab === 'lessons'
                     ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg shadow-blue-500/50 scale-105'
-                    : 'text-gray-300 hover:bg-slate-700/50 hover:scale-105'
+                    : 'text-gray-300 hover:bg-blue-500/20 hover:text-blue-300 hover:scale-105'
                 }`}
               >
                 <GraduationCap className="h-4 w-4" />
@@ -180,7 +174,7 @@ export default function Navigation({ activeTab, setActiveTab, setSelectedTopic }
               onMouseEnter={() => {}}
               onMouseLeave={() => {}}
             >
-              <button className="px-4 py-2 rounded-xl text-sm font-medium text-gray-300 hover:bg-slate-700/50 transition-all duration-300 flex items-center gap-2 hover:scale-105">
+              <button className="px-4 py-2 rounded-xl text-sm font-medium text-gray-300 hover:bg-blue-500/20 hover:text-blue-300 transition-all duration-300 flex items-center gap-2 hover:scale-105">
                 <ExternalLink className="h-4 w-4" />
                 Links
               </button>
@@ -242,21 +236,6 @@ export default function Navigation({ activeTab, setActiveTab, setSelectedTopic }
         {isMenuOpen && (
           <div className="md:hidden pb-4">
             <div className="flex flex-col space-y-2">
-              <button
-                onClick={() => {
-                  setActiveTab('home');
-                  setIsMenuOpen(false);
-                }}
-                className={`px-4 py-2 rounded-md text-sm font-medium text-left flex items-center gap-2 ${
-                  activeTab === 'home'
-                    ? 'bg-blue-600 text-white'
-                    : 'text-gray-300 hover:bg-gray-700'
-                }`}
-              >
-                <Home className="h-4 w-4" />
-                Home
-              </button>
-
               {/* Mobile Topics Section */}
               <div className="pt-2 border-t border-gray-700">
                 <p className="px-4 py-2 text-xs font-semibold text-gray-400 uppercase">Topics</p>
