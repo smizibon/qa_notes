@@ -10,6 +10,8 @@ A comprehensive, interactive learning platform for QA Engineers built with React
 - **Mega Menu Navigation**: Easy access to all topics from a single dropdown
 - **Progress Tracking**: Mark lessons as complete and track learning across all topics
 - **Modern UI**: Glassmorphism design with smooth animations
+- **Robust Error Handling**: Never crashes - graceful error recovery with retry mechanisms
+- **Comprehensive Documentation**: AI-friendly context files for maintainability
 
 ### 📚 Available Topics
 
@@ -48,6 +50,21 @@ A comprehensive, interactive learning platform for QA Engineers built with React
 - **Responsive Design**: Works on desktop and mobile devices
 - **Practice Site Links**: Quick access to TypeScript Playground, Type Challenges, and more
 
+### 🛡️ Reliability Features (v2.0.0)
+- **Centralized Error Handling**: Custom ErrorHandler library with retry logic
+- **Automatic Retries**: Network failures automatically retry up to 3 times
+- **Error Boundaries**: All components wrapped with try-catch for graceful degradation
+- **User-Friendly Errors**: Clear error messages with icons and retry buttons
+- **Never Crashes**: App continues working even when individual sections fail
+- **Detailed Logging**: Console logs with context for debugging
+
+### 📖 Documentation System
+- **Context Files**: CONTEXT.md in every major folder for AI-assisted development
+- **Architecture Docs**: Complete PROJECT_CONTEXT.md with patterns and conventions
+- **Component Documentation**: Detailed docs for all reusable components
+- **Data Schema Docs**: Complete JSON structure documentation with examples
+- **Utility API Docs**: Full error handling API reference with usage patterns
+
 ## 📋 Prerequisites
 
 - Node.js (v14 or higher)
@@ -81,6 +98,13 @@ The application will be available at `http://localhost:5173/`
 - **Tailwind CSS** - Utility-first CSS (via CDN)
 - **Lucide React 0.263.1** - Beautiful icon library
 
+### Error Handling Architecture
+- **ErrorHandler Class**: Centralized error management with sync/async support
+- **AppError**: Custom error types (NETWORK, PARSE, VALIDATION, RENDER, NOT_FOUND, UNKNOWN)
+- **safeFetch()**: Fetch wrapper with automatic retries and error handling
+- **loadJsonFile()**: JSON loader with optional validation functions
+- **ErrorDisplay Component**: Reusable error UI with compact and full modes
+
 ## 📁 Project Structure
 
 ```
@@ -88,16 +112,23 @@ qa_notes/
 ├── src/
 │   ├── components/              # Reusable UI components
 │   │   ├── Navigation.tsx       # Mega menu with all topics
-│   │   └── CodeBlock.tsx        # Syntax-highlighted code
+│   │   ├── CodeBlock.tsx        # Syntax-highlighted code
+│   │   ├── ErrorDisplay.tsx     # Error UI component
+│   │   └── CONTEXT.md           # Component documentation
 │   ├── pages/                   # Main page components
 │   │   ├── Home.tsx             # Landing page
 │   │   ├── Lessons.tsx          # Multi-topic lesson browser
-│   │   └── Details.tsx          # About the platform
+│   │   ├── Details.tsx          # About the platform
+│   │   └── CONTEXT.md           # Page architecture docs
+│   ├── utils/                   # Utility functions
+│   │   ├── errorHandler.ts      # Centralized error handling
+│   │   └── CONTEXT.md           # Error handling API docs
 │   ├── data/                    # Learning content (JSON)
 │   │   ├── typescript/          # ✅ Complete (48 files)
 │   │   │   ├── lessons/         # 16 detailed lessons
 │   │   │   ├── cheatsheet/      # 16 quick references
 │   │   │   └── examples/        # 16 practical examples
+│   │   ├── links/               # External resource links
 │   │   ├── test-cases/          # 🚧 Planned
 │   │   ├── api-testing/         # 🚧 Planned
 │   │   ├── playwright/          # 🚧 Planned
@@ -105,9 +136,12 @@ qa_notes/
 │   │   ├── cicd/                # 🚧 Planned
 │   │   ├── docker/              # 🚧 Planned
 │   │   ├── n8n/                 # 🚧 Planned
-│   │   └── llm-testing/         # 🚧 Planned
+│   │   ├── llm-testing/         # 🚧 Planned
+│   │   └── CONTEXT.md           # JSON schema documentation
+│   ├── CONTEXT.md               # Source directory overview
 │   ├── App.tsx                  # Main app with routing
 │   └── main.tsx                 # Application entry point
+├── PROJECT_CONTEXT.md           # Complete architecture documentation
 ├── DATA_STRUCTURE.md            # Detailed folder structure guide
 ├── index.html                   # HTML template
 └── package.json                 # Dependencies and scripts
@@ -154,19 +188,24 @@ This platform is designed for **QA Engineers** preparing for interviews and skil
 
 ## 🚀 Roadmap
 
-### ✅ Completed
+### ✅ Completed (v2.0.0)
 - [x] TypeScript: All 16 lessons with cheatsheets and examples
 - [x] Mega menu navigation for all 9 topics
 - [x] Progress tracking system
 - [x] Modern glassmorphism UI
 - [x] Responsive mobile design
+- [x] **Centralized error handling system**
+- [x] **Automatic retry mechanism for network failures**
+- [x] **Error boundaries on all components**
+- [x] **Comprehensive CONTEXT.md documentation system**
+- [x] **Dynamic link loading with error handling**
 
 ### 🔄 In Progress
 - [ ] Test Cases content (lessons, cheatsheet, examples)
 - [ ] API Testing content
 - [ ] Playwright automation guides
 
-### � Planned
+### 📋 Planned
 - [ ] Appium mobile testing
 - [ ] CI/CD pipeline tutorials
 - [ ] Docker containerization
@@ -177,11 +216,38 @@ This platform is designed for **QA Engineers** preparing for interviews and skil
 - [ ] Video tutorials
 - [ ] Downloadable PDF cheatsheets
 
+## 📚 Documentation
+
+This project uses comprehensive context documentation for AI-assisted development:
+
+- **`PROJECT_CONTEXT.md`** - Complete architecture, patterns, and development guidelines
+- **`src/CONTEXT.md`** - Source directory overview and documentation system
+- **`src/components/CONTEXT.md`** - Component patterns and usage guidelines
+- **`src/pages/CONTEXT.md`** - Page architecture and data flow documentation
+- **`src/utils/CONTEXT.md`** - Error handling API reference and examples
+- **`src/data/CONTEXT.md`** - JSON schema documentation and content guidelines
+
+### Documentation Philosophy
+
+**When stable code is present, update the docs.** This is a core principle for maintaining the codebase with AI assistance. Context files are updated whenever:
+- New components, pages, or utilities are added
+- Component APIs or signatures change
+- New data structures or JSON fields are introduced
+- Architectural patterns are modified
+- Major bugs that change behavior are fixed
+
 ## 🤝 Contributing
 
 This is a personal revision platform. Feel free to fork and customize for your own learning needs!
 
-## � License
+### Development Guidelines
+- Follow the existing patterns documented in CONTEXT.md files
+- Update relevant CONTEXT.md when making changes to stable code
+- Test error handling paths (app should never crash)
+- Maintain the glassmorphism design aesthetic
+- Ensure mobile responsiveness
+
+## 📄 License
 
 Open source for educational purposes.
 
@@ -189,3 +255,6 @@ Open source for educational purposes.
 
 **Made with ❤️ for QA Engineers**  
 *Your personal revision companion before interviews*
+
+**Version**: 2.0.0 (December 24, 2025)  
+**Repository**: [smizibon/qa_notes](https://github.com/smizibon/qa_notes)
