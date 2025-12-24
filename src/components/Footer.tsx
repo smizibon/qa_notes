@@ -1,4 +1,4 @@
-import { Heart, Github } from 'lucide-react';
+import { Heart, Github, Linkedin } from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -12,10 +12,19 @@ export default function Footer() {
               <Heart className="w-5 h-5 text-red-400" />
               QA Notes
             </h3>
-            <p className="text-slate-400 text-sm leading-relaxed">
-              Your personal revision companion for QA interview preparation. 
+            <p className="text-slate-400 text-sm leading-relaxed mb-3">
+              Syed Monowarul Islam's personal revision companion for QA interview preparation. 
               Covering TypeScript, testing frameworks, automation, and more.
             </p>
+            <a 
+              href="https://www.linkedin.com/in/smizibon/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 transition-colors text-sm"
+            >
+              <Linkedin className="w-4 h-4" />
+              Connect on LinkedIn
+            </a>
           </div>
 
           {/* Quick Links */}
