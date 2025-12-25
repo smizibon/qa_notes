@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ExternalLink, Globe, MousePointer2, Copy, Check, Trash2, ChevronDown, ChevronUp } from 'lucide-react';
+import { Globe, MousePointer2, Copy, Check, Trash2, ChevronDown, ChevronUp } from 'lucide-react';
 import { loadJsonFile } from '../utils/errorHandler';
 import GlassCard from '../components/GlassCard';
 import LinksControls from '../components/LinksControls';
@@ -9,6 +9,7 @@ interface Link {
   name: string;
   url: string;
   tooltip: string;
+  favicon?: string;
 }
 
 interface LinkCategory {
@@ -38,7 +39,6 @@ export default function Links({ selectedTopic }: LinksProps) {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedLinks, setSelectedLinks] = useState<Set<string>>(new Set());
   const [copied, setCopied] = useState(false);
@@ -47,6 +47,9 @@ export default function Links({ selectedTopic }: LinksProps) {
   const [categoriesPanelCollapsed, setCategoriesPanelCollapsed] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState<Set<string>>(new Set());
   const [collapsedCategoryBodies, setCollapsedCategoryBodies] = useState<Set<string>>(new Set());
+  const [visitedLinks, setVisitedLinks] = useState<Set<string>>(new Set());
+  const [failedFavicons, setFailedFavicons] = useState<Set<string>>(new Set());
+  const [clickAnimating, setClickAnimating] = useState<Set<string>>(new Set());
 
   const fetchLinks = async (showLoading = true) => {
     if (showLoading) setLoading(true);
@@ -65,6 +68,25 @@ export default function Links({ selectedTopic }: LinksProps) {
     fetchLinks();
   }, []);
 
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem('visitedLinks');
+      if (raw) {
+        const arr = JSON.parse(raw) as string[];
+        setVisitedLinks(new Set(arr));
+      }
+    } catch {}
+  }, []);
+
+  const markVisited = (url: string) => {
+    const next = new Set(visitedLinks);
+    next.add(url);
+    setVisitedLinks(next);
+    try {
+      localStorage.setItem('visitedLinks', JSON.stringify([...next]));
+    } catch {}
+  };
+
   // Auto-sync with selectedTopic
   useEffect(() => {
     if (selectedTopic && categories.length > 0) {
@@ -77,6 +99,11 @@ export default function Links({ selectedTopic }: LinksProps) {
       
       if (match) {
         setSelectedCategory(match.name);
+        setSelectedCategories(prev => {
+          const next = new Set(prev);
+          next.add(match.name);
+          return next;
+        });
       }
     }
   }, [selectedTopic, categories]);
@@ -281,8 +308,6 @@ export default function Links({ selectedTopic }: LinksProps) {
             <LinksControls
               searchQuery={searchQuery}
               onSearchChange={setSearchQuery}
-              viewMode={viewMode}
-              onSetViewMode={setViewMode}
               refreshing={refreshing}
               onRefresh={() => fetchLinks(false)}
             />
@@ -291,12 +316,12 @@ export default function Links({ selectedTopic }: LinksProps) {
       </div>
 
       {/* Links Grid/List */}
-      <div className="space-y-12">
+      <div className="space-y-3">
         {filteredCategories.map((category) => {
           const Icon = iconMap[category.icon] || Globe;
           return (
-            <div key={category.name} className="space-y-6">
-              <div className="flex items-center gap-4">
+            <div key={category.name} className="space-y-3">
+              <div className="flex items-center gap-3">
                 <div className="p-3 bg-blue-500/10 rounded-2xl border border-blue-500/20">
                   <Icon className="h-6 w-6 text-blue-400" />
                 </div>
@@ -313,131 +338,242 @@ export default function Links({ selectedTopic }: LinksProps) {
               </div>
 
               {!collapsedCategoryBodies.has(category.name) && (
-                <div className={viewMode === 'grid' 
-                  ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-                  : "flex flex-col gap-4"
-                }>
+                <div className="flex flex-col gap-0.5">
                 {category.links.map((link) => (
                   <GlassCard
                     key={link.url}
-                    className={`group transition-all duration-300 relative ${
+                    variant="secondary"
+                    padding="sm"
+                    className={`group transform-gpu transition-transform duration-250 ease-out relative ${
+                      clickAnimating.has(link.url) ? 'scale-[0.98] ring-2 ring-blue-400' : ''
+                    } ${
                       selectedLinks.has(link.url)
                         ? 'ring-2 ring-blue-500 bg-blue-500/10 scale-[1.02]'
-                        : 'hover:border-blue-500/30'
-                    }`}
+                        : visitedLinks.has(link.url)
+                          ? 'ring-1 ring-violet-400/60 bg-violet-500/10 shadow-[0_0_0_2px_rgba(139,92,246,0.35)]'
+                          : 'hover:border-blue-500/30'
+                    } rounded-lg shadow-none border-0`}
+                    onMouseDown={(e) => {
+                      const target = e.target as HTMLElement;
+                      if (
+                        target.closest('button') ||
+                        target.closest('[data-testid^="copy-link-"]') ||
+                        target.closest('[data-testid^="select-link-"]')
+                      ) {
+                        return;
+                      }
+                      setClickAnimating(prev => {
+                        const next = new Set(prev);
+                        next.add(link.url);
+                        return next;
+                      });
+                    }}
+                    onMouseUp={() => {
+                      setClickAnimating(prev => {
+                        const next = new Set(prev);
+                        next.delete(link.url);
+                        return next;
+                      });
+                    }}
+                    onClick={(e) => {
+                      const target = e.target as HTMLElement;
+                      if (
+                        target.closest('button') ||
+                        target.closest('[data-testid^="copy-link-"]') ||
+                        target.closest('[data-testid^="select-link-"]')
+                      ) {
+                        return;
+                      }
+                      setClickAnimating(prev => {
+                        const next = new Set(prev);
+                        next.add(link.url);
+                        return next;
+                      });
+                      setTimeout(() => {
+                        setClickAnimating(prev => {
+                          const next = new Set(prev);
+                          next.delete(link.url);
+                          return next;
+                        });
+                      }, 180);
+                      markVisited(link.url);
+                      window.open(link.url, '_blank', 'noopener,noreferrer');
+                    }}
+                    data-testid={`open-link-card-${link.name.toLowerCase().replace(/\s+/g, '-')}`}
                   >
                     <div
-                      className="flex flex-col h-full"
-                      onClick={(e) => {
-                        const target = e.target as HTMLElement;
-                        if (
-                          target.closest('button') ||
-                          target.closest('[data-testid^="open-link-"]') ||
-                          target.closest('[data-testid^="copy-link-"]') ||
-                          target.closest('[data-testid^="select-link-"]')
-                        ) {
-                          return;
-                        }
-                        window.open(link.url, '_blank', 'noopener,noreferrer');
-                      }}
-                      data-testid={`open-link-card-${link.name.toLowerCase().replace(/\s+/g, '-')}`}
+                      className="flex items-center h-full"
                     >
-                      <div className="flex justify-between items-start mb-4">
-                        <div className="flex items-center gap-3">
-                          <button
-                            onClick={() => toggleSelect(link.url)}
-                            className={`p-2 rounded-lg transition-all ${
-                              selectedLinks.has(link.url)
-                                ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/50'
-                                : 'bg-slate-700/30 text-slate-400 hover:text-white hover:bg-slate-700/50'
-                            }`}
-                            title={selectedLinks.has(link.url) ? "Deselect link" : "Select link to copy"}
-                            data-testid={`select-link-${link.name.toLowerCase().replace(/\s+/g, '-')}`}
-                          >
-                            {selectedLinks.has(link.url) ? <Check className="h-4 w-4" /> : <MousePointer2 className="h-4 w-4" />}
-                          </button>
-                          <div className={`p-2 rounded-lg transition-colors ${selectedLinks.has(link.url) ? 'bg-blue-500/20' : 'bg-slate-700/30 group-hover:bg-blue-500/20'}`}>
-                            <Globe className={`h-5 w-5 ${selectedLinks.has(link.url) ? 'text-blue-400' : 'text-slate-400 group-hover:text-blue-400'}`} />
-                          </div>
-                        </div>
-                        <div className="flex gap-2">
-                          <button
-                            onClick={async (e) => {
-                              e.stopPropagation();
-                              const text = `${link.name}: ${link.url}`;
-                              setCopiedSingles(prev => {
-                                const next = new Set(prev);
-                                next.add(link.url);
-                                return next;
-                              });
-                              const btnEl = e.currentTarget as HTMLElement;
-                              btnEl.classList.add('bg-green-500', 'text-white');
-                              try {
-                                await navigator.clipboard.writeText(text);
-                              } catch {
-                                const textarea = document.createElement('textarea');
-                                textarea.value = text;
-                                textarea.style.position = 'fixed';
-                                textarea.style.left = '-9999px';
-                                document.body.appendChild(textarea);
-                                textarea.focus();
-                                textarea.select();
-                                try {
-                                  document.execCommand('copy');
-                                } finally {
-                                  document.body.removeChild(textarea);
-                                }
-                              }
-                              setTimeout(() => {
-                                setCopiedSingles(prev => {
-                                  const next = new Set(prev);
-                                  next.delete(link.url);
-                                  return next;
-                                });
-                                btnEl.classList.remove('bg-green-500', 'text-white');
-                              }, 1500);
-                            }}
-                            data-testid={`copy-link-${link.name.toLowerCase().replace(/\s+/g, '-')}`}
-                            className={`p-2 rounded-lg transition-all ${
-                              copiedSingles.has(link.url)
-                                ? 'bg-green-500 text-white shadow-lg shadow-green-500/20'
-                                : 'bg-slate-700/30 text-slate-400 hover:text-blue-400 hover:bg-blue-500/20 active:scale-95'
-                            }`}
-                            title="Copy single link"
-                          >
-                            {copiedSingles.has(link.url) ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                          </button>
-                          <a
-                            href={link.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="p-2 bg-slate-700/30 text-slate-400 hover:text-blue-400 hover:bg-blue-500/20 rounded-lg transition-all"
-                            title="Open in new tab"
-                            data-testid={`open-link-${link.name.toLowerCase().replace(/\s+/g, '-')}`}
-                          >
-                            <ExternalLink className="h-4 w-4" />
-                          </a>
+                      <div className="flex items-center w-full gap-3 md:gap-4">
+                            <div className="flex items-center gap-2 md:gap-3 flex-1 min-w-0">
+                              <button
+                                onMouseDown={(e) => { e.stopPropagation(); }}
+                                onClick={(e) => { e.stopPropagation(); toggleSelect(link.url); }}
+                                className={`p-1.5 rounded-lg transition-all ${
+                                  selectedLinks.has(link.url)
+                                    ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/50'
+                                    : 'bg-slate-700/30 text-slate-400 hover:text-white hover:bg-slate-700/50'
+                                }`}
+                                title={selectedLinks.has(link.url) ? "Deselect link" : "Select link to copy"}
+                                data-testid={`select-link-${link.name.toLowerCase().replace(/\s+/g, '-')}`}
+                              >
+                                {selectedLinks.has(link.url) ? (
+                                  <Check className="h-3.5 w-3.5" />
+                                ) : (
+                                  <MousePointer2 className="h-3.5 w-3.5" />
+                                )}
+                              </button>
+                              <button
+                                onMouseDown={(e) => { e.stopPropagation(); }}
+                                onClick={async (e) => {
+                                  e.stopPropagation();
+                                  const text = link.url;
+                                  setCopiedSingles(prev => {
+                                    const next = new Set(prev);
+                                    next.add(link.url);
+                                    return next;
+                                  });
+                                  const btnEl = e.currentTarget as HTMLElement;
+                                  btnEl.classList.add('bg-green-500', 'text-white');
+                                  try {
+                                    await navigator.clipboard.writeText(text);
+                                  } catch {
+                                    const textarea = document.createElement('textarea');
+                                    textarea.value = text;
+                                    textarea.style.position = 'fixed';
+                                    textarea.style.left = '-9999px';
+                                    document.body.appendChild(textarea);
+                                    textarea.focus();
+                                    textarea.select();
+                                    try {
+                                      document.execCommand('copy');
+                                    } finally {
+                                      document.body.removeChild(textarea);
+                                    }
+                                  }
+                                  setTimeout(() => {
+                                    setCopiedSingles(prev => {
+                                      const next = new Set(prev);
+                                      next.delete(link.url);
+                                      return next;
+                                    });
+                                    btnEl.classList.remove('bg-green-500', 'text-white');
+                                  }, 1500);
+                                }}
+                                data-testid={`copy-link-${link.name.toLowerCase().replace(/\s+/g, '-')}`}
+                                className="p-1.5 rounded-lg transition-all bg-slate-700/30 text-slate-400 hover:text-blue-400 hover:bg-blue-500/20 active:scale-95"
+                                title="Copy single link"
+                              >
+                                {copiedSingles.has(link.url) ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+                              </button>
+                              
+                              <div className="p-1.5 rounded-lg transition-colors bg-slate-700/30 group-hover:bg-blue-500/20">
+                                {(() => {
+                                  const host = new URL(link.url).hostname.toLowerCase();
+                                  const s2 = `https://www.google.com/s2/favicons?domain=${host}&sz=64`;
+                                  const src = link.favicon || s2;
+                                  if (failedFavicons.has(link.url)) {
+                                    return <Globe className="h-4 w-4 text-slate-400 group-hover:text-blue-400" data-testid={`link-fallback-icon-${link.name.toLowerCase().replace(/\s+/g, '-')}`} />;
+                                  }
+                                  const handleError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+                                    const originFavicon = `${new URL(link.url).origin}/favicon.ico`;
+                                    const img = e.currentTarget as HTMLImageElement;
+                                    if (img.src !== originFavicon) {
+                                      img.src = originFavicon;
+                                    } else {
+                                      setFailedFavicons(prev => {
+                                        const next = new Set(prev);
+                                        next.add(link.url);
+                                        return next;
+                                      });
+                                    }
+                                  };
+                                  return <img src={src} onError={handleError} alt="site icon" className="h-4 w-4 rounded-sm" data-testid={`link-favicon-${link.name.toLowerCase().replace(/\s+/g, '-')}`} />;
+                                })()}
+                              </div>
+                              <span className="text-sm font-semibold text-white truncate max-w-[55%] md:max-w-[65%]">{link.name}</span>
+                              {visitedLinks.has(link.url) && (
+                                <span
+                                  className="ml-1 px-1.5 py-0.5 rounded-md text-[10px] font-semibold bg-violet-500/20 text-violet-300 border border-violet-500/30"
+                                  data-testid={`visited-badge-${link.name.toLowerCase().replace(/\s+/g, '-')}`}
+                                  title="Previously opened"
+                                >
+                                  Visited
+                                </span>
+                              )}
+                              <span className="hidden md:block text-xs text-slate-400 truncate flex-1 text-right">{link.tooltip}</span>
+                            </div>
+                            <div className="hidden"></div>
+
+                        <div className="hidden">
                           {copiedSingles.has(link.url) && (
                             <span
-                              className="ml-2 px-2 py-1 rounded-md text-xs font-semibold bg-green-500/20 text-green-400 border border-green-500/30 animate-in fade-in slide-in-from-top-2"
+                              className="px-2 py-1 rounded-md text-xs font-semibold bg-green-500/20 text-green-400 border border-green-500/30 animate-in fade-in slide-in-from-top-2"
                               data-testid={`copy-feedback-${link.name.toLowerCase().replace(/\s+/g, '-')}`}
                             >
                               Copied!
                             </span>
                           )}
                         </div>
-                      </div>
-
-                      <h3 className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors mb-2">
-                        {link.name}
-                      </h3>
-                      <p className="text-sm text-slate-400 line-clamp-2 flex-grow">
-                        {link.tooltip}
-                      </p>
-                      
-                      <div className="mt-4 pt-4 border-t border-slate-700/50 flex items-center justify-between text-xs text-slate-500">
-                        <span className="truncate max-w-[200px]">{new URL(link.url).hostname}</span>
-                        <span className="opacity-0 group-hover:opacity-100 transition-opacity text-blue-400 font-medium">Click to open →</span>
+                        {/* Grid title row with favicon */}
+                        <div className="hidden">
+                          <div className={`p-2 rounded-lg transition-colors ${
+                            selectedLinks.has(link.url)
+                              ? 'bg-blue-500/20'
+                              : visitedLinks.has(link.url)
+                                ? 'bg-violet-500/20'
+                                : 'bg-slate-700/30 group-hover:bg-blue-500/20'
+                            }`}>
+                            {(() => {
+                              const host = new URL(link.url).hostname.toLowerCase();
+                              const s2 = `https://www.google.com/s2/favicons?domain=${host}&sz=64`;
+                              const src = link.favicon || s2;
+                              if (failedFavicons.has(link.url)) {
+                                const color = selectedLinks.has(link.url)
+                                  ? 'text-blue-400'
+                                  : visitedLinks.has(link.url)
+                                    ? 'text-violet-400'
+                                    : 'text-slate-400 group-hover:text-blue-400';
+                                return <Globe className={`h-5 w-5 ${color}`} data-testid={`link-fallback-icon-${link.name.toLowerCase().replace(/\s+/g, '-')}`} />;
+                              } else {
+                                const handleError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+                                  const originFavicon = `${new URL(link.url).origin}/favicon.ico`;
+                                  const img = e.currentTarget as HTMLImageElement;
+                                  if (img.src !== originFavicon) {
+                                    img.src = originFavicon;
+                                  } else {
+                                    setFailedFavicons(prev => {
+                                      const next = new Set(prev);
+                                      next.add(link.url);
+                                      return next;
+                                    });
+                                  }
+                                };
+                                return (
+                                  <img
+                                    src={src}
+                                    onError={handleError}
+                                    alt="site icon"
+                                    className="h-5 w-5 rounded-sm"
+                                    data-testid={`link-favicon-${link.name.toLowerCase().replace(/\s+/g, '-')}`}
+                                  />
+                                );
+                              }
+                            })()}
+                          </div>
+                          <h3 className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors">
+                            {link.name}
+                          </h3>
+                        </div>
+                        <p className="hidden">
+                          {link.tooltip}
+                        </p>
+                        
+                        {false && (
+                          <div className="mt-3 pt-3 border-t border-slate-700/50 flex items-center justify-start text-xs text-slate-500">
+                            <span className="truncate">{new URL(link.url).hostname}</span>
+                          </div>
+                        )}
                       </div>
 
                     </div>

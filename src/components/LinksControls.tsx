@@ -1,10 +1,8 @@
-import { RefreshCw, LayoutGrid, List, X } from 'lucide-react';
+import { RefreshCw, X } from 'lucide-react';
 
 interface LinksControlsProps {
   searchQuery: string;
   onSearchChange: (value: string) => void;
-  viewMode: 'grid' | 'list';
-  onSetViewMode: (mode: 'grid' | 'list') => void;
   refreshing: boolean;
   onRefresh: () => void;
 }
@@ -12,8 +10,6 @@ interface LinksControlsProps {
 export default function LinksControls({
   searchQuery,
   onSearchChange,
-  viewMode,
-  onSetViewMode,
   refreshing,
   onRefresh
 }: LinksControlsProps) {
@@ -29,24 +25,6 @@ export default function LinksControls({
         >
           <RefreshCw className={`h-5 w-5 ${refreshing ? 'animate-spin' : ''}`} />
         </button>
-        <div className="flex bg-slate-700/40 p-1 rounded-lg border border-slate-600/40">
-          <button
-            onClick={() => onSetViewMode('grid')}
-            data-testid="links-view-grid-button"
-            className={`p-2 rounded-md transition-all ${viewMode === 'grid' ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/20' : 'text-slate-300 hover:text-white'}`}
-            title="Grid View"
-          >
-            <LayoutGrid className="h-5 w-5" />
-          </button>
-          <button
-            onClick={() => onSetViewMode('list')}
-            data-testid="links-view-list-button"
-            className={`p-2 rounded-md transition-all ${viewMode === 'list' ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/20' : 'text-slate-300 hover:text-white'}`}
-            title="List View"
-          >
-            <List className="h-5 w-5" />
-          </button>
-        </div>
         <input
           type="text"
           placeholder="Search links..."

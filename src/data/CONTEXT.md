@@ -17,10 +17,23 @@ data/
 - **IDs**: Prefix-based unique strings (e.g., `ts-lesson-01`).
 - **Loading**: ALWAYS use `loadJsonFile` from `src/utils/`.
 - **Validation**: Schema-first; refer to `[topic]/CONTEXT.md` before editing.
+ 
+## 🔗 Links JSON Schema
+- Path: `src/data/links/links.json`
+- Shape:
+  - `categories[]`:
+    - `name`: string
+    - `icon`: string (Lucide icon key)
+    - `links[]`:
+      - `name`: string
+      - `url`: string
+      - `tooltip`: string
+      - `favicon` (optional): string URL to site icon (preferred). If omitted, UI falls back to `https://www.google.com/s2/favicons?domain=<host>&sz=64`.
+       - Fallback behavior: if both `favicon` and S2 fail, UI displays a globe icon.
 
 ## 🕒 Latest Changes
-- **links.json**: Categorized into 9 specific QA/Dev groups.
+- **links.json**: Categorized into 9 specific QA/Dev groups. Optional `favicon` field added for per-link icons.
 - **videos.json**: Initialized for the Watch page hub.
 
 ---
-**Last Updated**: 2025-12-25 | **Version**: 2.5.0
+**Last Updated**: 2025-12-25 | **Version**: 2.6.1

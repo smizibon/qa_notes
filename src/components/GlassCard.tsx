@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode, MouseEventHandler } from 'react';
 
 interface GlassCardProps {
   children: ReactNode;
@@ -6,7 +6,9 @@ interface GlassCardProps {
   className?: string;
   padding?: 'sm' | 'md' | 'lg' | 'xl';
   'data-testid'?: string;
-  onClick?: () => void;
+  onClick?: MouseEventHandler<HTMLDivElement>;
+  onMouseDown?: MouseEventHandler<HTMLDivElement>;
+  onMouseUp?: MouseEventHandler<HTMLDivElement>;
 }
 
 /**
@@ -33,7 +35,9 @@ export function GlassCard({
   className = '',
   padding = 'md',
   'data-testid': testId,
-  onClick
+  onClick,
+  onMouseDown,
+  onMouseUp
 }: GlassCardProps) {
   const variants = {
     primary: 'bg-gradient-to-br from-slate-800/70 to-slate-900/70 rounded-3xl',
@@ -52,6 +56,8 @@ export function GlassCard({
       className={`${variants[variant]} backdrop-blur-xl border border-slate-700/50 shadow-2xl ${paddings[padding]} ${className}`}
       data-testid={testId}
       onClick={onClick}
+      onMouseDown={onMouseDown}
+      onMouseUp={onMouseUp}
     >
       {children}
     </div>

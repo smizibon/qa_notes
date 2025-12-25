@@ -23,9 +23,13 @@
 - **Cards**: `open-link-card-*`, `select-link-*`, `copy-link-*`, `open-link-*`
 - **Bulk Actions**: `links-selection-bar`, `links-selected-count`, `links-copy-all-button`, `links-clear-selection-button`
 - **Category Collapse**: `category-collapse-*` (button left of title)
+ 
+## 🔖 Visited State
+- Link cards remain highlighted after opening in a new tab.
+- Visited URLs persist via `localStorage` key `visitedLinks`.
 
 ## 🕒 Latest Changes
-- **Links.tsx**: Resource hub with categories above search, multi-select chips, internal categories collapse, per-category collapse, prominent search, bulk copy selection bar, single-link copy visual feedback, and global topic synchronization.
+- **Links.tsx**: Resource hub with categories above search, multi-select chips, internal categories collapse, per-category collapse, prominent search, bulk copy selection bar, single-link copy visual feedback, global topic synchronization, unified controls via `LinksControls`, and persistent visited highlight.
 - **Watch.tsx**: Progress tracking (manual toggle), category counts, design selector relocated.
 - **Home.tsx**: Full `data-testid` coverage, profile glow enhancements.
 
