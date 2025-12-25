@@ -8,6 +8,7 @@
 | `ErrorDisplay`| `error-display`| Centralized UI for `AppError` handling. |
 | `Footer` | `footer-container`| Global footer. |
 | `ProfileImage`| `profile-image`| Glowing avatar with scales. |
+| `LinksControls` | `links-search-input`, `links-refresh-button`, `links-view-grid-button`, `links-view-list-button` | Unified controls for search, view toggles, and refresh. |
 
 ## 🎨 Implementation Patterns
 - **Test IDs**: Required on all interactive elements. Pattern: `component-element-type`.

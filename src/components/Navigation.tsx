@@ -286,17 +286,27 @@ export default function Navigation({ activeTab, setActiveTab, setSelectedTopic }
               About Me
             </button>
 
-            {/* Links Dropdown */}
+            {/* Links Button */}
+            <button
+              data-testid="nav-links-button"
+              onClick={() => setActiveTab('links')}
+              className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
+                activeTab === 'links'
+                  ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg shadow-blue-500/50 scale-105'
+                  : 'text-gray-300 hover:bg-blue-500/20 hover:text-blue-300 hover:scale-105'
+              }`}
+            >
+              <ExternalLink className="h-4 w-4" />
+              Links
+            </button>
+
+            {/* Links Dropdown (Hover) */}
             <div 
               data-testid="links-dropdown-container"
               className="relative group/links"
               onMouseEnter={() => {}}
               onMouseLeave={() => setHoveredCategory(null)}
             >
-              <button data-testid="nav-links-button" className="px-4 py-2 rounded-xl text-sm font-medium text-gray-300 hover:bg-blue-500/20 hover:text-blue-300 transition-all duration-300 flex items-center gap-2 hover:scale-105">
-                <ExternalLink className="h-4 w-4" />
-                Links
-              </button>
               
               {/* Categories Dropdown */}
               <div data-testid="links-dropdown-menu" className="absolute right-0 mt-2 w-72 bg-slate-800/95 backdrop-blur-xl border border-slate-600/50 rounded-2xl shadow-2xl shadow-black/20 opacity-0 invisible group-hover/links:opacity-100 group-hover/links:visible transition-all duration-300 transform group-hover/links:translate-y-0 -translate-y-2 z-10">

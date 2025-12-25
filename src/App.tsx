@@ -4,6 +4,7 @@ import Navigation from './components/Navigation.tsx';
 import Lessons from './pages/Lessons';
 import Watch from './pages/Watch';
 import AboutMe from './pages/AboutMe';
+import Links from './pages/Links';
 import Footer from './components/Footer';
 
 export default function TypeScriptCheatsheet() {
@@ -20,6 +21,8 @@ export default function TypeScriptCheatsheet() {
         return <Lessons selectedTopic={selectedTopic} />;
       case 'watch':
         return <Watch />;
+      case 'links':
+        return <Links selectedTopic={selectedTopic} />;
       default:
         return <Home />;
     }
