@@ -1,0 +1,50 @@
+{
+  "categories": [
+    {
+      "id": "typescript",
+      "name": "TypeScript",
+      "videos": [
+        {
+          "id": "ts-basics-1",
+          "title": "TypeScript Course for Beginners 2023",
+          "url": "https://www.youtube.com/watch?v=d56mG7DezGs",
+          "duration": "1:20:00",
+          "description": "Learn TypeScript from scratch in this comprehensive course."
+        },
+        {
+          "id": "ts-advanced-2",
+          "title": "Advanced TypeScript Patterns",
+          "url": "https://www.youtube.com/watch?v=A2claopQ7e4",
+          "duration": "45:00",
+          "description": "Master advanced patterns in TypeScript."
+        }
+      ]
+    },
+    {
+      "id": "playwright",
+      "name": "Playwright",
+      "videos": [
+        {
+          "id": "playwright-intro",
+          "title": "Playwright - Full Course for Beginners",
+          "url": "https://www.youtube.com/watch?v=Xz6nl1F49Ic",
+          "duration": "2:30:00",
+          "description": "Complete Playwright automation tutorial."
+        }
+      ]
+    },
+    {
+      "id": "react",
+      "name": "React & Vite",
+      "videos": [
+        {
+          "id": "react-vite-setup",
+          "title": "React + Vite Setup Guide",
+          "url": "https://www.youtube.com/watch?v=9j7iFqZtT0g",
+          "duration": "15:00",
+          "description": "How to set up React with Vite correctly."
+        }
+      ]
+    }
+  ]
+}

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Home from './pages/Home';
 import Navigation from './components/Navigation.tsx';
 import Lessons from './pages/Lessons';
+import Watch from './pages/Watch';
 import AboutMe from './pages/AboutMe';
 import Footer from './components/Footer';
 
@@ -17,6 +18,8 @@ export default function TypeScriptCheatsheet() {
         return <AboutMe />;
       case 'lessons':
         return <Lessons selectedTopic={selectedTopic} />;
+      case 'watch':
+        return <Watch />;
       default:
         return <Home />;
     }

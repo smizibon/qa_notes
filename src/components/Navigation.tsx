@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Menu, X, FileCode, ExternalLink, GraduationCap, BookOpen, Code, Smartphone, GitBranch, Container, Workflow, Brain, ClipboardCheck, TestTube2, Award, Wrench } from 'lucide-react';
+import { Menu, X, FileCode, ExternalLink, GraduationCap, BookOpen, Code, Smartphone, GitBranch, Container, Workflow, Brain, ClipboardCheck, TestTube2, Award, Wrench, MonitorPlay } from 'lucide-react';
 import { loadJsonFile } from '../utils/errorHandler';
 
 interface NavigationProps {
@@ -258,6 +258,20 @@ export default function Navigation({ activeTab, setActiveTab, setSelectedTopic }
               </div>
             </div>
 
+            {/* Watch Button */}
+            <button
+              data-testid="nav-watch-button"
+              onClick={() => setActiveTab('watch')}
+              className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
+                activeTab === 'watch'
+                  ? 'bg-gradient-to-r from-cyan-600 to-cyan-500 text-white shadow-lg shadow-cyan-500/50 scale-105'
+                  : 'text-gray-300 hover:bg-cyan-500/20 hover:text-cyan-300 hover:scale-105'
+              }`}
+            >
+              <MonitorPlay className="h-4 w-4" />
+              Watch
+            </button>
+
             {/* About Me Button */}
             <button
               data-testid="nav-about-button"
@@ -401,7 +415,7 @@ export default function Navigation({ activeTab, setActiveTab, setSelectedTopic }
         {isMenuOpen && (
           <div data-testid="mobile-menu" className="md:hidden pb-4">
             <div className="flex flex-col space-y-2">
-              {/* Mobile Home and About */}
+              {/* Mobile Home */}
               <div className="pt-2 border-t border-gray-700">
                 <button
                   onClick={() => {
@@ -412,23 +426,8 @@ export default function Navigation({ activeTab, setActiveTab, setSelectedTopic }
                 >
                   Home
                 </button>
-                
-                <button
-                  data-testid="mobile-about-button"
-                  onClick={() => {
-                    setActiveTab('about');
-                    setIsMenuOpen(false);
-                  }}
-                  className={`w-full text-left px-4 py-3 text-sm ${
-                    activeTab === 'about'
-                      ? 'bg-purple-600 text-white'
-                      : 'text-gray-300 hover:bg-gray-700 hover:text-purple-400'
-                  }`}
-                >
-                  About Me
-                </button>
               </div>
-              
+
               {/* Mobile Topics Section */}
               <div className="pt-2 border-t border-gray-700">
                 <p className="px-4 py-2 text-xs font-semibold text-gray-400 uppercase">Topics</p>
@@ -470,26 +469,64 @@ export default function Navigation({ activeTab, setActiveTab, setSelectedTopic }
                 })}
               </div>
 
+              {/* Watch and About */}
+              <div className="pt-2 border-t border-gray-700">
+                <button
+                  onClick={() => {
+                    setActiveTab('watch');
+                    setIsMenuOpen(false);
+                  }}
+                  className={`w-full text-left px-4 py-3 text-sm flex items-center gap-2 ${
+                    activeTab === 'watch'
+                      ? 'bg-cyan-600 text-white'
+                      : 'text-gray-300 hover:bg-gray-700 hover:text-cyan-400'
+                  }`}
+                >
+                  <MonitorPlay className="h-4 w-4" />
+                  Watch
+                </button>
+                
+                <button
+                  data-testid="mobile-about-button"
+                  onClick={() => {
+                    setActiveTab('about');
+                    setIsMenuOpen(false);
+                  }}
+                  className={`w-full text-left px-4 py-3 text-sm ${
+                    activeTab === 'about'
+                      ? 'bg-purple-600 text-white'
+                      : 'text-gray-300 hover:bg-gray-700 hover:text-purple-400'
+                  }`}
+                >
+                  About Me
+                </button>
+              </div>
+
               {/* Mobile Links */}
               <div className="pt-2 border-t border-gray-700 mt-2">
-                <p className="px-4 py-2 text-xs font-semibold text-gray-400 uppercase">Links</p>
-                {links.map((link) => (
-                  <a
-                    key={link.name}
-                    data-testid={`mobile-link-${link.name.toLowerCase().replace(/\s+/g, '-')}`}
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block px-4 py-2 text-sm hover:bg-gray-700"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    <div className="font-medium text-gray-200 hover:text-blue-400">
-                      {link.name}
-                    </div>
-                    <div className="text-xs text-gray-400 mt-0.5">
-                      {link.tooltip}
-                    </div>
-                  </a>
+                <p className="px-4 py-2 text-xs font-semibold text-gray-400 uppercase">External Resources</p>
+                {categories.map((category) => (
+                  <div key={category.name}>
+                    <p className="px-4 py-1 text-[10px] font-bold text-gray-500 uppercase pl-6">{category.name}</p>
+                    {category.links.map((link) => (
+                      <a
+                        key={link.name}
+                        data-testid={`mobile-link-${link.name.toLowerCase().replace(/\s+/g, '-')}`}
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block px-4 py-2 text-sm hover:bg-gray-700 pl-8"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        <div className="font-medium text-gray-200 hover:text-blue-400">
+                          {link.name}
+                        </div>
+                        <div className="text-xs text-gray-400 mt-0.5">
+                          {link.tooltip}
+                        </div>
+                      </a>
+                    ))}
+                  </div>
                 ))}
               </div>
             </div>
