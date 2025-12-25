@@ -303,34 +303,62 @@ export default function Home() {
         data-testid="about-creator-section"
         variant="secondary" 
         padding="lg"
-        className="hover:shadow-purple-500/20 transition-all duration-500"
+        className="hover:shadow-purple-500/20 transition-all duration-500 relative overflow-hidden group/creator"
       >
-        <div className="flex flex-col md:flex-row items-center gap-8">
-          <div data-testid="creator-avatar" className="relative">
-            <div className="w-32 h-32 rounded-full bg-gradient-to-br from-blue-600 via-cyan-500 to-purple-600 flex items-center justify-center shadow-2xl ring-4 ring-blue-500/30">
-              <Users className="h-16 w-16 text-white" />
+        <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/5 blur-3xl -mr-32 -mt-32 rounded-full group-hover/creator:bg-purple-500/10 transition-colors"></div>
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/5 blur-3xl -ml-32 -mb-32 rounded-full group-hover/creator:bg-blue-500/10 transition-colors"></div>
+        
+        <div className="flex flex-col md:flex-row items-center gap-10 relative z-10">
+          <div data-testid="creator-avatar" className="relative group/avatar">
+            {/* Prominent Ring Animation */}
+            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-500 via-cyan-400 to-purple-500 animate-spin-slow opacity-75 blur-md group-hover/avatar:opacity-100 transition-opacity"></div>
+            
+            <div className="relative w-40 h-40 md:w-48 md:h-48 rounded-full overflow-hidden ring-4 ring-slate-900/50 shadow-2xl">
+              <img 
+                src="/src/data/profile/smizibon.jpg" 
+                alt="Syed Monowarul Islam" 
+                className="w-full h-full object-cover transition-transform duration-700 group-hover/avatar:scale-110"
+                onError={(e) => {
+                  // Fallback if image fails to load
+                  e.currentTarget.style.display = 'none';
+                  e.currentTarget.parentElement?.classList.add('bg-gradient-to-br', 'from-blue-600', 'via-cyan-500', 'to-purple-600', 'flex', 'items-center', 'justify-center');
+                  const icon = document.createElement('div');
+                  icon.innerHTML = '<svg class="h-20 w-20 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>';
+                  e.currentTarget.parentElement?.appendChild(icon.firstChild as Node);
+                }}
+              />
             </div>
-            <div data-testid="creator-award-badge" className="absolute -bottom-2 -right-2 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full p-3 shadow-xl border-4 border-slate-900">
-              <Award className="h-6 w-6 text-white" />
+            
+            <div data-testid="creator-award-badge" className="absolute -bottom-2 -right-2 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full p-3.5 shadow-xl border-4 border-slate-900 z-20 hover:scale-110 transition-transform">
+              <Award className="h-7 w-7 text-white" />
             </div>
           </div>
 
-          <div className="flex-1 text-center md:text-left">
-            <h3 data-testid="creator-name" className="text-2xl font-bold text-white mb-2">Syed Monowarul Islam</h3>
-            <p data-testid="creator-role" className="text-cyan-400 font-semibold mb-3">Sr. Software Engineer in Test</p>
-            <p data-testid="creator-bio" className="text-slate-300 leading-relaxed mb-4">
+          <div className="flex-1 text-center md:text-left space-y-4">
+            <div>
+              <h3 data-testid="creator-name" className="text-3xl md:text-4xl font-black text-white mb-2 tracking-tight">
+                Syed Monowarul Islam
+              </h3>
+              <p data-testid="creator-role" className="text-xl text-cyan-400 font-bold flex items-center justify-center md:justify-start gap-2">
+                <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></div>
+                Sr. Software Engineer in Test
+              </p>
+            </div>
+            
+            <p data-testid="creator-bio" className="text-lg text-slate-300 leading-relaxed max-w-2xl">
               10+ years of experience in QA engineering across global companies. 
               This platform is my personal revision companion for interview preparation, 
               now shared with the QA community.
             </p>
-            <div data-testid="creator-skills" className="flex items-center justify-center md:justify-start gap-3">
-              <span className="px-3 py-1 bg-blue-500/20 rounded-full text-sm text-blue-300 border border-blue-500/30">
+            
+            <div data-testid="creator-skills" className="flex flex-wrap items-center justify-center md:justify-start gap-3 pt-2">
+              <span className="px-4 py-1.5 bg-blue-500/10 rounded-full text-sm font-bold text-blue-300 border border-blue-500/30 hover:bg-blue-500/20 transition-colors">
                 TypeScript
               </span>
-              <span className="px-3 py-1 bg-green-500/20 rounded-full text-sm text-green-300 border border-green-500/30">
+              <span className="px-4 py-1.5 bg-green-500/10 rounded-full text-sm font-bold text-green-300 border border-green-500/30 hover:bg-green-500/20 transition-colors">
                 Test Automation
               </span>
-              <span className="px-3 py-1 bg-purple-500/20 rounded-full text-sm text-purple-300 border border-purple-500/30">
+              <span className="px-4 py-1.5 bg-purple-500/10 rounded-full text-sm font-bold text-purple-300 border border-purple-500/30 hover:bg-purple-500/20 transition-colors">
                 CI/CD
               </span>
             </div>
