@@ -14,6 +14,38 @@
 - **Doc-First Update**: Update relevant `CONTEXT.md` files *after* verifying code stability.
 - **Glassmorphism**: Match `slate-950` base, `backdrop-blur-xl`, and semi-transparent border styling.
 
+## 🏷️ Test ID Catalog
+- **Pattern**: `component-element-type` (kebab-case). Keep IDs stable for automation.
+- **Pages (roots)**:
+  - `home-page`, `lessons-page`, `watch-page`, `links-page`, `examples-page`, `details-page`, `about-me-page`
+- **Links Page (controls)**:
+  - `links-controls-toggle`, `links-categories-panel`, `links-categories-collapse`, `links-categories-clear`, `links-category-chip-*`
+  - `links-refresh-button`, `links-view-grid-button`, `links-view-list-button`, `links-search-input`, `links-search-clear`
+- **Links Page (cards)**:
+  - `open-link-card-*`, `select-link-*`, `copy-link-*`, `open-link-*`
+  - Bulk bar: `links-selection-bar`, `links-selected-count`, `links-copy-all-button`, `links-clear-selection-button`
+- **Code Blocks**:
+  - `code-block`, `code-block-title`, `code-block-content`
+
+## 🎨 Design Tokens & UI Style Guide
+- **Base panel**: `bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-2xl`
+- **Card accent**: `hover:border-blue-500/30`, active: `ring-2 ring-blue-500 bg-blue-500/10`
+- **Icon chips**: `bg-blue-500/10 border border-blue-500/20 text-blue-400`
+- **Interactive button (default)**: `p-2 bg-slate-700/30 text-slate-400 hover:text-blue-400 hover:bg-blue-500/20 rounded-lg transition-all`
+- **Primary action**: `bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-600/20`
+- **Success feedback**: `bg-green-500 text-white shadow-lg shadow-green-500/20`
+- **Press animation**: `active:scale-95` on clickable elements
+- Keep spacing compact (`gap-2`/`gap-3`) and radii consistent (`rounded-lg`/`rounded-2xl`)
+
+## ✅ Typecheck & Docs Update Checklist
+1. Run type check/build: `npm run build` (or `tsc` if configured)
+2. Verify required `data-testid` presence on new/edited elements
+3. Update relevant context docs:
+   - `PROJECT_CONTEXT.md` (rules, catalogs, style guide)
+   - `src/{folder}/CONTEXT.md` (implementation changes)
+4. Smoke-test in browser; verify layout and interactions
+5. Commit with clear message summarizing user-facing changes and doc updates
+
 ## 🎯 Project Overview & Vision
 A **personal QA revision platform** for interview preparation. 
 - **Core Strategy**: 16-lesson progression (Basics → Advanced → Reference) per topic.
@@ -62,4 +94,4 @@ qa_notes/
 ```
 
 ---
-**Last Updated**: 2025-12-25 | **Version**: 2.5.0
+**Last Updated**: 2025-12-25 | **Version**: 2.6.0

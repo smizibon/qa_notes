@@ -17,10 +17,17 @@
 - **Error Handling**: Component-level `try-catch` + `ErrorDisplay`.
 - **State Persistence**: `localStorage` (watched videos in `Watch.tsx`).
 
+## 🧪 Controls & Test IDs — Links Page
+- **Controls**: `links-controls-toggle`, `links-refresh-button`, `links-view-grid-button`, `links-view-list-button`, `links-search-input`, `links-search-clear`
+- **Categories**: `links-categories-panel`, `links-categories-collapse`, `links-categories-clear`, `links-category-chip-*`
+- **Cards**: `open-link-card-*`, `select-link-*`, `copy-link-*`, `open-link-*`
+- **Bulk Actions**: `links-selection-bar`, `links-selected-count`, `links-copy-all-button`, `links-clear-selection-button`
+- **Category Collapse**: `category-collapse-*` (button left of title)
+
 ## 🕒 Latest Changes
-- **Links.tsx**: Resource hub with categories above search, multi-select chips, internal categories collapse, per-category collapse, prominent search, bulk copy selection bar, single-link copy visual feedback, global topic synchronization, and unified controls via `LinksControls`.
+- **Links.tsx**: Resource hub with categories above search, multi-select chips, internal categories collapse, per-category collapse, prominent search, bulk copy selection bar, single-link copy visual feedback, and global topic synchronization.
 - **Watch.tsx**: Progress tracking (manual toggle), category counts, design selector relocated.
 - **Home.tsx**: Full `data-testid` coverage, profile glow enhancements.
 
 ---
-**Last Updated**: 2025-12-25 | **Version**: 2.5.0
+**Last Updated**: 2025-12-25 | **Version**: 2.6.0
